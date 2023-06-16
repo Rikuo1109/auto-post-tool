@@ -13,6 +13,6 @@ class UserController:
     def get_me(self, request):
         return request.user
 
-    @http_post("login", response=List[str])
+    @http_post("login")
     def login(self, request, payload: LoginSchema):
         return True
