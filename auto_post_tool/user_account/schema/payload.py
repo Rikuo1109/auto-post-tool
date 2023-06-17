@@ -11,3 +11,7 @@ class UserRegisterRequest(Schema):
 class UserLoginRequest(Schema):
     username: str
     password: str
+
+class UserChangePassword(Schema):
+    current_password: str
+    new_password: str
