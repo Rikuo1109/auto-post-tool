@@ -1,5 +1,6 @@
-from ninja.schema import  Schema
+from ninja.schema import Schema
+
 
 class LoginSchema(Schema):
-    email: str
+    username: str
     password: str

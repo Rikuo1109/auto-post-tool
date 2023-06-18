@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "ninja_extra",
     # local apps
     "user_account",
+    "post_management",
 ]
 
 
