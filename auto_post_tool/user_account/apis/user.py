@@ -9,7 +9,7 @@ from ninja_extra import api_controller, http_get, http_post
 
 import jwt
 from ..models.user import User
-from ..schema.payload import UserChangePassword, UserLoginRequest, UserRegisterRequest
+from ..schema.payload import UserChangePassword, UserLoginRequest, UserRegisterRequest, UserUpdateInfoRequest
 from ..schema.response import UserResponse
 from router.authenticate import AuthBearer
 
@@ -62,11 +62,16 @@ class UserController:
 
     @http_get("/get/me", response=UserResponse, auth=AuthBearer())
     def get_me(self, request):
-        print(request.user)
-        return request.user
+        user = request.user
+        return {
+            "username": user.username,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "email": user.email,
+            "date_joined": user.date_joined
+        }
 
     #Changing password
-
     @http_post("/change_password", auth=AuthBearer())
     def change_password(self, request, data: UserChangePassword):
         user = request.user
@@ -85,3 +90,31 @@ class UserController:
         return {
             "message": "Password updated successfully"
         }
+    
+    #Update info
+    @http_post("/update_info", auth=AuthBearer())
+    def update_info(self, request, data: UserUpdateInfoRequest):
+        user = request.user
+        user.first_name = data.first_name
+        user.last_name = data.last_name
+        user.username = data.username
+        user.email = data.email
+        user.save()
+
+        return {
+            "message": "Info updated successfully"
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

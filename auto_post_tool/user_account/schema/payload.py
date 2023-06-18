@@ -15,3 +15,9 @@ class UserLoginRequest(Schema):
 class UserChangePassword(Schema):
     current_password: str
     new_password: str
+
+class UserUpdateInfoRequest(Schema):
+    first_name: str
+    last_name: str
+    email: str
+    username: str

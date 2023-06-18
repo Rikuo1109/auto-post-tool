@@ -16,7 +16,6 @@ class AuthBearer(HttpBearer):
 
             # Retrieve the user from the user_id
             request.user = User.objects.get(id=user_id)
-            print(request.user.password)
             return token
         except jwt.exceptions.DecodeError:
             return {
