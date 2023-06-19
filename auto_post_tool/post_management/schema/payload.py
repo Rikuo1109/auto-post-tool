@@ -23,6 +23,11 @@ class PostRequest(Schema):
 
 
 class PostDetailUpdateRequest(Schema):
-    post_id: str
+    uid: str
     content: str = None
     post_type: str = None
+    managements: List[str] = list()
+
+
+class PostRemoveRequest(Schema):
+    uid: str

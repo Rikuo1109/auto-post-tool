@@ -25,6 +25,7 @@ class Post(models.Model):
 
 
 class PostManagement(models.Model):
+    uid = models.UUIDField(default=uuid4, editable=False, unique=True)
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
     time_posting = models.DateTimeField(auto_now_add=True)

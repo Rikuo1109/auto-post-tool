@@ -2,13 +2,13 @@ from typing import List
 
 from ninja_extra import api_controller, http_get, http_post
 
-from ..models.post import Post
-from ..schema.payload import PostRequest, PostDetailUpdateRequest
-from ..schema.response import PostResponse
-from router.authenticate import AuthBearer
-
+from ..models.post import Post, PostManagement
+from ..schema.payload import PostDetailUpdateRequest, PostRemoveRequest, PostRequest
+from ..schema.response import PostDetailResponse, PostContentResponse, PostManagementResponse
 from ..services.create_post import CreatePostService
+from ..services.remove_post import RemovePostService
 from ..services.update_detail_post import UpdatePostDetailService
+from router.authenticate import AuthBearer
 
 
 @api_controller(prefix_or_class="/posts", tags=["Post"])
@@ -19,9 +19,8 @@ class PostController:
             user=request.user, content=payload.content, post_type=payload.post_type, managements=payload.managements
         )
         create_post()
-        return {"status": "success"}
 
-    @http_post("/update", response=PostResponse, auth=AuthBearer())
+    @http_post("/update", response=PostDetailResponse, auth=AuthBearer())
     def update_post(self, request, payload: PostRequest):
         return
         # post = Post.objects.get(uid=payload.post.uid)
@@ -31,18 +30,46 @@ class PostController:
         #     platform=payload.post_management.platform, time_posting=payload.post_management.time_posting
         # )
 
-    @http_get("/matrix", response=List[PostResponse], auth=AuthBearer())
+    @http_get("/matrix", auth=AuthBearer())
     def get_view_all(self, request):
         posts = Post.objects.filter(user=request.user)
-        return posts
+        return [
+            {
+                "uid": post.uid,
+                "content": post.content,
+                "post_type": post.post_type,
+                "managements": [
+                    {"platform": management.platform, "auto_publish": management.auto_publish}
+                    for management in PostManagement.objects.filter(post=post)
+                ],
+            }
+            for post in posts
+        ]
 
-    @http_get("/detail", response=PostResponse, auth=AuthBearer())
-    def get_view_post(self, request, post_id):
-        post = Post.objects.get(uid=post_id)
-        return post
+    @http_get("/detail", response=PostDetailResponse, auth=AuthBearer())
+    def get_view_post(self, request, uid):
+        post = Post.objects.get(uid=uid)
+        post_management = PostManagement.objects.filter(post=post)
 
-    @http_post("/detail/update", response=PostResponse, auth=AuthBearer())
+        return (post, post_management)
+        # return {
+        #     "uid": post.uid,
+        #     "content": post.content,
+        #     "post_type": post.post_type,
+        #     "managements": [
+        #         {"platform": management.platform, "auto_publish": management.auto_publish}
+        #         for management in post_management
+        #     ],
+        # }
+
+    @http_post("/detail/update", auth=AuthBearer())
     def update_detail_post(self, request, payload: PostDetailUpdateRequest):
-        update_post = UpdatePostDetailService(payload.post_id, payload.content, payload.post_type)
+        update_post = UpdatePostDetailService(
+            uid=payload.uid, content=payload.content, post_type=payload.post_type, managements=payload.managements
+        )
         update_post()
-        return Post.objects.get(uid=payload.post_id)
+
+    @http_post("/detail/remove", auth=AuthBearer())
+    def remove_post(self, request, payload: PostRemoveRequest):
+        remove_post_ = RemovePostService(uid=payload.uid)
+        remove_post_()
