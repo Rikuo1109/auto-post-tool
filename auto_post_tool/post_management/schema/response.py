@@ -6,4 +6,4 @@ from ..models import Post
 class PostResponse(ModelSchema):
     class Config:
         model = Post
-        model_fields = ["content", "post_type"]
+        model_fields = ["uid", "content", "post_type"]

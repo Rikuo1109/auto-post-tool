@@ -1,9 +1,28 @@
+from typing import List
+
 from ninja import Schema, ModelSchema
-from ninja.orm import create_schema
 from ..models import Post, PostManagement
-from .response import PostResponse
+
+
+class PostPayloadSchema(ModelSchema):
+    class Config:
+        model = Post
+        model_fields = ["content", "post_type"]
+
+
+class PostManagementPayloadSchema(ModelSchema):
+    class Config:
+        model = PostManagement
+        model_fields = ["platform", "auto_publish"]
 
 
 class PostRequest(Schema):
-    post: PostResponse
-    # post_management: PostManagementSchema
+    content: str
+    post_type: str
+    managements: List[PostManagementPayloadSchema]
+
+
+class PostDetailUpdateRequest(Schema):
+    post_id: str
+    content: str = None
+    post_type: str = None

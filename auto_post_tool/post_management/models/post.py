@@ -8,21 +8,6 @@ from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnu
 
 
 class Post(models.Model):
-    pass
-
-
-class PostManager:
-    def create_post(self, user: User, content: str, post_type: str):
-        post = Post.objects.get(user=user)
-        post.content = content
-        post.post_type = post_type
-        post.save(using=self._db)
-        return post
-
-
-class Post(models.Model):
-    objects = PostManager()
-
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     content = models.TextField()
@@ -40,8 +25,6 @@ class Post(models.Model):
 
 
 class PostManagement(models.Model):
-    objects = PostManager()
-
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
     time_posting = models.DateTimeField(auto_now_add=True)
