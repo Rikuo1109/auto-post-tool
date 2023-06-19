@@ -1,29 +1,71 @@
 from uuid import uuid4
 
 from django.db import models
+from django.utils import timezone
 
 from user_account.models.user import User
-from utils.enums.post import PostManagementStatusEnum, PostTypeEnum, PostManagementPlatFormEnum
+from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
 
 class Post(models.Model):
+    pass
+
+
+class PostManager:
+    def create_post(self, user: User, content: str, post_type: str, created_at):
+        post = Post(user=user)
+        post.content = content
+        post.post_type = post_type
+        post.created_at = created_at
+        post.save(using=self._db)
+        return post
+
+
+class Post(models.Model):
+    objects = PostManager()
+
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices)
     created_at = models.DateTimeField(auto_now_add=True)
 
+    def update(self, *args, **kwargs):
+        try:
+            for field, value in kwargs.items():
+                setattr(self, field, value)
+                self.save()
+            return {"status": "success"}
+        except:
+            return {"status": "error"}
+
 
 class PostManagement(models.Model):
+    objects = PostManager()
+
     post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
-    status = models.CharField(max_length=16, choices=PostManagementStatusEnum.choices)
     time_posting = models.DateTimeField(auto_now_add=True)
     auto_publish = models.BooleanField(default=False)
-    url = models.TextField()
+    status = models.CharField(max_length=16, choices=PostManagementStatusEnum.choices)
+    url = models.TextField(blank=True)
 
-    def get_reaction_detail(self):
-        pass
+    def save(self, *args, **kwargs):
+        if self.time_posting < timezone.now():
+            pass
+        else:
+            self.auto_publish = True
+        super().save(*args, **kwargs)
 
-    def set_time_posting(t: models.DateTimeField):
-        pass
+    def update(self, *args, **kwargs):
+        try:
+            for field, value in kwargs.items():
+                setattr(self, field, value)
+                self.save()
+            return {"status": "success"}
+        except:
+            return {"status": "error"}
+
+    def update_after_posting(self, status, url):
+        self.status = status
+        self.url = url
