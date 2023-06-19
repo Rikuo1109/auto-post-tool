@@ -1,17 +1,16 @@
 from datetime import datetime, timedelta
 
 from django.conf import settings
-from django.contrib.auth import authenticate, login
 from django.contrib.auth.hashers import check_password
-from django.http import JsonResponse
 
 from ninja_extra import api_controller, http_get, http_post
 
 import jwt
+from utils.exceptions import *
 from ..models.user import User
 from ..schema.payload import UserChangePassword, UserLoginRequest, UserRegisterRequest, UserUpdateInfoRequest
 from ..schema.response import UserResponse
-from router.authenticate import AuthBearer
+from router.authenticate import AuthBearer, BlacklistToken
 
 
 # function to generate JWT token
@@ -34,11 +33,12 @@ class UserController:
         username = data.username
         password = data.password
 
-        user = User.objects.get(username=username)
-        if user is None:
-            return {"message": "Invalid username or password"}
-        elif not check_password(password, user.password):
-            return {"message": "Invalid username or password"}
+        try:
+            user = User.objects.get(username=username)
+        except:
+            raise AuthenticationFailed
+        if not check_password(password, user.password):
+            raise AuthenticationFailed
 
         access_token = generate_jwt_token(user.id)
 
@@ -104,17 +104,10 @@ class UserController:
         return {
             "message": "Info updated successfully"
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    
+    #Update info
+    @http_post("/logout", auth=AuthBearer())
+    def logout(self, request):
+        jwt_token = request.headers.get('authorization', '').split('Bearer ')[-1]
+        BlacklistToken.add_token(jwt_token)
+        return BlacklistToken.print()
