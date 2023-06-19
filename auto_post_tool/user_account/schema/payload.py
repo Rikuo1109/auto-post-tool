@@ -24,3 +24,13 @@ class UserUpdateInfoRequest(Schema):
     last_name: str
     email: str
     username: str
+
+
+class UserEmailRequest(Schema):
+    email: str
+
+
+class UserPasswordResetRequest(Schema):
+    password: str
+    uidb64: str
+    token: str

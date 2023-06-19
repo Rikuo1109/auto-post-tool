@@ -224,3 +224,6 @@ MEDIA_URL = str(os.environ.get("MEDIA_URL"))
 STATICFILES_DIRS = ("/static/",)
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = os.environ.get("STATIC_URL")
+
+
+FRONTEND_HOST_URL = ""
