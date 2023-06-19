@@ -6,11 +6,11 @@ from django.contrib.auth.hashers import check_password
 from ninja_extra import api_controller, http_get, http_post
 
 import jwt
-from utils.exceptions import *
 from ..models.user import User
 from ..schema.payload import UserChangePassword, UserLoginRequest, UserRegisterRequest, UserUpdateInfoRequest
 from ..schema.response import UserResponse
 from router.authenticate import AuthBearer, BlacklistToken
+from utils.exceptions import *
 
 
 # function to generate JWT token
@@ -72,7 +72,7 @@ class UserController:
         }
 
     #Changing password
-    @http_post("/change_password", auth=AuthBearer())
+    @http_post("/update/password", auth=AuthBearer())
     def change_password(self, request, data: UserChangePassword):
         user = request.user
         current_password = data.current_password
@@ -92,7 +92,7 @@ class UserController:
         }
     
     #Update info
-    @http_post("/update_info", auth=AuthBearer())
+    @http_post("/update/info", auth=AuthBearer())
     def update_info(self, request, data: UserUpdateInfoRequest):
         user = request.user
         user.first_name = data.first_name
