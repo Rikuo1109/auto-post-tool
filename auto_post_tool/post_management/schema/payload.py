@@ -13,7 +13,12 @@ class PostPayloadSchema(ModelSchema):
 class PostManagementPayloadSchema(ModelSchema):
     class Config:
         model = PostManagement
-        model_fields = ["platform", "auto_publish"]
+        model_fields = ["platform", "auto_publish", "time_posting"]
+
+
+class PostManagementRequest(Schema):
+    uid: str
+    management: PostManagementPayloadSchema
 
 
 class PostRequest(Schema):
