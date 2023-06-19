@@ -12,11 +12,10 @@ class Post(models.Model):
 
 
 class PostManager:
-    def create_post(self, user: User, content: str, post_type: str, created_at):
-        post = Post(user=user)
+    def create_post(self, user: User, content: str, post_type: str):
+        post = Post.objects.get(user=user)
         post.content = content
         post.post_type = post_type
-        post.created_at = created_at
         post.save(using=self._db)
         return post
 

@@ -12,15 +12,14 @@ from router.authenticate import AuthBearer
 class PostController:
     @http_post("/create", response=PostResponse, auth=AuthBearer())
     def create_new_post(self, request, payload: PostRequest):
-        print(request.user)
         post = Post.objects.create_post(
             user=request.user, content=payload.post.content, post_type=payload.post.post_type
         )
         post_management = PostManagement(
             post=post, platform=payload.post_management.platform, time_posting=payload.post_management.time_posting
         )
-        if post_management.auto_publish is True:
-            """push post_management to priority queue"""
+        # if post_management.auto_publish is True:
+        """push post_management to priority queue"""
         return post
 
     @http_post("/update", response=PostResponse, auth=AuthBearer())

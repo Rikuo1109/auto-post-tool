@@ -1,11 +1,9 @@
-from ninja.schema import Schema
+from ninja import Schema, ModelSchema
 from ninja.orm import create_schema
 from ..models import Post, PostManagement
-
-PostSchema = create_schema(Post)
-PostManagementSchema = create_schema(PostManagement)
+from .response import PostResponse
 
 
 class PostRequest(Schema):
-    post: PostSchema
-    post_management: PostManagementSchema
+    post: PostResponse
+    # post_management: PostManagementSchema
