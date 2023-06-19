@@ -14,9 +14,8 @@ class PostContentResponse(ModelSchema):
 class PostManagementResponse(ModelSchema):
     class Config:
         model = PostManagement
-        model_fields = ["platform", "auto_publish"]
+        model_fields = ["platform", "auto_publish", "post"]
 
 
-class PostDetailResponse(Schema):
-    content: PostContentResponse
+class PostDetailResponse(PostContentResponse):
     managements: List[PostManagementResponse]

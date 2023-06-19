@@ -30,37 +30,18 @@ class PostController:
         #     platform=payload.post_management.platform, time_posting=payload.post_management.time_posting
         # )
 
-    @http_get("/matrix", auth=AuthBearer())
+    @http_get("/matrix", response=List[PostDetailResponse], auth=AuthBearer())
     def get_view_all(self, request):
         posts = Post.objects.filter(user=request.user)
-        return [
-            {
-                "uid": post.uid,
-                "content": post.content,
-                "post_type": post.post_type,
-                "managements": [
-                    {"platform": management.platform, "auto_publish": management.auto_publish}
-                    for management in PostManagement.objects.filter(post=post)
-                ],
-            }
-            for post in posts
-        ]
+        for index, post in enumerate(posts):
+            posts[index].managements = PostManagement.objects.filter(post=post)
+        return posts
 
     @http_get("/detail", response=PostDetailResponse, auth=AuthBearer())
     def get_view_post(self, request, uid):
         post = Post.objects.get(uid=uid)
-        post_management = PostManagement.objects.filter(post=post)
-
-        return (post, post_management)
-        # return {
-        #     "uid": post.uid,
-        #     "content": post.content,
-        #     "post_type": post.post_type,
-        #     "managements": [
-        #         {"platform": management.platform, "auto_publish": management.auto_publish}
-        #         for management in post_management
-        #     ],
-        # }
+        post.managements = PostManagement.objects.filter(post=post)
+        return post
 
     @http_post("/detail/update", auth=AuthBearer())
     def update_detail_post(self, request, payload: PostDetailUpdateRequest):
