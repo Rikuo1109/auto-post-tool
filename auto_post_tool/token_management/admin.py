@@ -3,4 +3,6 @@ from .models import Token
 
 
 # Register your models here.
-admin.site.register(Token)
+@admin.register(Token)
+class TokenAdmin(admin.ModelAdmin):
+    pass

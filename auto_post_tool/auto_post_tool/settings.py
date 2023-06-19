@@ -63,6 +63,7 @@ INSTALLED_APPS = [
     # local apps
     "user_account",
     "post_management",
+    "token_management",
 ]
 
 
