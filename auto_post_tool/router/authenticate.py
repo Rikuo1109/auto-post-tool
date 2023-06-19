@@ -31,10 +31,10 @@ class AuthBearer(HttpBearer):
                 raise NotAuthenticated
             try:
                 access_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
-                user_email = access_token["user_email"]
+                user_uid = access_token["user_uid"]
 
                 # Retrieve the user from the user_id
-                request.user = User.objects.get(email=user_email)
+                request.user = User.objects.get(uid=user_uid)
                 return token
             except jwt.exceptions.DecodeError:
                 return {"detail": "Invalid access token."}

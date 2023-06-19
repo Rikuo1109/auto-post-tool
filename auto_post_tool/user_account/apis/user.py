@@ -26,9 +26,9 @@ from utils.exceptions import *
 
 
 # function to generate JWT token
-def generate_jwt_token(user_email):
+def generate_jwt_token(user_uid):
     access_token_payload = {
-        "user_email": user_email,
+        "user_email": user_uid,
         "exp": datetime.utcnow() + timedelta(hours=1),
         "iat": datetime.utcnow(),
     }
@@ -51,7 +51,7 @@ class UserController:
         if not check_password(password, user.password):
             raise AuthenticationFailed
 
-        access_token = generate_jwt_token(user.email)
+        access_token = generate_jwt_token(user.uid)
 
         return {"message": "User login successfully!", "access_token": access_token}
 
