@@ -16,7 +16,7 @@ class CreateTokenService:
 
     @transaction.atomic
     def __call__(self):
-        token = Token(
+        token = Token.objects.create(
             value=self.value,
             browser=self.browser,
             user=self.user,
