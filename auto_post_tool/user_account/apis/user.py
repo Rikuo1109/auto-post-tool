@@ -28,7 +28,7 @@ from utils.exceptions import *
 # function to generate JWT token
 def generate_jwt_token(user_uid):
     access_token_payload = {
-        "user_email": user_uid,
+        "user_uid": user_uid,
         "exp": datetime.utcnow() + timedelta(hours=1),
         "iat": datetime.utcnow(),
     }
@@ -51,7 +51,7 @@ class UserController:
         if not check_password(password, user.password):
             raise AuthenticationFailed
 
-        access_token = generate_jwt_token(user.uid)
+        access_token = generate_jwt_token(str(user.uid))
 
         return {"message": "User login successfully!", "access_token": access_token}
 
@@ -64,22 +64,15 @@ class UserController:
         password = data.password
 
         # Create a new user with the given email and password
-        user = User.objects.create_user(
+        return User.objects.create_user(
             first_name=first_name, last_name=last_name, email=email, username=username, password=password
         )
 
-        return user
 
     @http_get("/get/me", response=UserResponse, auth=AuthBearer())
     def get_me(self, request):
         user = request.user
-        return {
-            "username": user.username,
-            "first_name": user.first_name,
-            "last_name": user.last_name,
-            "email": user.email,
-            "date_joined": user.date_joined,
-        }
+        return user
 
     # Changing password
     @http_post("/update/password", auth=AuthBearer())
