@@ -9,4 +9,4 @@ class Browser(models.Model):
 
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
     user = models.ForeignKey(to=User, on_delete=models.CASCADE)
-    deviceName = models.CharField(max_length=64)
+    agent_header = models.TextField()
