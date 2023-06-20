@@ -1,8 +1,6 @@
 from django.db import transaction
 
-from post_management.models.post import Post, PostManagement
-
-from .create_post_management import CreatePostManagement
+from post_management.models.post import Post
 
 
 class CreatePostService:
@@ -14,6 +12,4 @@ class CreatePostService:
 
     @transaction.atomic
     def __call__(self):
-        post = Post(user=self.user, content=self.content, post_type=self.post_type)
-        CreatePostManagement(post=post, managements=self.managements)
-        post.save()
+        return Post(user=self.user, content=self.content, post_type=self.post_type)

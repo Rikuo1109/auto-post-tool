@@ -17,7 +17,6 @@ class PostManagementPayloadSchema(ModelSchema):
 
 
 class PostManagementRequest(Schema):
-    uid: str
     management: PostManagementPayloadSchema
 
 
@@ -28,11 +27,9 @@ class PostRequest(Schema):
 
 
 class PostDetailUpdateRequest(Schema):
-    uid: str
     content: str = None
     post_type: str = None
-    managements: List[str] = list()
 
 
-class PostRemoveRequest(Schema):
-    uid: str
+class PostManagementUpdateRequest(Schema):
+    management: PostManagementPayloadSchema

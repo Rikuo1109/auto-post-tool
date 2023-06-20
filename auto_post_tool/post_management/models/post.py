@@ -14,15 +14,6 @@ class Post(models.Model):
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices)
     created_at = models.DateTimeField(auto_now_add=True)
 
-    def update(self, *args, **kwargs):
-        try:
-            for field, value in kwargs.items():
-                setattr(self, field, value)
-                self.save()
-            return {"status": "success"}
-        except:
-            return {"status": "error"}
-
 
 class PostManagement(models.Model):
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
@@ -34,21 +25,6 @@ class PostManagement(models.Model):
     url = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
-        if self.time_posting < timezone.now():
-            pass
-        else:
+        if self.time_posting >= timezone.now():
             self.auto_publish = True
         super().save(*args, **kwargs)
-
-    def update(self, *args, **kwargs):
-        try:
-            for field, value in kwargs.items():
-                setattr(self, field, value)
-                self.save()
-            return {"status": "success"}
-        except:
-            return {"status": "error"}
-
-    def update_after_posting(self, status, url):
-        self.status = status
-        self.url = url
