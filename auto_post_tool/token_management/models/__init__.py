@@ -1,4 +1,3 @@
-from .token import Token
-from .browser import Browser
+from .token import LoginToken, ResetToken, ThirdPartyToken
 
-__all__ = ["Token", "Browser"]
+__all__ = ["LoginToken", "ResetToken", "ThirdPartyToken"]
