@@ -4,15 +4,18 @@ from post_management.models.post import PostManagement
 
 
 class CreatePostManagement:
-    def __init__(self, post, platform=None, auto_publish=None, time_posting=None):
+    def __init__(self, post, managements=[]):
         self.post = post
-        self.platform = platform
-        self.auto_publish = auto_publish
-        self.time_posting = time_posting
+        self.managements = managements
 
     @transaction.atomic
     def __call__(self):
-        post_management = PostManagement(
-            post=self.post, platform=self.platform, auto_publish=self.auto_publish, time_posting=self.time_posting
-        )
-        post_management.save()
+        if type(self.managements) is not list:
+            self.managements = list(self.managements)
+        managements = [
+            PostManagement(
+                post=self.post, platform=_.platform, auto_publish=_.auto_publish, time_posting=_.time_posting
+            )
+            for _ in self.managements
+        ]
+        PostManagement.objects.bulk_create(managements)

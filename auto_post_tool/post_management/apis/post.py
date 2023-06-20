@@ -49,10 +49,5 @@ class PostController:
     @http_post("/detail/create-management", auth=AuthBearer())
     def create_post_management(self, request, payload: PostManagementRequest):
         post = Post.objects.get(uid=payload.uid)
-        create_post_management_ = CreatePostManagement(
-            post=post,
-            platform=payload.management.platform,
-            auto_publish=payload.management.auto_publish,
-            time_posting=payload.management.time_posting,
-        )
+        create_post_management_ = CreatePostManagement(post=post, managements=payload.management)
         create_post_management_()
