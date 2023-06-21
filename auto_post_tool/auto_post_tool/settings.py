@@ -227,9 +227,11 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = os.environ.get("STATIC_URL")
 
 
-FRONTEND_HOST_URL = os.environ.get("BASE_UI_URL")
+FRONTEND_HOST_URL = ""
 
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
 
 JWT_EXPIRED_TIME = os.environ.get("JWT_EXPIRED_TIME")
 
+RESET_TOKEN_LENGTH = os.environ.get("RESET_TOKEN_LENGTH")
+RESET_TOKEN_TTL = os.environ.get("RESET_TOKEN_TTL")
