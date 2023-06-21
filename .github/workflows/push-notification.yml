@@ -1,12 +1,8 @@
 on: push
 name: Slack Notification Demo
 jobs:
-  slackNotification:
-    name: Slack Notification
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v2
-    - name: Slack Notification
-      uses: rtCamp/action-slack-notify@v2
-      env:
-        SLACK_WEBHOOK: https://hooks.slack.com/services/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
+    slackNotification:
+        name: Slack Notification
+        runs-on: ubuntu-latest
+        run:
+            curl -X POST --data-urlencode "payload={\"text\": \"Hello\"}" https://hooks.slack.com/services/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
