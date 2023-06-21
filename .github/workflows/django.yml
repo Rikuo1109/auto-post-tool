@@ -15,5 +15,5 @@ jobs:
     - uses: actions/checkout@v3
     - name: Push noti
       run: |
-        curl -X POST --data-urlencode "payload={\"text\": \"XXX\"}" https://hooks.slack.com/services/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
+        curl -X POST --data-urlencode "payload={\"channel\": \"#intern-webhook\", \"username\": \"Death-bot\", \"text\": \"Lo\"}" https://hooks.slack.com/services/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
         
