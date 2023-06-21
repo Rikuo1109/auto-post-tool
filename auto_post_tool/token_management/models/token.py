@@ -24,7 +24,7 @@ class ResetToken(models.Model):
     expire_at = models.DateTimeField(auto_now_add=False, auto_now=False)
 
     def save(self, *args, **kwargs):
-        self.expire_at = self.created_at + timedelta(minutes=settings.RESET_TOKEN_TTL)
+        self.expire_at = self.created_at + timedelta(minutes=settings.RESET_PASSWORD_TOKEN_LIFETIME)
         super().save(*args, **kwargs)
 
 

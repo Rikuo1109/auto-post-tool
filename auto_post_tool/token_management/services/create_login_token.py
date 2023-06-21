@@ -9,14 +9,7 @@ class CreateLoginTokenService:
     """Get the value of JWT token then turn it into a LoginToken Object in the DB"""
 
     def create_token(self, uid=str):
-        """function to create a jwt token for logging in
-
-        Args:
-            uid (str): uid of user
-
-        Returns:
-            str: access_token encoded by jwt. Format header.payload.signature
-        """
+        """function to create a jwt token for logging in"""             
         access_token = jwt.encode(
             {"user_uid": uid, "exp": datetime.now() + timedelta(hours=int(settings.JWT_EXPIRED_TIME))},
             settings.SECRET_KEY,
