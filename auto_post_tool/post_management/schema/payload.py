@@ -1,6 +1,8 @@
+from datetime import datetime
 from typing import List
 
-from ninja import Schema, ModelSchema
+from ninja import ModelSchema, Schema
+
 from ..models import Post, PostManagement
 
 
@@ -32,4 +34,6 @@ class PostDetailUpdateRequest(Schema):
 
 
 class PostManagementUpdateRequest(Schema):
-    management: PostManagementPayloadSchema
+    platform: str = None
+    auto_publish: bool = None
+    time_posting: datetime = None

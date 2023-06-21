@@ -1,6 +1,6 @@
 from django.db import transaction
 
-from post_management.models.post import PostManagement
+from post_management.models.post import Post, PostManagement
 
 
 class CreatePostManagementService:
@@ -13,11 +13,9 @@ class CreatePostManagementService:
 
     @transaction.atomic
     def __call__(self):
-        PostManagement.objects.bulk_create(
-            [
-                PostManagement(
-                    post=self.post, platform=_.platform, auto_publish=_.auto_publish, time_posting=_.time_posting
-                )
-                for _ in self.managements
-            ]
-        ).save()
+        return [
+            PostManagement(
+                post=self.post, platform=_.platform, auto_publish=_.auto_publish, time_posting=_.time_posting
+            )
+            for _ in self.managements
+        ]

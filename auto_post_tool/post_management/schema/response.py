@@ -14,7 +14,7 @@ class PostContentResponseSchema(ModelSchema):
 class PostManagementResponseSchema(ModelSchema):
     class Config:
         model = PostManagement
-        model_fields = ["platform", "auto_publish", "post"]
+        model_fields = ["uid", "platform", "auto_publish", "post"]
 
 
 class PostDetailResponse(PostContentResponseSchema):

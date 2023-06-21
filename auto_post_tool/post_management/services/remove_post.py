@@ -9,5 +9,4 @@ class RemovePostService:
 
     @transaction.atomic
     def __call__(self):
-        post = Post.objects.get(uid=self.uid)
-        post.delete()
+        return Post.objects.get(uid=self.uid).delete()

@@ -5,27 +5,19 @@ from utils.enums.post import PostManagementStatusEnum
 
 
 class UpdatePostManagementService:
-    def __init__(self, post, managements=[]):
-        self.post = post
-        if not isinstance(managements, list):
-            self.managements = list(managements)
-        else:
-            self.managements = managements
+    def __init__(self, uid, management):
+        self.uid = uid
+        self.post_management = PostManagement.objects.get(uid=self.uid)
+        self.post_management.platform = (
+            management.platform if management.platform is not None else self.post_management.platform
+        )
+        self.post_management.auto_publish = (
+            management.auto_publish if management.auto_publish is not None else self.post_management.auto_publish
+        )
+        self.post_management.time_posting = (
+            management.time_posting if management.time_posting is not None else self.post_management.time_posting
+        )
 
     @transaction.atomic
     def __call__(self):
-        managements = PostManagement.objects.filter(uid__in=[_.uid for _ in self.managements])
-        for index, management in enumerate(managements):
-            if management.status == PostManagementStatusEnum.PENDING and management.auto_publish:
-                """post is being in queue"""
-            elif management.status == PostManagementStatusEnum.PENDING and management.auto_publish:
-                """user is holding"""
-
-            if self.managements[index].status is not None:
-                managements[index].status = self.managements[index].status
-            if self.managements[index].auto_publish is not None:
-                managements[index].auto_publish = self.managements[index].auto_publish
-            if self.managements[index].time_posting is not None:
-                managements[index].time_posting = self.managements[index].time_posting
-
-        managements.save()
+        self.post_management.save()
