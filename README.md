@@ -55,5 +55,3 @@ python3 manage.py dumpdata --indent 2 > initial_database_dev.json
 ```
 python3 manage.py loaddata initial_database.json
 ```
-
-==================
