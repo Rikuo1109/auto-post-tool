@@ -1,13 +1,15 @@
 from django.db import transaction
 
-from .create_post import CreatePostService
-from .create_post_management import CreatePostManagementService
-from .get_detail_post import GetDetailPostService
-from .get_matrix_post import GetMatrixPostService
-from .remove_post import RemovePostService
-from .remove_post_management import RemovePostManagementService
-from .update_detail_post import UpdatePostDetailService
-from .update_post_management import UpdatePostManagementService
+from .post.create_post import CreatePostService
+from .post.get_detail_post import GetDetailPostService
+from .post.get_matrix_post import GetMatrixPostService
+from .post.remove_post import RemovePostService
+from .post.update_detail_post import UpdatePostDetailService
+from .post_management.create_post_management import CreatePostManagementService
+from .post_management.remove_post_management import RemovePostManagementService
+from .post_management.update_post_management import UpdatePostManagementService
+from .apis.facebook.publish_post import *
+from .apis.facebook.get_informations import *
 from post_management.models.post import PostManagement
 
 
@@ -18,7 +20,7 @@ class Service:
     @transaction.atomic
     def create_post(self, data):
         post = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)()
-        post_managements = CreatePostManagementService(post=post, managements=data.managements)()
+        post_managements = CreatePostManagementService(uid=post, managements=data.managements)()
         post.save()
         PostManagement.objects.bulk_create(post_managements)
         return post
@@ -41,10 +43,24 @@ class Service:
         return RemovePostService(uid)()
 
     def create_post_management(self, uid, data):
-        return CreatePostManagementService(uid=uid, managements=data.management)()
+        post_managements = CreatePostManagementService(uid=uid, managements=data.managements)()
+        PostManagement.objects.bulk_create(post_managements)
 
     def update_post_management(self, uid, data):
-        return UpdatePostManagementService(uid=uid, management=data)()
+        post_management = UpdatePostManagementService(uid=uid, management=data)()
+        post_management.save()
 
     def remove_post_management(self, uid):
         return RemovePostManagementService(uid=uid)()
+
+    def test_facebook_api(self):
+        return PublishPostServices(
+            page_id=111255372005139,
+            path_to_photo="https://images.unsplash.com/photo-1629654769983-94d7ad40d4fc?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=464&q=80",
+            message="Hello Horus Team",
+        ).publish_image_in_page()
+        return PublishPostServices(
+            message="Hello, welcome to my channel", page_id=111255372005139
+        ).publish_sample_in_page()
+        return GetInformationServices().get_user_pages()
+        return GetInformationServices().get_user_info()

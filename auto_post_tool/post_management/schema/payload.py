@@ -18,8 +18,8 @@ class PostManagementPayloadSchema(ModelSchema):
         model_fields = ["platform", "auto_publish", "time_posting"]
 
 
-class PostManagementRequest(Schema):
-    management: PostManagementPayloadSchema
+class PostManagementCreateRequest(Schema):
+    managements: List[PostManagementPayloadSchema]
 
 
 class PostRequest(Schema):

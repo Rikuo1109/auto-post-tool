@@ -4,14 +4,14 @@ from post_management.models.post import Post, PostManagement
 
 
 class CreatePostManagementService:
-    def __init__(self, post, managements=[]):
-        self.post = post
+    def __init__(self, uid, managements=[]):
+        print(uid)
+        self.post = uid if isinstance(uid, Post) else Post.objects.get(uid=uid)
         if not isinstance(managements, list):
             self.managements = list(managements)
         else:
             self.managements = managements
 
-    @transaction.atomic
     def __call__(self):
         return [
             PostManagement(

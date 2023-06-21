@@ -20,4 +20,4 @@ class UpdatePostManagementService:
 
     @transaction.atomic
     def __call__(self):
-        self.post_management.save()
+        return self.post_management
