@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "ninja_extra",
     # local apps
     "user_account",
+    "token_management"
 ]
 
 
@@ -226,4 +227,9 @@ STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = os.environ.get("STATIC_URL")
 
 
-FRONTEND_HOST_URL = ""
+FRONTEND_HOST_URL = os.environ.get("BASE_UI_URL")
+
+JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
+
+JWT_EXPIRED_TIME = os.environ.get("JWT_EXPIRED_TIME")
+
