@@ -59,5 +59,5 @@ python3 manage.py loaddata initial_database.json
 ## Run test
 
 ```
-Hello Duy
+Hello one more time
 ```
