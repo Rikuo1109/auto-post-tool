@@ -1,5 +1,7 @@
 # Auto post tool
 
+This is a tool to help you post your content to social media automatically.
+
 ## Version info
 
 ## I. Version info
