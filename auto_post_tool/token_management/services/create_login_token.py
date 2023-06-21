@@ -1,4 +1,6 @@
-from django.db import transaction
+from datetime import datetime, timedelta
+from django.conf import settings
+import jwt
 
 from token_management.models.token import LoginToken
 
@@ -6,15 +8,20 @@ from token_management.models.token import LoginToken
 class CreateLoginTokenService:
     """Get the value of JWT token then turn it into a LoginToken Object in the DB"""
 
-    def __init__(self, token, active, created_at, expire_at):
-        self.token = token
-        self.active = active
-        self.created_at = created_at
-        self.expire_at = expire_at
+    def create_token(self, uid=str):
+        """function to create a jwt token for logging in
 
-    @transaction.atomic
-    def __call__(self):
-        token = LoginToken.objects.create(
-            token=self.token, active=self.active, created_at=self.created_at, expire_at=self.expire_at
+        Args:
+            uid (str): uid of user
+
+        Returns:
+            str: access_token encoded by jwt. Format header.payload.signature
+        """
+        access_token = jwt.encode(
+            {"user_uid": uid, "exp": datetime.now() + timedelta(hours=int(settings.JWT_EXPIRED_TIME))},
+            settings.SECRET_KEY,
+            algorithm=settings.JWT_ALGORITHM,
         )
-        token.save()
+        jwt_token = LoginToken(token=access_token)
+        jwt_token.save()
+        return access_token
