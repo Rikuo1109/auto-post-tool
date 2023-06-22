@@ -22,7 +22,7 @@ class CreateResetTokenService:
         """Generate token for reseting password"""
         random_token = CreateResetTokenService.generator_token()
 
-        while not ResetToken.objects.filter(token=random_token).exists():
+        while ResetToken.objects.filter(token=random_token).exists():
             random_token = CreateResetTokenService.generator_token()
 
         reset_token = ResetToken(token=random_token, user=user)

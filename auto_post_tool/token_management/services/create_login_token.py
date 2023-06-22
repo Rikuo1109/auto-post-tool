@@ -19,7 +19,7 @@ class CreateLoginTokenService:
     @staticmethod
     def create_token(user: User):
         """function to create a jwt token for logging in"""
-        access_token = CreateLoginTokenService.generator_token(uid=str(User.objects.get("uid")))
+        access_token = CreateLoginTokenService.generator_token(uid=str(user.uid))
         jwt_token = LoginToken(user=user, token=access_token)
         jwt_token.save()
         return access_token

@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 from uuid import uuid4
 from django.conf import settings
 from django.db import models
@@ -40,7 +40,7 @@ class ResetToken(models.Model):
     expire_at = models.DateTimeField(null=True, blank=False)
 
     def save(self, *args, **kwargs):
-        self.expire_at = self.created_at + timedelta(minutes=settings.RESET_PASSWORD_TOKEN_LIFETIME)
+        self.expire_at = datetime.now() + timedelta(minutes=settings.RESET_PASSWORD_TOKEN_LIFETIME)
         super().save(*args, **kwargs)
 
 
