@@ -1,20 +1,13 @@
-<<<<<<< HEAD
 from datetime import datetime
 
-=======
->>>>>>> main
 from django.conf import settings
 
 from ninja.security import HttpBearer
 
 import jwt
-<<<<<<< HEAD
 from token_management.models.token import LoginToken
 from user_account.models.user import User
 from utils.exceptions import AuthenticationFailed, NotFound, ParseError
-=======
-from user_account.models.user import User
->>>>>>> main
 
 
 class AuthBearer(HttpBearer):

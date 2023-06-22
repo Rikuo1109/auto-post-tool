@@ -62,12 +62,8 @@ INSTALLED_APPS = [
     "ninja_extra",
     # local apps
     "user_account",
-<<<<<<< HEAD
-    "token_management"
-=======
     "post_management",
     "token_management",
->>>>>>> main
 ]
 
 
