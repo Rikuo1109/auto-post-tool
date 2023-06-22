@@ -1,14 +1,17 @@
 from typing import List
 
+from ninja import Query
 from ninja_extra import api_controller, http_get, http_post
 
 from ..schema.payload import (
     PostDetailUpdateRequest,
+    PostFiltersRequest,
     PostManagementCreateRequest,
+    PostManagementFiltersRequest,
     PostManagementUpdateRequest,
     PostRequest,
 )
-from ..schema.response import PostDetailResponse
+from ..schema.response import PostDetailResponse, PostManagementResponse
 from ..services import Service
 from router.authenticate import AuthBearer
 
@@ -21,9 +24,9 @@ class PostController:
         service.create_post(data=payload)
 
     @http_get("/matrix", response=List[PostDetailResponse])
-    def get_view_all(self, request):
+    def get_view_all(self, request, filters: PostFiltersRequest = Query(...)):
         service = Service(request=request)
-        return service.get_matrix_post()
+        return service.get_matrix_post(filters=filters)
 
     @http_get("/{uid}/detail", response=PostDetailResponse)
     def get_view_post(self, request, uid):
@@ -62,6 +65,11 @@ class PostController:
         service = Service(request=request)
         return service.remove_post_management(uid=uid)
 
+    @http_get("/post-management/matrix", response=List[PostManagementResponse])
+    def get_matrix_post_management(self, request, filters: PostManagementFiltersRequest = Query(...)):
+        service = Service(request=request)
+        return service.get_matrix_post_management(filters=filters)
+
     @http_post("/post-management/{uid}/update")
     def update_post_management(self, request, uid, payload: PostManagementUpdateRequest):
         """
@@ -70,6 +78,15 @@ class PostController:
         """
         service = Service(request=request)
         service.update_post_management(uid=uid, data=payload)
+
+    @http_post("/post-management/{uid}/publish")
+    def publish_post_management(self, request, uid):
+        """
+        update only one post management per time
+        @uid: post-management uid
+        """
+        service = Service(request=request)
+        service.test_facebook_api(uid=uid)
 
     @http_post("/test-facebook-api")
     def test_facebook_api(self, request):

@@ -1,7 +1,6 @@
 from django.db import transaction
 
 from post_management.models.post import Post, PostManagement
-from utils.enums.post import PostManagementStatusEnum
 
 
 class UpdatePostDetailService:
@@ -17,5 +16,4 @@ class UpdatePostDetailService:
             post.content = self.content
         if self.post_type is not None:
             post.post_type = self.post_type
-        post.save()
         return post

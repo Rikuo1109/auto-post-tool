@@ -22,6 +22,9 @@ class PublishPostServices:
                 f"""https://graph.facebook.com/{self.page_id}/feed""", headers=PAGE_HEADERS, params=params
             )
 
+            if response.code_status == 200:
+                pass
+
     def publish_link_in_page(self):
         """TODO: not done"""
         if self.page_id is not None:
