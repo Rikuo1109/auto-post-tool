@@ -9,6 +9,6 @@ class GetDetailPostService:
 
     @transaction.atomic
     def __call__(self):
-        post = Post.objects.get(uid=self.uid)
-        post.managements = PostManagement.objects.filter(post=post)
+        post = Post.get_by_uid(uid=self.uid)
+        post.managements = PostManagement.filter_by_post(post=post)
         return post

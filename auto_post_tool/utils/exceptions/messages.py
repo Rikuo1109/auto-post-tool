@@ -23,4 +23,6 @@ ERROR_MESSAGES = {
     "INVALID_ARGUMENTS": "Invalid arguments",
     # Post errors
     "POST_NOT_FOUND": "Post not found",
+    # Post management errors
+    "POST_MANAGEMENT_NOT_FOUND": "Post management not found",
 }

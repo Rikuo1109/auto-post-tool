@@ -14,5 +14,4 @@ class CreatePostService:
     def __call__(self):
         post = Post(user=self.user, content=self.content, post_type=self.post_type)
         post.save()
-
         return post

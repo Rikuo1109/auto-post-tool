@@ -12,7 +12,7 @@ class UpdatePostDetailService:
     @transaction.atomic
     def __call__(self):
         # TODO: Nếu uid sai thì sao?
-        post = Post.objects.get(uid=self.uid)
+        post = Post.get_by_uid(uid=self.uid)
         if self.content is not None:
             post.content = self.content
         if self.post_type is not None:

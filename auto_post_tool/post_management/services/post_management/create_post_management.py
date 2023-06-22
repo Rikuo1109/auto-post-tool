@@ -10,6 +10,6 @@ class CreatePostManagementService:
         return [
             PostManagement(
                 post=self.post, platform=_.platform, auto_publish=_.auto_publish, time_posting=_.time_posting
-            )
+            ).full_clean()
             for _ in self.managements
         ]

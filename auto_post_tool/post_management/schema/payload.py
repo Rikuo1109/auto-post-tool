@@ -5,7 +5,7 @@ from ninja import FilterSchema, ModelSchema, Schema
 
 from ..models import Post, PostManagement
 from pydantic import Field
-from utils.enums.common import SortingPostEnum, SortingPostManagementEnum, SortTypeEnum
+from utils.enums.common import SortingPostManagementEnum, SortTypeEnum
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
 
@@ -63,9 +63,6 @@ FILTER FIELDS
 
 
 class PostFiltersRequest(FilterSchema):
-    # page: Optional[int] = 1
-    # sorting: Optional[SortingPostEnum] = None
-    # sort_type: Optional[SortTypeEnum] = None
     search: Optional[str] = Field(q=["content__icontains", "post_type__icontains"])
     post_type: Optional[PostTypeEnum] = Field(q=["post_type__iexact"])
     min_time: Optional[datetime] = Field(q=["created_at__gte"])
@@ -73,10 +70,8 @@ class PostFiltersRequest(FilterSchema):
 
 
 class PostManagementFiltersRequest(FilterSchema):
-    sorting: Optional[SortingPostManagementEnum] = SortingPostManagementEnum.TIME_POSTING
-    sort_type: Optional[SortTypeEnum] = SortTypeEnum.ASC
-    platform: Optional[PostManagementPlatFormEnum]
-    auto_publish: Optional[bool] = None
-    status: Optional[PostManagementStatusEnum]
-    min_time: Optional[datetime] = None
-    max_time: Optional[datetime] = None
+    platform: Optional[PostManagementPlatFormEnum] = Field(q=["platform__iexact"])
+    auto_publish: Optional[bool] = Field(q=["auto_publish__exact"])
+    status: Optional[PostManagementStatusEnum] = Field(q=["platform__iexact"])
+    min_time: Optional[datetime] = Field(q=["created_at__gte"])
+    max_time: Optional[datetime] = Field(q=["created_at__lte"])
