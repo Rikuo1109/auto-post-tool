@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta
-from django.conf import settings
-import jwt
 
+from django.conf import settings
+
+import jwt
 from token_management.models.token import LoginToken
 
 
@@ -10,9 +11,9 @@ class CreateLoginTokenService:
 
     @staticmethod
     def create_token(uid=str):
-        """function to create a jwt token for logging in"""             
+        """function to create a jwt token for logging in"""
         access_token = jwt.encode(
-            {"user_uid": uid, "exp": datetime.now() + timedelta(hours=int(settings.JWT_EXPIRED_TIME))},
+            {"user_uid": uid, "exp": datetime.now() + timedelta(minutes=int(settings.JWT_EXPIRED_TIME))},
             settings.SECRET_KEY,
             algorithm=settings.JWT_ALGORITHM,
         )

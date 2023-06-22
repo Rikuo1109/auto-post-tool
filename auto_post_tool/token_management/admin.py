@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import LoginToken, ThirdPartyToken, ResetToken
+
+from .models import LoginToken, ResetToken, ThirdPartyToken
 
 
 # Register your models here.

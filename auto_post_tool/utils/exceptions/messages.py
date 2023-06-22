@@ -21,4 +21,6 @@ ERROR_MESSAGES = {
     "INVALID_FIELD": "Invalid field",
     # Validation errors
     "INVALID_ARGUMENTS": "Invalid arguments",
+    # Facebook errors
+    "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
 }

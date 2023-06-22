@@ -1,6 +1,8 @@
 from datetime import timedelta
-from django.db import models
+
 from django.conf import settings
+from django.db import models
+
 from user_account.models.user import User
 
 
@@ -17,7 +19,13 @@ class ResetToken(models.Model):
     """Model representing token given when issuing reset"""
 
     token = models.TextField(editable=False, max_length=64, primary_key=True)
-    user_uid = models.ForeignKey(to=User, related_name="user", on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=User,
+        related_name="user_fk_user_account",
+        on_delete=models.CASCADE,
+        db_constraint=False,
+        db_column="user_uid",
+    )
     active = models.BooleanField(editable=True, default=True)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False)
     expire_at = models.DateTimeField(auto_now_add=False, auto_now=False)
@@ -51,4 +59,3 @@ class ZaloToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=True)
     expire_at = models.DateTimeField()
-# Create your models here.
