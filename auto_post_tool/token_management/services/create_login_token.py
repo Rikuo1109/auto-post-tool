@@ -8,7 +8,8 @@ from token_management.models.token import LoginToken
 class CreateLoginTokenService:
     """Get the value of JWT token then turn it into a LoginToken Object in the DB"""
 
-    def create_token(self, uid=str):
+    @staticmethod
+    def create_token(uid=str):
         """function to create a jwt token for logging in"""             
         access_token = jwt.encode(
             {"user_uid": uid, "exp": datetime.now() + timedelta(hours=int(settings.JWT_EXPIRED_TIME))},

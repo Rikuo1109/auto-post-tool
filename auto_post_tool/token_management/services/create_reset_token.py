@@ -8,7 +8,9 @@ from token_management.models.token import ResetToken
 class CreateResetTokenService:
     """Get the value of Reset token then turn it into a ResetToken Object in the DB"""
 
-    def create_reset_token(self, uid):
+    @staticmethod
+    def create_reset_token(uid):
+        """Generate token for reseting password"""
         random_token = "".join(
             random.choice(string.ascii_letters + string.digits)
             for i in range(int(settings.RESET_PASSWORD_TOKEN_LENGTH))
