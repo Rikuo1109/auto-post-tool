@@ -16,7 +16,7 @@ from ..services.data_validate import validate, validate_info, validate_password
 from router.authenticate import AuthBearer
 from token_management.models.token import LoginToken, ResetToken
 from token_management.services.create_login_token import CreateLoginTokenService
-from utils.exceptions import AuthenticationFailed, NotFound, ParseError
+from utils.exceptions import AuthenticationFailed, NotFound
 from utils.mail import MailSenderService
 
 
@@ -35,7 +35,7 @@ class UserController:
 
     @http_post("/register", response=UserResponse)
     def user_register(self, data: UserRegisterRequest):
-        data = validate(data)
+        validate(data)
         return User.objects.create_user(
             first_name=data.first_name, last_name=data.last_name, email=data.email, password=data.password
         )
@@ -46,7 +46,7 @@ class UserController:
 
     @http_post("/update/password", auth=AuthBearer())
     def change_password(self, request, data: UserChangePassword):
-        validate_password(data.password)
+        validate_password(data)
         user = request.user
         if data.current_password == data.new_password:
             raise AuthenticationFailed("New password is the same with current password")
@@ -96,6 +96,7 @@ class UserController:
                 raise NotFound("Reset Token not found")
             except User.DoesNotExist:
                 raise NotFound("User not found")
+            validate_password(data.password)
             user.set_password(data.password)
             user.save
             return True

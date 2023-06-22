@@ -51,5 +51,3 @@ class MailSenderService:
             use_tls=self.use_tls,
         )
         thread.run()
-
-        
