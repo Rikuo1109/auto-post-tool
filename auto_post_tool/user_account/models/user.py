@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 from typing import Any, Optional
 from uuid import uuid4
 
@@ -8,9 +7,6 @@ from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 from utils.exceptions.exceptions import AuthenticationFailed
-
-
-LOGGER = logging.getLogger("API")
 
 
 class UserManager(BaseUserManager):  # type: ignore

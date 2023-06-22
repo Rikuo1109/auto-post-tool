@@ -39,4 +39,6 @@ ERROR_MESSAGES = {
     "INVALID_USERNAME": "Invalid username",
     "INVALID_PASSWORD": "Invalid password",
     "DATA_MISSING": "Missing data input",
+    # Facebook errors
+    "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
 }

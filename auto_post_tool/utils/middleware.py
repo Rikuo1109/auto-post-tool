@@ -29,8 +29,6 @@ class ResponseHandleWiddleware:
         LOGGER.debug(f"> Running time: {ended_time - started_time}")
         LOGGER.debug(f"> Number of queries: {ended_connection_queries - started_connection_queries}")
 
-        return response
-
         if response.status_code == 401:
             return JsonResponse(
                 {

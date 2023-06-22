@@ -43,6 +43,7 @@ class UserController:
 
     @http_get("/get/me", response=UserResponse, auth=AuthBearer())
     def get_me(self, request):
+        print(request.user)
         return request.user
 
     @http_post("/update/password", auth=AuthBearer())
