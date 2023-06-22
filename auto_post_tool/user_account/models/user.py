@@ -7,6 +7,8 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
+from utils.exceptions.exceptions import AuthenticationFailed
+
 
 LOGGER = logging.getLogger("API")
 
@@ -38,7 +40,14 @@ class UserManager(BaseUserManager):  # type: ignore
         user.save(using=self._db)
         print("Superuser created successfully.")
         return user
-
+    
+    @staticmethod
+    def get_user_by_email(email):
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise AuthenticationFailed(message_code = "USER_NOT_FOUND")
+        return user
 
 class User(AbstractUser):
     objects = UserManager()

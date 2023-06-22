@@ -21,4 +21,22 @@ ERROR_MESSAGES = {
     "INVALID_FIELD": "Invalid field",
     # Validation errors
     "INVALID_ARGUMENTS": "Invalid arguments",
+    # Check user existence
+    "USER_NOT_FOUND": "User not found",
+    # Check login information
+    "INVALID_PASSWORD": "Invalid Password",
+    # Check new password and old password
+    "SAME_PASSWORD": "New password is the same with current password",
+    # Check login token
+    "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
+    "INVALID_LOGIN_TOKEN":"Invalid login token",
+    # Check reset token
+    "RESET_TOKEN_NOT_FOUND": "Reset token not found",
+    # Check data format
+    "INVALID_FIRST_NAME": "Invalid first name",
+    "INVALID_LAST_NAME": "Invalid last name",
+    "INVALID_EMAIL": "Invalid email",
+    "INVALID_USERNAME": "Invalid username",
+    "INVALID_PASSWORD": "Invalid password",
+    "DATA_MISSING": "Missing data input",
 }

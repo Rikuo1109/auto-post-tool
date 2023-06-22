@@ -1,46 +1,56 @@
 import re
+from utils.exceptions.exceptions import ValidationError
 
-from django.core.exceptions import ValidationError
+NAME = r"^[^\d]+$"
+PASSWORD = r"[a-zA-Z0-9]{8,}$"
+EMAIL = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
 
 
-# TODO: Data này kiểu gì???
+def validate_name(first_name, last_name):
+    if not re.match(NAME, first_name):
+        raise ValidationError(message_code="INVALID_FIRST_NAME")
+    if not re.match(NAME, last_name):
+        raise ValidationError(message_code="INVALID_LAST_NAME")
 
 
-def validate(data: dict):
+def validate_password(password):
+    if not re.match(PASSWORD, password):
+        raise ValidationError(message_code="INVALID_PASSWORD")
+
+
+def validate_username(username):
+    if len(username) < 8:
+        raise ValidationError(message_code="INVALID_USERNAME")
+
+
+def validate_email(email):
+    if not re.match(EMAIL, email):
+        raise ValidationError(message_code="INVALID_EMAIL")
+
+
+def validate_register(data:dict):
     # TODO: Tạo regex cho contanst
 
     try:
-        if not re.match(r"^[^\d]+$", data.first_name):
-            raise ValidationError("Invalid Firstname")
-        if not re.match(r"^[^\d]+$", data.last_name):
-            raise ValidationError("Invalid Lastname")
-        if not re.match(r"[a-zA-Z0-9]{8,}$", data.password):
-            raise ValidationError("Invalid Password")
-        if len(data.username) < 8:
-            raise ValidationError("Invalid Username")
-        if not re.match(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$", data.email):
-            raise ValidationError("Invalid email format")
-    except KeyError:
-        raise ValidationError("Missing key in data input")
+        validate_name(data.get("first_name"), data.get("last_name"))
+        validate_password(data.get("password"))
+        validate_username(data.get("username"))
+        validate_email(data.get("email"))
+    except NameError:
+        raise ValidationError(message_code="DATA_MISSING")
 
 
-def validate_password(data: dict):
+def validate_update_password(data:dict):
     try:
-        if not re.match(r"[a-zA-Z0-9]{8,}$", data.current_password):
-            raise ValidationError("Invalid Password")
-        if not re.match(r"[a-zA-Z0-9]{8,}$", data.new_pasword):
-            raise ValidationError("Invalid Password")
-    except KeyError:
-        raise ValidationError("Missing key in data input")
+        validate_password(data.get("current_password"))
+        validate_password(data.get("new_password"))
+    except NameError:
+        raise ValidationError(message_code="DATA_MISSING")
 
 
-def validate_info(data: dict):
+def validate_update_info(data:dict):
     try:
-        if not re.match(r"^[^\d]+$", data.first_name):
-            raise ValidationError("Invalid Firstname")
-        if not re.match(r"^[^\d]+$", data.last_name):
-            raise ValidationError("Invalid Lastname")
-        if len(data.username) < 8:
-            raise ValidationError("Invalid Username")
-    except KeyError:
-        raise ValidationError("Missing key in data input")
+        validate_name(data.get("first_name"), data.get("last_name"))
+        validate_username(data.get("username"))
+    except NameError:
+        raise ValidationError(message_code="DATA_MISSING")
