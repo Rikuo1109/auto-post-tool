@@ -7,11 +7,14 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):  # type: ignore
-    def create_user(self, email: str, password: Optional[str]) -> Any:
+    def create_user(self, first_name: str, last_name: str, email: str, username:str, password: str) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
 
         user: Any = User(email=self.normalize_email(email))
+        user.first_name = first_name
+        user.last_name = last_name
+        user.username = username
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -33,16 +36,15 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS: list[str] = []
 
-    username = None
 
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
+    username = models.CharField(max_length=255, null=True)
 
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
-    full_name = models.CharField(max_length=255, blank=True, null=True)
 
-    # Other information
-    country = models.CharField(max_length=255, blank=True, null=True)
+    facebook_access_token = models.TextField(null = True)
+    zalo_access_token = models.TextField(null = True)
 
     # Required by django admin
     is_superuser = models.BooleanField(default=False)
