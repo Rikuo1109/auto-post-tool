@@ -20,3 +20,12 @@ class SortingPostEnum(TextChoices):
             cls.POST_TYPE: [SortTypeEnum.ASC, SortTypeEnum.DESC],
             cls.CREATED_AT: [SortTypeEnum.ASC, SortTypeEnum.DESC],
         }.get(field, [])
+
+
+@unique
+class SortingPostManagementEnum(TextChoices):
+    TIME_POSTING = "time_posting"
+
+    @classmethod
+    def valid_sort_types(cls, field):
+        return {cls.TIME_POSTING: [SortTypeEnum.ASC, SortTypeEnum.DESC]}.get(field, [])

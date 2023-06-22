@@ -6,7 +6,7 @@ from ninja import FilterSchema, ModelSchema, Schema
 
 from ..models import Post, PostManagement
 from pydantic import Field, validator
-from utils.enums.common import SortingPostEnum, SortTypeEnum
+from utils.enums.common import SortingPostEnum, SortingPostManagementEnum, SortTypeEnum
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
 
@@ -49,13 +49,13 @@ UPDATE FIELDS
 
 
 class PostDetailUpdateRequest(Schema):
-    content: str = None
-    post_type: PostTypeEnum
+    content: Optional[str]
+    post_type: Optional[PostTypeEnum]
 
 
 class PostManagementUpdateRequest(Schema):
     platform: Optional[PostManagementPlatFormEnum]
-    auto_publish: Optional[bool]
+    auto_publish: Optional[bool] = None
     time_posting: Optional[datetime]
 
 
@@ -75,9 +75,11 @@ class PostFiltersRequest(FilterSchema):
 
 
 class PostManagementFiltersRequest(FilterSchema):
+    sorting: Optional[SortingPostManagementEnum] = SortingPostManagementEnum.TIME_POSTING
+    sort_type: Optional[SortTypeEnum] = SortTypeEnum.ASC
     page: Optional[int] = 1
     platform: Optional[PostManagementPlatFormEnum]
-    auto_publish: Optional[bool]
+    auto_publish: Optional[bool] = None
     status: Optional[PostManagementStatusEnum]
     min_time: Optional[datetime] = None
     max_time: Optional[datetime] = None

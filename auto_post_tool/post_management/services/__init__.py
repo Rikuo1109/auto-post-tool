@@ -29,7 +29,7 @@ class Service:
         return post
 
     def update_post_details(self, uid, data):
-        post = UpdatePostDetailService(uid=uid, content=data.content, post_type=data.post_type)()
+        post = UpdatePostDetailService(uid=uid, data=data.dict())()
         post.save()
 
     def get_matrix_post(self, filters):
@@ -50,7 +50,7 @@ class Service:
         PostManagement.objects.bulk_create(post_managements)
 
     def update_post_management(self, uid, data):
-        post_management = UpdatePostManagementService(uid=uid, management=data)()
+        post_management = UpdatePostManagementService(uid=uid, management=data.dict())()
         post_management.full_clean()
         post_management.save()
 

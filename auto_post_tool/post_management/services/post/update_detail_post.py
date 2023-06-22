@@ -4,10 +4,10 @@ from post_management.models.post import Post, PostManagement
 
 
 class UpdatePostDetailService:
-    def __init__(self, uid, content=None, post_type=None):
+    def __init__(self, uid, data):
         self.uid = uid
-        self.content = content
-        self.post_type = post_type
+        self.content = data.get("content", None)
+        self.post_type = data.get("post_type", None)
 
     @transaction.atomic
     def __call__(self):
