@@ -1,32 +1,23 @@
-from datetime import datetime, timedelta
-
-from django.conf import settings
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes
-
+from datetime import datetime
 
 from ninja_extra import api_controller, http_get, http_post
 
 from ..models.user import User
 from ..schema.payload import (
     UserChangePassword,
+    UserEmailRequest,
     UserLoginRequest,
+    UserPasswordResetRequest,
     UserRegisterRequest,
     UserUpdateInfoRequest,
-    UserEmailRequest,
-    UserPasswordResetRequest,
 )
 from ..schema.response import UserResponse
+from ..services.data_validate import validate, validate_info, validate_password
 from router.authenticate import AuthBearer
-from utils.exceptions import *
-
-from token_management.services.create_login_token import CreateLoginTokenService
-from token_management.services.create_reset_token import CreateResetTokenService
-
 from token_management.models.token import LoginToken, ResetToken
-from ..services.data_validate import validate, validate_password, validate_info
+from token_management.services.create_login_token import CreateLoginTokenService
+from utils.exceptions import AuthenticationFailed, NotFound, ParseError
+from utils.mail import MailSenderService
 
 
 @api_controller(prefix_or_class="users", tags=["User"])
@@ -46,11 +37,7 @@ class UserController:
     def user_register(self, data: UserRegisterRequest):
         data = validate(data)
         return User.objects.create_user(
-            first_name=data.first_name,
-            last_name=data.last_name,
-            email=data.email,
-            username=data.username,
-            password=data.password,
+            first_name=data.first_name, last_name=data.last_name, email=data.email, password=data.password
         )
 
     @http_get("/get/me", response=UserResponse, auth=AuthBearer())
@@ -96,27 +83,19 @@ class UserController:
             user = User.objects.get(email=data.email)
         except User.DoesNotExist:
             raise ValueError("User not found")
-
-        reset_token = CreateResetTokenService().create_reset_token(user)
-        reset_link = f"{settings.FRONTEND_HOST_URL}/reset-password/{reset_token}/{reset_token}"
-
-        send_mail(
-            subject="Reset your password",
-            message=f"Please click on the link to reset your password: {reset_link}",
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[data.email],
-        )
+        MailSenderService(user).send_reset_password_email()
         return True
 
-    # Reset password
     @http_post("/reset-password")
     def password_reset_confirm(self, data: UserPasswordResetRequest):
-        try:
-            reset_token = ResetToken.objects.get(token=data.token)
-            user = reset_token.user
-        except ResetToken.DoesNotExist:
-            raise NotFound("Reset Token not found")
-        except User.DoesNotExist:
-            raise NotFound("User not found")
-        user.setpassword(data.password)
-        return True
+        if data.token:
+            try:
+                reset_token = ResetToken.objects.get(token=data.token)
+                user = reset_token.user
+            except ResetToken.DoesNotExist:
+                raise NotFound("Reset Token not found")
+            except User.DoesNotExist:
+                raise NotFound("User not found")
+            user.set_password(data.password)
+            user.save
+            return True

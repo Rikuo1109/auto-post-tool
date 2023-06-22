@@ -82,7 +82,7 @@ class EmailThread(threading.Thread):
 
             connection.send_messages(self.messages)
 
-    def run(self) -> None:
+    def run(self):
         if self.send_type == "normal":
             self.send_normal()
         else:

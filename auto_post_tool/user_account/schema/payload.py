@@ -24,6 +24,7 @@ class UserUpdateInfoRequest(Schema):
     last_name: str
     username: str
 
+
 class UserEmailRequest(Schema):
     email: str
 

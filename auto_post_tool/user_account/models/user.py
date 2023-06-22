@@ -43,10 +43,9 @@ class User(AbstractUser):
     uid = models.UUIDField(unique=True, default=uuid4)
 
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
-    username = models.CharField(max_length=255, null=True, blank=True)
+    username = models.CharField(max_length=255, null=True, blank=True, default=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
-
     # Required by django admin
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)

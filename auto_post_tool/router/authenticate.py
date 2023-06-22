@@ -47,12 +47,10 @@ class AuthBearer(HttpBearer):
                     print(access_token)
                     user_uid = access_token.get("user_uid")
                     exp_time = access_token.get("exp")
-
                     if user_uid == None or exp_time == None:
                         raise ParseError("Invalid Login Token")
                     if datetime.fromtimestamp(exp_time) < datetime.now():
                         raise AuthenticationFailed("Login token has expired")
-
                     request.user = User.objects.get(uid=user_uid)
                     return token
                 except jwt.exceptions.DecodeError:
