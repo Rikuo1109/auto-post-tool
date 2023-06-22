@@ -11,7 +11,7 @@ class GetMatrixPostService:
     def __init__(self, user, filters):
         self.user = user
         self.filters = filters
-        self.default_page_size = int(os.environ.get("DEFAULT_PAGE_SIZE"))
+        self.default_page_size = int(str(os.environ.get("DEFAULT_PAGE_SIZE")))
 
     def filter_paging(self, posts):
         offset = (self.filters.page - 1) * self.default_page_size

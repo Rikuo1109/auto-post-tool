@@ -12,4 +12,7 @@ class CreatePostService:
 
     @transaction.atomic
     def __call__(self):
-        return Post(user=self.user, content=self.content, post_type=self.post_type)
+        post = Post(user=self.user, content=self.content, post_type=self.post_type)
+        post.save()
+
+        return post

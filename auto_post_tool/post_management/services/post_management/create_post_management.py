@@ -1,16 +1,10 @@
-from django.db import transaction
-
 from post_management.models.post import Post, PostManagement
 
 
 class CreatePostManagementService:
-    def __init__(self, uid, managements=[]):
-        print(uid)
-        self.post = uid if isinstance(uid, Post) else Post.objects.get(uid=uid)
-        if not isinstance(managements, list):
-            self.managements = list(managements)
-        else:
-            self.managements = managements
+    def __init__(self, post: Post, managements=[]):
+        self.post = post
+        self.managements = managements if isinstance(managements, list) else [managements]
 
     def __call__(self):
         return [

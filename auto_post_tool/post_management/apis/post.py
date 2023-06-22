@@ -1,7 +1,7 @@
 from typing import List
 
 from ninja import Query
-from ninja_extra import api_controller, http_get, http_post
+from ninja_extra import api_controller, http_get, http_post, paginate
 
 from ..schema.payload import (
     PostDetailUpdateRequest,
@@ -14,6 +14,7 @@ from ..schema.payload import (
 from ..schema.response import PostDetailResponse, PostManagementResponse
 from ..services import Service
 from router.authenticate import AuthBearer
+from router.paginate import Pagination
 
 
 @api_controller(prefix_or_class="/posts", tags=["Post"], auth=AuthBearer())
@@ -24,6 +25,7 @@ class PostController:
         service.create_post(data=payload)
 
     @http_get("/matrix", response=List[PostDetailResponse])
+    @paginate(Pagination)
     def get_view_all(self, request, filters: PostFiltersRequest = Query(...)):
         service = Service(request=request)
         return service.get_matrix_post(filters=filters)
@@ -47,7 +49,7 @@ class PostController:
         service = Service(request=request)
         service.remove_post(uid=uid)
 
-    @http_post("/{uid}/create")
+    @http_post("/{uid}/create/post-management")
     def create_post_management(self, request, uid, payload: PostManagementCreateRequest):
         """
         create one|multy post management from a post
@@ -66,6 +68,7 @@ class PostController:
         return service.remove_post_management(uid=uid)
 
     @http_get("/post-management/matrix", response=List[PostManagementResponse])
+    @paginate(Pagination)
     def get_matrix_post_management(self, request, filters: PostManagementFiltersRequest = Query(...)):
         service = Service(request=request)
         return service.get_matrix_post_management(filters=filters)
@@ -86,7 +89,7 @@ class PostController:
         @uid: post-management uid
         """
         service = Service(request=request)
-        service.test_facebook_api(uid=uid)
+        service.test_facebook_api()
 
     @http_post("/test-facebook-api")
     def test_facebook_api(self, request):

@@ -6,6 +6,7 @@ from django.utils import timezone
 
 from user_account.models.user import User
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
+from utils.exceptions import NotFound
 
 
 def validate_platform(value):
@@ -29,6 +30,13 @@ class Post(models.Model):
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, validators=[validate_post_type])
     created_at = models.DateTimeField(auto_now_add=True)
+
+    @staticmethod
+    def get_by_uid(uid: str):
+        try:
+            return Post.objects.get(uid=uid)
+        except Post.DoesNotExist as e:
+            raise NotFound(message_code="POST_NOT_FOUND") from e
 
 
 class PostManagement(models.Model):

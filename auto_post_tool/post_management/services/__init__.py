@@ -21,22 +21,26 @@ class Service:
 
     @transaction.atomic
     def create_post(self, data):
-        post = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)()
-        post_managements = CreatePostManagementService(uid=post, managements=data.managements)()
-        post.save()
+        service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
+        post = service()
+
+        post_managements = CreatePostManagementService(post=post, managements=data.managements)()
+        # TODO: Chơi đồ ít thoy
         [post_management.full_clean() for post_management in post_managements]
         PostManagement.objects.bulk_create(post_managements)
         return post
 
     def update_post_details(self, uid, data):
-        post = UpdatePostDetailService(uid=uid, data=data.dict())()
-        post.save()
+        service = UpdatePostDetailService(uid=uid, data=data)
+        return service()
 
     def get_matrix_post(self, filters):
-        return GetMatrixPostService(user=self.request.user, filters=filters)()
+        service = GetMatrixPostService(user=self.request.user, filters=filters)
+        return service()
 
     def get_matrix_post_management(self, filters):
-        return GetMatrixPostManagementService(user=self.request.user, filters=filters)()
+        service = GetMatrixPostManagementService(user=self.request.user, filters=filters)
+        return service()
 
     def get_detail_post(self, uid):
         return GetDetailPostService(uid)()
@@ -45,7 +49,8 @@ class Service:
         return RemovePostService(uid)()
 
     def create_post_management(self, uid, data):
-        post_managements = CreatePostManagementService(uid=uid, managements=data.managements)()
+        post = Post.get_by_uid(uid=uid)
+        post_managements = CreatePostManagementService(post=post, managements=data.managements)()
         [post_management.full_clean() for post_management in post_managements]
         PostManagement.objects.bulk_create(post_managements)
 

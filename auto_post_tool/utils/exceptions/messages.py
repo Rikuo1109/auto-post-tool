@@ -21,4 +21,6 @@ ERROR_MESSAGES = {
     "INVALID_FIELD": "Invalid field",
     # Validation errors
     "INVALID_ARGUMENTS": "Invalid arguments",
+    # Post errors
+    "POST_NOT_FOUND": "Post not found",
 }
