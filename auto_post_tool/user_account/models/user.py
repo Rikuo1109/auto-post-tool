@@ -37,13 +37,6 @@ class UserManager(BaseUserManager):  # type: ignore
         print("Superuser created successfully.")
         return user
     
-    @staticmethod
-    def get_user_by_email(email):
-        try:
-            user = User.objects.get(email=email)
-        except User.DoesNotExist:
-            raise AuthenticationFailed(message_code = "USER_NOT_FOUND")
-        return user
 
 class User(AbstractUser):
     objects = UserManager()
@@ -66,3 +59,12 @@ class User(AbstractUser):
 
     last_login = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+
+
+    def get_user_by_email(self, email):
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise AuthenticationFailed(message_code = "USER_NOT_FOUND")
+        return user

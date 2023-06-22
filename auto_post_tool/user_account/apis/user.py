@@ -2,7 +2,7 @@ from datetime import datetime
 
 from ninja_extra import api_controller, http_get, http_post
 
-from ..models.user import User, UserManager
+from ..models.user import User
 from ..schema.payload import (
     UserChangePassword,
     UserEmailRequest,
@@ -12,7 +12,7 @@ from ..schema.payload import (
     UserUpdateInfoRequest,
 )
 from ..schema.response import UserResponse
-from ..services.data_validate import validate_register, validate_update_info, validate_update_password
+from ..services.data_validate import validate_register, validate_update_info, validate_update_password, validate_password
 from router.authenticate import AuthBearer
 from token_management.models.token import LoginToken, ResetToken
 from token_management.services.create_login_token import CreateLoginTokenService
@@ -24,10 +24,10 @@ from utils.mail import MailSenderService
 class UserController:
     @http_post("/login")
     def user_login(self, data: UserLoginRequest):
-        user = UserManager.get_user_by_email(data.email)
+        user = User().get_user_by_email(data.email)
         if not user.check_password(data.password):
             raise AuthenticationFailed(message_code="INVALID_PASSWORD")
-        access_token = CreateLoginTokenService().create_login_token(str(user.uid))
+        access_token = CreateLoginTokenService().create_token(user)
         return {"access_token": access_token}
 
     @http_post("/register", response=UserResponse)
@@ -78,10 +78,11 @@ class UserController:
         token.active = False
         token.deactivate_at = datetime.now()
         token.save()
+        return True
 
     @http_post("/forgot-password")
     def forgot_password(self, data: UserEmailRequest):
-        user = UserManager.get_user_by_email(data.email)
+        user = User().get_user_by_email(data.email)
         MailSenderService(user).send_reset_password_email()
         return True
 
@@ -94,7 +95,8 @@ class UserController:
         except ResetToken.DoesNotExist:
             raise NotFound(message_code="RESET_TOKEN_NOT_FOUND")
         user = reset_token.user
-        validate_update_password(data)
+        print(user.username)
+        validate_password(data.password)
         user.set_password(data.password)
-        user.save
+        user.save()
         return True

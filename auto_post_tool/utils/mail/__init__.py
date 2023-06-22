@@ -35,7 +35,6 @@ class MailSenderService:
 
     def send_reset_password_email(self):
         subject, body, to = EmailPayload.reset_password(user=self.recipients)
-
         # Create new thread for sending email
         thread = EmailThread(
             subject=subject,
