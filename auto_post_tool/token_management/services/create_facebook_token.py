@@ -1,7 +1,6 @@
 from datetime import timedelta
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
-from utils.exceptions.exceptions import AuthenticationFailed
 
 class FacebookTokenService:
     """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB"""
