@@ -28,3 +28,6 @@ django-tinymce==3.6.1
 
 # Facebook
 python-facebook-api==0.15.0
+
+#Encoding
+passlib==1.7.4

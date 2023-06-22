@@ -1,4 +1,4 @@
-from .token import LoginToken, ResetToken, ThirdPartyToken
+from .token import LoginToken, ResetToken, FacebookToken, ZaloToken
 
 
-__all__ = ["LoginToken", "ResetToken", "ThirdPartyToken"]
+__all__ = ["LoginToken", "ResetToken", "FacebookToken", "ZaloToken"]
