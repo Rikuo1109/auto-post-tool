@@ -1,8 +1,0 @@
-on: push
-name: Slack Notification Demo
-jobs:
-    slackNotification:
-        name: Slack Notification
-        runs-on: ubuntu-latest
-        run:
-            curl -X POST --data-urlencode "payload={\"text\": \"Hello\"}" https://hooks.slack.com/services/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
