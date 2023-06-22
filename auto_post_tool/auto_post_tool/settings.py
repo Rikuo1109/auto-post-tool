@@ -231,7 +231,12 @@ FRONTEND_HOST_URL = os.environ.get("BASE_UI_URL")
 
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
 
-JWT_EXPIRED_TIME = os.environ.get("JWT_EXPIRED_TIME")
+JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
 
-RESET_TOKEN_LENGTH = os.environ.get("RESET_TOKEN_LENGTH")
-RESET_TOKEN_TTL = os.environ.get("RESET_TOKEN_TTL")
+RESET_TOKEN_LENGTH = int(str(os.environ.get("RESET_TOKEN_LENGTH")))
+
+FACEBOOK_API_APP_ID = os.environ.get("FACEBOOK_API_APP_ID")
+FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
+FACEBOOK_API_VERSION = os.environ.get("FACEBOOK_API_VERSION")
+
+REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
