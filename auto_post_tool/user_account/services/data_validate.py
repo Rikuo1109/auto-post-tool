@@ -1,8 +1,14 @@
 import re
+
 from django.core.exceptions import ValidationError
 
 
+# TODO: Data này kiểu gì???
+
+
 def validate(data: dict):
+    # TODO: Tạo regex cho contanst
+
     try:
         if not re.match(r"^[^\d]+$", data.first_name):
             raise ValidationError("Invalid Firstname")

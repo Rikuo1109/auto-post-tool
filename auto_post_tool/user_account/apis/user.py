@@ -26,8 +26,8 @@ class UserController:
     def user_login(self, data: UserLoginRequest):
         try:
             user = User.objects.get(email=data.email)
-        except User.DoesNotExist:
-            raise AuthenticationFailed("User not found")
+        except User.DoesNotExist as e:
+            raise AuthenticationFailed("User not found") from e
         if not user.check_password(data.password):
             raise AuthenticationFailed("Invalid email or password")
         access_token = CreateLoginTokenService().create_login_token(str(user.uid))
@@ -35,9 +35,13 @@ class UserController:
 
     @http_post("/register", response=UserResponse)
     def user_register(self, data: UserRegisterRequest):
-        validate(data)
+        validate(data=data.dict())
         return User.objects.create_user(
-            first_name=data.first_name, last_name=data.last_name, email=data.email, password=data.password
+            username=data.username,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            email=data.email,
+            password=data.password,
         )
 
     @http_get("/get/me", response=UserResponse, auth=AuthBearer())
@@ -46,7 +50,7 @@ class UserController:
 
     @http_post("/update/password", auth=AuthBearer())
     def change_password(self, request, data: UserChangePassword):
-        validate_password(data)
+        validate_password(data=data.dict())
         user = request.user
         if data.current_password == data.new_password:
             raise AuthenticationFailed("New password is the same with current password")
@@ -58,7 +62,7 @@ class UserController:
 
     @http_post("/update/info", auth=AuthBearer())
     def update_info(self, request, data: UserUpdateInfoRequest):
-        validate_info(data)
+        validate_info(data=data.dict())
         user = request.user
         user.first_name = data.first_name
         user.last_name = data.last_name
@@ -71,18 +75,18 @@ class UserController:
         access_token = request.headers.get("authorization", "").split("Bearer ")[-1]
         try:
             token = LoginToken.objects.get(token=access_token)
-            token.active = False
-            token.deactivate_at = datetime.now()
-            token.save()
-        except LoginToken.DoesNotExist:
-            raise NotFound("Login token not found")
+        except LoginToken.DoesNotExist as e:
+            raise NotFound("Login token not found") from e
+        token.active = False
+        token.deactivate_at = datetime.now()
+        token.save()
 
     @http_post("/forgot-password")
     def forgot_password(self, data: UserEmailRequest):
         try:
             user = User.objects.get(email=data.email)
-        except User.DoesNotExist:
-            raise ValueError("User not found")
+        except User.DoesNotExist as e:
+            raise ValueError("User not found") from e
         MailSenderService(user).send_reset_password_email()
         return True
 
@@ -92,10 +96,11 @@ class UserController:
             try:
                 reset_token = ResetToken.objects.get(token=data.token)
                 user = reset_token.user
-            except ResetToken.DoesNotExist:
-                raise NotFound("Reset Token not found")
-            except User.DoesNotExist:
-                raise NotFound("User not found")
+            except ResetToken.DoesNotExist as e:
+                raise NotFound("Reset Token not found") from e
+            except User.DoesNotExist as e:
+                # TODO: Tại sao có cái này???
+                raise NotFound("User not found") from e
             validate_password(data.password)
             user.set_password(data.password)
             user.save

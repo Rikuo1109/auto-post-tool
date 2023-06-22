@@ -1,14 +1,16 @@
 # payload.py
 from datetime import datetime
+
 from django.conf import settings
 from django.template.loader import render_to_string
 
-BASE_MEDIA_HOST = settings.BASE_MEDIA_HOST
-BASE_UI_URL = settings.BASE_UI_URL
-
+from token_management.services.create_reset_token import CreateResetTokenService
 from user_account.models import User
 from user_account.services.create_reset_link import CreateResetLinkService
-from token_management.services.create_reset_token import CreateResetTokenService
+
+
+BASE_MEDIA_HOST = settings.BASE_MEDIA_HOST
+BASE_UI_URL = settings.BASE_UI_URL
 
 
 class EmailPayload:

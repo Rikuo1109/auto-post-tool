@@ -12,7 +12,14 @@ LOGGER = logging.getLogger("API")
 
 
 class UserManager(BaseUserManager):  # type: ignore
-    def create_user(self, first_name: str, last_name: str, email: str, username: str, password: str) -> Any:
+    def create_user(
+        self,
+        email: str,
+        password: str,
+        username: Optional[str] = None,
+        first_name: Optional[str] = None,
+        last_name: Optional[str] = None,
+    ) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
         user: Any = User(email=self.normalize_email(email))
@@ -23,7 +30,7 @@ class UserManager(BaseUserManager):  # type: ignore
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email: str, password: Optional[str]) -> Any:
+    def create_superuser(self, email: str, password: str) -> Any:
         user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
@@ -43,7 +50,7 @@ class User(AbstractUser):
     uid = models.UUIDField(unique=True, default=uuid4)
 
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
-    username = models.CharField(max_length=255, null=True, blank=True, default=True)
+    username = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
     # Required by django admin
