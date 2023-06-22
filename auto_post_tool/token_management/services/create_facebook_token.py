@@ -17,10 +17,10 @@ class FacebookTokenService:
     @staticmethod
     def create_token(exp: int, user: User, token: str):
         """function to create a facebook token"""
-        enc_token = pbkdf2_sha256.hash(token)
-        fb_token = FacebookToken.objects.create(user=user, long_live_token=enc_token)
-        fb_token.expire_at = fb_token.created_at + timedelta(seconds=exp)
-        fb_token.save()
+        encrypted_token = pbkdf2_sha256.hash(token)
+        facebook_token = FacebookToken.objects.create(user=user, long_live_token=encrypted_token)
+        facebook_token.expire_at = facebook_token.created_at + timedelta(seconds=exp)
+        facebook_token.save()
 
     @staticmethod
     def get_long_lived_access_token(user_id, short_lived_access_token):

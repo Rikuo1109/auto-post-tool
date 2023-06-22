@@ -31,3 +31,5 @@ python-facebook-api==0.15.0
 
 #Encoding
 passlib==1.7.4
+
+requests==2.31.0
