@@ -23,4 +23,6 @@ ERROR_MESSAGES = {
     "INVALID_ARGUMENTS": "Invalid arguments",
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
+    # Expired
+    "TOKEN_EXPIRED": "Token expired",
 }

@@ -2,9 +2,10 @@ import random
 import string
 
 from django.conf import settings
-
+from datetime import datetime
 from token_management.models.token import ResetToken
 from user_account.models import User
+from utils.exceptions import ValidationError, PermissionDenied
 
 
 class CreateResetTokenService:
@@ -28,3 +29,15 @@ class CreateResetTokenService:
         reset_token = ResetToken(token=random_token, user=user)
         reset_token.save()
         return random_token
+
+    @staticmethod
+    def deactivate(token: ResetToken):
+        if not token.active:
+            raise ValidationError("VALIDATION_ERROR")
+        token.active = False
+        token.save()
+
+    @staticmethod
+    def check_expired(token: ResetToken):
+        return token.expire_at > datetime.now()
+

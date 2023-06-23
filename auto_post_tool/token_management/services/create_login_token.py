@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from django.conf import settings
 from token_management.models.token import LoginToken
 from user_account.models.user import User
+from utils.exceptions import ValidationError
 
 class CreateLoginTokenService:
     """Get the value of JWT token then turn it into a LoginToken Object in the DB"""
@@ -23,3 +24,14 @@ class CreateLoginTokenService:
         jwt_token = LoginToken(user=user, token=access_token)
         jwt_token.save()
         return access_token
+    
+    @staticmethod
+    def deactivate(token: str):
+        try:
+            login_token = LoginToken.objects.get(token=token)
+        except LoginToken.MultipleObjectsReturned as exc:
+            raise ValidationError(message_code="CONTACT_ADMIN_FOR_SUPPORT") from exc
+        
+        login_token.active = False
+        login_token.deactivated_at = datetime.now()
+        login_token.save()
