@@ -1,5 +1,5 @@
 from .post import Post, PostManagement
-from .image import Image
+from .image import ImagePost
 
 
-__all__ = ["Post", "PostManagement", "Image"]
+__all__ = ["Post", "PostManagement", "ImagePost"]

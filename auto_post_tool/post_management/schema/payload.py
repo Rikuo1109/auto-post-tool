@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from ninja import FilterSchema, ModelSchema, Schema
 
-from ..models import Post, PostManagement
+from ..models import Post, PostManagement, ImagePost
 from pydantic import Field
 from utils.enums.common import SortingPostManagementEnum, SortTypeEnum
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
@@ -26,6 +26,12 @@ class PostManagementPayloadSchema(ModelSchema):
         model_fields = ["platform", "auto_publish", "time_posting"]
 
 
+class ImagePostPayloadSchema(ModelSchema):
+    class Config:
+        model = ImagePost
+        model_fields = ["source"]
+
+
 """
 CREATE FIELDS
 """
@@ -36,9 +42,15 @@ class PostManagementCreateRequest(Schema):
 
 
 class PostRequest(Schema):
-    content: str
+    content: Optional[str]
     post_type: PostTypeEnum
     managements: List[PostManagementPayloadSchema]
+
+
+class PostWithImageRequest(Schema):
+    content: Optional[str]
+    post_type: PostTypeEnum
+    image: Optional[ImagePostPayloadSchema]
 
 
 """

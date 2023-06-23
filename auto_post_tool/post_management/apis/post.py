@@ -11,6 +11,7 @@ from ..schema.payload import (
     PostManagementFiltersRequest,
     PostManagementUpdateRequest,
     PostRequest,
+    PostWithImageRequest,
 )
 from ..schema.response import PostContentResponseSchema, PostDetailResponse, PostManagementResponse
 from ..services import Service
@@ -25,6 +26,11 @@ class PostController:
     def create_new_post(self, request, payload: PostRequest):
         service = Service(request=request)
         service.create_post(data=payload)
+
+    @http_post("/create-image")
+    def create_new_post_with_image(self, request, payload: PostWithImageRequest):
+        service = Service(request=request)
+        service.create_post_with_image(data=payload)
 
     @http_get("/matrix", response=List[PostDetailResponse])
     @paginate(Pagination)
