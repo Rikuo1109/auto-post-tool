@@ -1,19 +1,13 @@
 from __future__ import annotations
 
-import logging
 from typing import Any, Optional
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 
-LOGGER = logging.getLogger("API")
-
-
 class UserManager(BaseUserManager):  # type: ignore
-    def create_user(
-        self, email: str, username: str, first_name: str = None, last_name: str = None, password: str = None
-    ) -> Any:
+    def create_user(self, first_name: str, last_name: str, email: str, username: str, password: str) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
 

@@ -8,6 +8,7 @@ from user_account.models.user import User
 
 class AuthBearer(HttpBearer):
     def authenticate(self, request, token):
+        print(token)
         try:
             # Decode the access token
             access_token = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])

@@ -18,3 +18,13 @@ django-ninja==0.21.0
 django-ninja-extra==0.18.7
 django-ninja-jwt==5.2.5
 orjson==3.8.10
+
+django-tinymce==3.6.1
+
+# Facebook
+python-facebook-api==0.15.0
+
+#Encoding
+passlib==1.7.4
+
+requests==2.31.0

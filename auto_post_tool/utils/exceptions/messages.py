@@ -25,4 +25,6 @@ ERROR_MESSAGES = {
     "POST_NOT_FOUND": "Post not found",
     # Post management errors
     "POST_MANAGEMENT_NOT_FOUND": "Post management not found",
+    # Facebook errors
+    "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
 }
