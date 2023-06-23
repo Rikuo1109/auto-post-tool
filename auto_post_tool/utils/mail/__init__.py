@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 
 from .payload import EmailPayload
 from .utils import EmailThread

@@ -4,7 +4,7 @@ from datetime import datetime
 from django.conf import settings
 from django.template.loader import render_to_string
 
-from token_management.services.create_reset_token import CreateResetTokenService
+from token_management.services.create_reset_token import ResetTokenService
 from user_account.models import User
 from user_account.services.create_reset_link import CreateResetLinkService
 
@@ -22,7 +22,7 @@ class EmailPayload:
         email = user.email
         subject = "Đặt lại mật khẩu"
 
-        reset_token = CreateResetTokenService().create_reset_token(user)
+        reset_token = ResetTokenService().create_reset_token(user)
         reset_link = CreateResetLinkService().create_reset_link(reset_token)
 
         context = {

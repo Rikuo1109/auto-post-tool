@@ -33,5 +33,12 @@ class UserPasswordResetRequest(Schema):
     token: str
     password: str
 
+
 class UserFacebookTokenRequest(Schema):
     token: str
+
+
+class UserZaloTokenRequest(Schema):
+    access_token: str
+    refresh_token: str
+    exp: int
