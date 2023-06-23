@@ -10,14 +10,22 @@ from ..schema.payload import (
     UserPasswordResetRequest,
     UserRegisterRequest,
     UserUpdateInfoRequest,
+    UserFacebookTokenRequest,
 )
-from ..schema.response import UserResponse
-from ..services.data_validate import validate_register, validate_update_info, validate_update_password, validate_password
+from ..schema.response import UserResponse, UserResponse2
+from ..services.data_validate import (
+    validate_register,
+    validate_update_info,
+    validate_update_password,
+    validate_password,
+)
 from router.authenticate import AuthBearer
-from token_management.models.token import LoginToken, ResetToken
+from token_management.models.token import LoginToken, ResetToken, FacebookToken, ZaloToken
 from token_management.services.create_login_token import CreateLoginTokenService
-from utils.exceptions import AuthenticationFailed, NotFound, ParseError
+from token_management.services.create_reset_token import CreateResetTokenService
+from utils.exceptions import AuthenticationFailed, NotFound, ParseError, ValidationError
 from utils.mail import MailSenderService
+from token_management.services.create_facebook_token import FacebookTokenService
 
 
 @api_controller(prefix_or_class="users", tags=["User"])
@@ -41,9 +49,9 @@ class UserController:
             password=data.password,
         )
 
-    @http_get("/get/me", response=UserResponse, auth=AuthBearer())
+    @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
     def get_me(self, request):
-        print(request.user)
+        request.user.facebook_status = FacebookToken().get_facebook_by_user(request.user)
         return request.user
 
     @http_post("/update/password", auth=AuthBearer())
@@ -71,13 +79,7 @@ class UserController:
     @http_post("/logout", auth=AuthBearer())
     def logout(self, request):
         access_token = request.headers.get("authorization", "").split("Bearer ")[-1]
-        try:
-            token = LoginToken.objects.get(token=access_token)
-        except LoginToken.DoesNotExist:
-            raise NotFound(message_code="LOGIN_TOKEN_NOT_FOUND")
-        token.active = False
-        token.deactivate_at = datetime.now()
-        token.save()
+        CreateLoginTokenService.deactivate(access_token)
         return True
 
     @http_post("/forgot-password")
@@ -95,8 +97,18 @@ class UserController:
         except ResetToken.DoesNotExist:
             raise NotFound(message_code="RESET_TOKEN_NOT_FOUND")
         user = reset_token.user
-        print(user.username)
+        if not CreateResetTokenService.check_expired(reset_token):
+            raise ValidationError(message_code="RESET_TOKEN_EXPIRED")
         validate_password(data.password)
         user.set_password(data.password)
         user.save()
+        CreateResetTokenService.deactivate(reset_token)
         return True
+
+    @http_post("/connect/facebook-token", auth=AuthBearer())
+    def connect_facebook_token(self, request, data: UserFacebookTokenRequest):
+        FacebookTokenService.get_long_lived_access_token(request.user, data.token)
+
+    @http_post("/disconnect/facebook-token", auth=AuthBearer())
+    def disconnect_facebook_token(self, request):
+        FacebookTokenService.deactivate(request.user)

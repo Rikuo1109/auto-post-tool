@@ -32,3 +32,6 @@ class UserEmailRequest(Schema):
 class UserPasswordResetRequest(Schema):
     token: str
     password: str
+
+class UserFacebookTokenRequest(Schema):
+    token: str
