@@ -45,9 +45,7 @@ class FacebookTokenService:
         if response.status_code == 200:
             response_data = response.json()
             FacebookTokenService.create_token(
-                exp=response_data.get("expires_in"),
-                user=user,
-                token=response_data.get("access_token")
+                exp=response_data.get("expires_in"), user=user, token=response_data.get("access_token")
             )
         else:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
@@ -57,5 +55,9 @@ class FacebookTokenService:
         FacebookToken.objects.filter(user=user, active=True).update(active=False)
 
     @staticmethod
-    def check_facebook_token(user: User):
+    def check_exist_facebook_token(user: User):
         return FacebookToken.objects.filter(user=user, active=True).exists()
+
+    @staticmethod
+    def check_valid_facebook_token(token: FacebookToken):
+        return token.expire_at < datetime.now() and token.active

@@ -6,7 +6,7 @@ from token_management.models.token import LoginToken
 from user_account.models.user import User
 from utils.exceptions import NotFound
 
-class CreateLoginTokenService:
+class LoginTokenService:
     """Get the value of JWT token then turn it into a LoginToken Object in the DB"""
 
     @staticmethod
@@ -20,7 +20,7 @@ class CreateLoginTokenService:
     @staticmethod
     def create_token(user: User):
         """function to create a jwt token for logging in"""
-        access_token = CreateLoginTokenService.generator_token(uid=str(user.uid))
+        access_token = LoginTokenService.generator_token(uid=str(user.uid))
         jwt_token = LoginToken(user=user, token=access_token)
         jwt_token.save()
         return access_token
