@@ -1,4 +1,13 @@
 from django.contrib import admin
 
+from .models import Post, PostManagement
 
-# Register your models here.
+
+@admin.register(PostManagement)
+class PostManagementAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(Post)
+class PostAdmin(admin.ModelAdmin):
+    pass
