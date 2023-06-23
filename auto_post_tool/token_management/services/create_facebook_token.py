@@ -23,7 +23,7 @@ class FacebookTokenService:
         facebook_token.save()
 
     @staticmethod
-    def get_long_lived_access_token(user_id, short_lived_access_token):
+    def get_long_lived_access_token(user: User, short_lived_access_token: str):
         """Generate long-live access token from short-live"""
         try:
             response = requests.post(
@@ -42,7 +42,7 @@ class FacebookTokenService:
 
         if response.status_code == 200:
             FacebookTokenService.create_token(
-                response.json().get("expires in"), user_id, response.json().get("access_token")
+                response.json().get("expires in"), user, response.json().get("access_token")
             )
         else:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
