@@ -23,10 +23,7 @@ Operation._log_action = _log_action  # type: ignore
 
 api.register_controllers(UserController)
 api.register_controllers(PostController)
-<<<<<<< HEAD
-=======
 api.register_controllers(ImageController)
->>>>>>> main
 
 api.add_exception_handler(Exception, exception_handler)  # type: ignore
 
