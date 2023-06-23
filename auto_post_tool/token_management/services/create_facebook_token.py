@@ -5,7 +5,7 @@ from django.conf import settings
 import requests
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
-from utils.exceptions import ValidationError, PermissionDenied
+from utils.exceptions import ValidationError, PermissionDenied, AuthenticationFailed
 from user_account.models.user import User
 
 FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
@@ -19,14 +19,14 @@ class FacebookTokenService:
         """function to create a facebook token in the DB"""
         encrypted_token = pbkdf2_sha256.hash(token)
         facebook_token = FacebookToken.objects.create(user=user, long_live_token=encrypted_token)
-        facebook_token.expire_at = datetime.now() + timedelta(seconds=exp)
+        facebook_token.expire_at = datetime.now() + timedelta(sec=exp)
         facebook_token.save()
 
     @staticmethod
     def get_long_lived_access_token(user: User, short_lived_access_token: str):
         """Generate long-live access token from short-live"""
         if FacebookToken.objects.filter(user=user, active=True).exists():
-            raise PermissionDenied("PERMISSION_DENIED")
+            raise PermissionDenied(message_code="PERMISSION_DENIED")
         try:
             response = requests.post(
                 FACEBOOK_ACCESS_TOKEN_URL,
@@ -43,27 +43,19 @@ class FacebookTokenService:
             raise TimeoutError("Request timed out") from exc
 
         if response.status_code == 200:
+            response_data = response.json()
             FacebookTokenService.create_token(
-                exp=response.json().get("expires_in"),
+                exp=response_data.get("expires_in"),
                 user=user,
-                token=response.json().get("access_token")
+                token=response_data.get("access_token")
             )
         else:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
 
     @staticmethod
     def deactivate(user: User):
-        try:
-            facebook_token = FacebookToken.objects.get(user=user, active=True)
-        except FacebookToken.MultipleObjectsReturned as exc:
-            raise ValidationError(message_code="CONTACT_ADMIN_FOR_SUPPORT") from exc
-        facebook_token.active = False
-        facebook_token.save()
+        FacebookToken.objects.filter(user=user, active=True).update(active=False)
 
     @staticmethod
-    def get_facebook_by_user(user: User):
-        try:
-            FacebookToken.objects.get(user=user, active=True)
-        except FacebookToken.DoesNotExist:
-            return False
-        return True
+    def check_facebook_token(user: User):
+        return FacebookToken.objects.filter(user=user, active=True).exists()

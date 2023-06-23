@@ -32,12 +32,12 @@ class CreateResetTokenService:
 
     @staticmethod
     def deactivate(token: ResetToken):
-        if not token.active:
+        if not CreateResetTokenService.check_valid(token=token):
             raise ValidationError("VALIDATION_ERROR")
         token.active = False
         token.save()
 
     @staticmethod
-    def check_expired(token: ResetToken):
-        return token.expire_at > datetime.now()
+    def check_valid(token: ResetToken):
+        return token.expire_at > datetime.now() and token.active
 
