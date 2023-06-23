@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "user_account",
     "post_management",
     "token_management",
+    "image_management",
 ]
 
 

@@ -26,7 +26,9 @@ def validate_post_type(value):
 
 class Post(models.Model):
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE)
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, related_name="post_fk_user", db_constraint=False, db_column="user_id"
+    )
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, validators=[validate_post_type])
     created_at = models.DateTimeField(auto_now_add=True)
@@ -48,7 +50,13 @@ class Post(models.Model):
 
 class PostManagement(models.Model):
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
-    post = models.ForeignKey(to=Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        to=Post,
+        on_delete=models.CASCADE,
+        related_name="post_management_fk_post",
+        db_constraint=False,
+        db_column="post_id",
+    )
     platform = models.CharField(
         max_length=16, choices=PostManagementPlatFormEnum.choices, validators=[validate_platform]
     )
