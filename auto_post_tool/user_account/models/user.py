@@ -7,7 +7,9 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):  # type: ignore
-    def create_user(self, first_name: str, last_name: str, email: str, username: str, password: str) -> Any:
+    def create_user(
+        self, email: str, password: str, first_name: str = "admin", last_name: str = "admin", username: str = "admin"
+    ) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
 

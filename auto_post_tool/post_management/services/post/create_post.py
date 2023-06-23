@@ -4,11 +4,10 @@ from post_management.models.post import Post
 
 
 class CreatePostService:
-    def __init__(self, user, content, post_type, managements=[]):
+    def __init__(self, user, content, post_type):
         self.user = user
         self.content = content
         self.post_type = post_type
-        self.managements = managements
 
     @transaction.atomic
     def __call__(self):

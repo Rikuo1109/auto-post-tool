@@ -1,6 +1,8 @@
 from django.db import transaction
 from django.db.models import Q
 
+from ninja import File
+
 from .post.create_post import CreatePostService
 from .post.get_detail_post import GetDetailPostService
 from .post.remove_post import RemovePostService
@@ -10,7 +12,6 @@ from .post_management.remove_post_management import RemovePostManagementService
 from .post_management.update_post_management import UpdatePostManagementService
 from post_management.models.post import Post, PostManagement
 from utils.enums.common import SortTypeEnum
-from post_management.models.image import ImagePost
 
 
 class Service:
@@ -24,14 +25,6 @@ class Service:
         service = CreatePostManagementService(post=post, managements=data.managements)
         post_managements = service()
         PostManagement.objects.bulk_create(post_managements)
-        return post
-
-    @transaction.atomic
-    def create_post_with_image(self, data):
-        service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
-        post = service()
-        service = ImagePost(post=post, source=data.image)
-        image = service()
         return post
 
     def update_post_details(self, uid, data):
