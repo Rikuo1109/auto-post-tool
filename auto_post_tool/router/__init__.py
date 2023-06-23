@@ -8,6 +8,7 @@ from .logger import _log_action
 from .renderer import Renderer
 from user_account.apis import UserController
 from post_management.apis import PostController
+from image_management.apis import ImageController
 
 
 api = NinjaExtraAPI(
@@ -22,6 +23,10 @@ Operation._log_action = _log_action  # type: ignore
 
 api.register_controllers(UserController)
 api.register_controllers(PostController)
+<<<<<<< HEAD
+=======
+api.register_controllers(ImageController)
+>>>>>>> main
 
 api.add_exception_handler(Exception, exception_handler)  # type: ignore
 

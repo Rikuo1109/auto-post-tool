@@ -1,17 +1,15 @@
 from __future__ import annotations
 
-import logging
 from typing import Any, Optional
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
 
-LOGGER = logging.getLogger("API")
-
-
 class UserManager(BaseUserManager):  # type: ignore
-    def create_user(self, first_name: str, last_name: str, email: str, username:str, password: str) -> Any:
+    def create_user(
+        self, email: str, password: str, first_name: str = "admin", last_name: str = "admin", username: str = "admin"
+    ) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
 
@@ -40,15 +38,14 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS: list[str] = []
 
-
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
     username = models.CharField(max_length=255, null=True)
 
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
 
-    facebook_access_token = models.TextField(null = True)
-    zalo_access_token = models.TextField(null = True)
+    facebook_access_token = models.TextField(null=True)
+    zalo_access_token = models.TextField(null=True)
 
     # Required by django admin
     is_superuser = models.BooleanField(default=False)

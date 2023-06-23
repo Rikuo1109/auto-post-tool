@@ -6,6 +6,7 @@ from token_management.models.token import LoginToken
 from user_account.models.user import User
 from utils.exceptions import NotFound
 
+
 class LoginTokenService:
     """Get the value of JWT token then turn it into a LoginToken Object in the DB"""
 
@@ -24,14 +25,14 @@ class LoginTokenService:
         jwt_token = LoginToken(user=user, token=access_token)
         jwt_token.save()
         return access_token
-    
+
     @staticmethod
     def deactivate(token: str):
         try:
             login_token = LoginToken.objects.get(token=token)
         except LoginToken.DoesNotExist as exc:
             raise NotFound(message_code="LOGIN_TOKEN_NOT_FOUND")
-        
+
         login_token.deactivated_at = datetime.now()
         login_token.active = False
         login_token.save()

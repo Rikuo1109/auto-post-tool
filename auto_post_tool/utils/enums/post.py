@@ -8,8 +8,8 @@ class PostTypeEnum(TextChoices):
     ARTICLE = "ARTICLE", "article"
     COMMERCIAL = "COMMERCIAL", "commercial"
     MARKETING = "MARKETING", "marketing"
-    EDUCATION = "EDUCATION", "education"
     RECRUITMENT = "RECRUITMENT", "recruitment"
+    EDUCATION = "EDUCATION", "education"
 
 
 @unique

@@ -43,7 +43,7 @@ VERSION = os.environ.get("VERSION", "1.0")
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG") == "True"
+DEBUG = "True"
 
 ALLOWED_HOSTS = json.loads(str(os.environ.get("ALLOWED_HOSTS")))
 
@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "user_account",
     "post_management",
     "token_management",
+    "image_management",
 ]
 
 
