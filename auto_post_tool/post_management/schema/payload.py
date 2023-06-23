@@ -4,7 +4,7 @@ from typing import List, Optional
 from ninja import FilterSchema, ModelSchema, Schema
 
 from ..models import Post, PostManagement
-from pydantic import Field
+from ninja import Field
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
 
@@ -52,7 +52,7 @@ class PostDetailUpdateRequest(Schema):
 
 class PostManagementUpdateRequest(Schema):
     platform: Optional[PostManagementPlatFormEnum]
-    auto_publish: Optional[bool] = None
+    auto_publish: Optional[bool]
     time_posting: Optional[datetime]
 
 

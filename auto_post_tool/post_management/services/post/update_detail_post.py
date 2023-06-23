@@ -1,21 +1,14 @@
 from django.db import transaction
 
-from post_management.models.post import Post
-
 
 class UpdatePostDetailService:
-    def __init__(self, uid, data):
-        self.uid = uid
+    def __init__(self, post, data):
+        self.post = post
+        self.post.__dict__.update({key: value for key, value in data.dict().items() if value is not None})
         self.content = data.content
         self.post_type = data.post_type
 
     @transaction.atomic
     def __call__(self):
-        # TODO: Nếu uid sai thì sao?
-        post = Post.get_by_uid(uid=self.uid)
-        if self.content is not None:
-            post.content = self.content
-        if self.post_type is not None:
-            post.post_type = self.post_type
-        post.save()
-        return post
+        self.post.save()
+        return self.post

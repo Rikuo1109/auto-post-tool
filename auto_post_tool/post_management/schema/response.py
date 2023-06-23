@@ -1,11 +1,7 @@
-from datetime import datetime
-from typing import List, Optional
-
-from ninja import ModelSchema, Schema
+from ninja import ModelSchema
 
 from ..models import Post, PostManagement
-from pydantic import Field
-from utils.enums.post import PostTypeEnum
+from ninja import Field
 
 
 class PostContentResponseSchema(ModelSchema):
@@ -21,7 +17,6 @@ class PostManagementResponseSchema(ModelSchema):
 
 
 class PostDetailResponse(PostContentResponseSchema):
-    # managements: List[PostManagementResponseSchema]
     pass
 
 
@@ -29,4 +24,3 @@ class PostManagementResponse(ModelSchema):
     class Config:
         model = PostManagement
         model_fields = ["uid", "platform", "auto_publish", "time_posting"]
-        model_fields_optional = []

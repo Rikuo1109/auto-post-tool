@@ -10,11 +10,12 @@ class CreatePostManagementService:
 
     @transaction.atomic
     def __call__(self):
-        post_managements = [
-            PostManagement(
+        post_managements = []
+        for _ in self.managements:
+            post_management = PostManagement(
                 post=self.post, platform=_.platform, auto_publish=_.auto_publish, time_posting=_.time_posting
             )
-            for _ in self.managements
-        ]
-        [_.full_clean() for _ in post_managements]
+            post_management.full_clean()
+            post_managements.append(post_management)
+        PostManagement.objects.bulk_create(post_managements)
         return post_managements

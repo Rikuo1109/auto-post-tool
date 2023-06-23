@@ -1,7 +1,4 @@
 from django.db import transaction
-from django.db.models import Q
-
-from ninja import File
 
 from .post.create_post import CreatePostService
 from .post.get_detail_post import GetDetailPostService
@@ -11,7 +8,7 @@ from .post_management.create_post_management import CreatePostManagementService
 from .post_management.remove_post_management import RemovePostManagementService
 from .post_management.update_post_management import UpdatePostManagementService
 from post_management.models.post import Post, PostManagement
-from utils.enums.common import SortTypeEnum
+from utils.functions.filters import FiltersUtils
 
 
 class Service:
@@ -19,49 +16,46 @@ class Service:
         self.request = request
 
     @transaction.atomic
-    def create_post(self, data):
+    def create_post_service(self, data):
         service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
         post = service()
         service = CreatePostManagementService(post=post, managements=data.managements)
-        post_managements = service()
-        PostManagement.objects.bulk_create(post_managements)
+        service()
         return post
 
-    def update_post_details(self, uid, data):
-        service = UpdatePostDetailService(uid=uid, data=data)
+    def update_post_details_service(self, uid, data):
+        post = Post.get_by_uid(uid=uid)
+        service = UpdatePostDetailService(post=post, data=data)
         return service()
 
-    def get_matrix_post(self, filters, sorting, sort_type):
-        sort_field = f"{'' if sort_type is SortTypeEnum.ASC else '-'}{sorting}"
-        return Post.objects.filter(Q(user__exact=self.request.user) & filters.get_filter_expression()).order_by(
-            sort_field
-        )
+    def get_matrix_post_service(self, filters, sorting, sort_type):
+        sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
+        return Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
 
-    def get_matrix_post_management(self, filters, sorting, sort_type):
-        sort_field = f"{'' if sort_type is SortTypeEnum.ASC else '-'}{sorting}"
+    def get_matrix_post_management_service(self, filters, sorting, sort_type):
+        sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
         posts = Post.filter_by_user(user=self.request.user)
-        return PostManagement.objects.filter(Q(post__in=posts) & filters.get_filter_expression()).order_by(sort_field)
+        return PostManagement.objects.filter(filters.get_filter_expression(), post__in=posts).order_by(sort_field)
 
-    def get_detail_post(self, uid):
+    def get_detail_post_service(self, uid):
         service = GetDetailPostService(uid)
         return service()
 
-    def remove_post(self, uid):
+    def remove_post_service(self, uid):
         service = RemovePostService(uid)
         service()
 
-    def create_post_management(self, uid, data):
+    def create_post_management_service(self, uid, data):
         post = Post.get_by_uid(uid=uid)
         service = CreatePostManagementService(post=post, managements=data.managements)
-        post_managements = service()
-        PostManagement.objects.bulk_create(post_managements)
+        service()
 
-    def update_post_management(self, uid, data):
-        service = UpdatePostManagementService(uid=uid, management=data)
-        post_management = service()
-        post_management.full_clean()
-        post_management.save()
+    def update_post_management_service(self, uid, data):
+        post_management = PostManagement.get_by_uid(uid=uid)
+        service = UpdatePostManagementService(post_management=post_management, management=data)
+        service()
 
-    def remove_post_management(self, uid):
-        service = RemovePostManagementService(uid=uid)
+    def remove_post_management_service(self, uid):
+        post_management = PostManagement.get_by_uid(uid=uid)
+        service = RemovePostManagementService(post_management=post_management)
         return service()
