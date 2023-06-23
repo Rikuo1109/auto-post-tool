@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import PostManagement, Post
+from .models import Post, PostManagement
 
 
 @admin.register(PostManagement)
