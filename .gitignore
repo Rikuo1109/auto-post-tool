@@ -18,3 +18,5 @@ Dockerfile
 **/migrations/00*
 
 media
+
+.python-version

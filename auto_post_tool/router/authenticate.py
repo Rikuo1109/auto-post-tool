@@ -38,5 +38,7 @@ class AuthBearer(HttpBearer):
         try:
             request.user = User.objects.get(uid=user_uid)
             return token
-        except User.DoesNotExist as exc:
-            raise NotFound("User not found") from exc
+        except jwt.exceptions.DecodeError:
+            return {"detail": "Invalid access token."}
+        except User.DoesNotExist:
+            return {"detail": "User does not exist."}
