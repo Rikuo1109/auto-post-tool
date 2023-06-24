@@ -39,7 +39,7 @@ class PostManagement(models.Model):
         db_column="post_id",
     )
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
-    time_posting = models.DateTimeField(auto_now_add=True)
+    time_posting = models.DateTimeField(auto_now_add=False)
     auto_publish = models.BooleanField(default=False)
     status = models.CharField(
         max_length=16, choices=PostManagementStatusEnum.choices, default=PostManagementStatusEnum.PENDING
@@ -65,3 +65,8 @@ class PostManagement(models.Model):
         if self.time_posting >= datetime.now():
             self.auto_publish = True
         return super().full_clean(exclude=["post", "status"], validate_unique=validate_unique)
+
+    def save(self, *args, **kwargs):
+        if self.time_posting is None:
+            self.time_posting = datetime.now()
+        super().save(*args, **kwargs)

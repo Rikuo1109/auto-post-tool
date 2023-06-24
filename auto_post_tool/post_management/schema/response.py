@@ -1,7 +1,9 @@
+from typing import List, Optional
+
 from ninja import ModelSchema
 
 from ..models import Post, PostManagement
-from ninja import Field
+from image_management.schema.response import ImagePostResponseSchema
 
 
 class PostContentResponseSchema(ModelSchema):
@@ -17,7 +19,7 @@ class PostManagementResponseSchema(ModelSchema):
 
 
 class PostDetailResponse(PostContentResponseSchema):
-    pass
+    images: Optional[List[ImagePostResponseSchema]]
 
 
 class PostManagementResponse(ModelSchema):

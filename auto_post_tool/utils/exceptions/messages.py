@@ -27,4 +27,5 @@ ERROR_MESSAGES = {
     "POST_MANAGEMENT_NOT_FOUND": "Post management not found",
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
+    "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
 }
