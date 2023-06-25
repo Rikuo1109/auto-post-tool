@@ -5,6 +5,7 @@ from passlib.hash import pbkdf2_sha256
 from token_management.models.token import ZaloToken
 from user_account.models.user import User
 from utils.exceptions import ValidationError, NotFound
+from utils.services.Zalo import ZaloService
 
 ZALO_ACCESS_TOKEN_URL = "https://oauth.zaloapp.com/v4/oa/access_token"
 
@@ -13,7 +14,10 @@ class ZaloTokenService:
     """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB"""
 
     @staticmethod
-    def call_access_token_from_oauth(user: User):
+    def call_access_token_from_oauth(user: User, oath_code: str):
+        """EXPECTED: oath_code returned from FE"""
+        if ZaloToken.objects.filter(user=user, active=True).exists():
+            ZaloTokenService.deactivate(user=user)
         response = requests.request(
             "POST",
             ZALO_ACCESS_TOKEN_URL,
@@ -21,7 +25,7 @@ class ZaloTokenService:
                 "secret_key": settings.ZALO_API_APP_SECRET,
                 "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
             },
-            data=f"app_id={settings.ZALO_API_APP_ID}&code=",
+            data=ZaloService.generate_access_oath_link(oath_code=oath_code),
         )
         if response.status_code == 200:
             response_data = response.json()
@@ -39,13 +43,13 @@ class ZaloTokenService:
         try:
             zalo_token = ZaloToken.objects.get(user=user, active=True)
         except ZaloToken.DoesNotExist as exc:
-            raise NotFound(message_code="USER_NOT_FOUND")
-        except ZaloToken.MultipleObjectsReturned as exc:
-            raise ValidationError(message_code="VALIDATION_ERROR")
+            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED")
         return zalo_token.refresh_token
 
     @staticmethod
     def call_access_token_from_refresh(user: User):
+        if ZaloToken.objects.filter(user=user, active=True).exists():
+            ZaloTokenService.deactivate(user=user)
         response = requests.request(
             "POST",
             ZALO_ACCESS_TOKEN_URL,
@@ -53,7 +57,7 @@ class ZaloTokenService:
                 "secret_key": settings.ZALO_API_APP_SECRET,
                 "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
             },
-            data=f"app_id={settings.ZALO_API_APP_ID}&grant_type=refresh_token&refresh_token={ZaloTokenService.get_refresh_token(user=user)}",
+            data=ZaloService.generate_access_fefresh_link(refresh_token=ZaloTokenService.get_refresh_token(user=user)),
         )
         if response.status_code == 200:
             response_data = response.json()

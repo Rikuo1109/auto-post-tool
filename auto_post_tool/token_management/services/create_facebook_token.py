@@ -19,12 +19,14 @@ class FacebookTokenService:
         """function to create a facebook token in the DB"""
         encrypted_token = pbkdf2_sha256.hash(token)
         facebook_token = FacebookToken.objects.create(user=user, long_live_token=encrypted_token)
-        facebook_token.expire_at = datetime.now() + timedelta(sec=exp)
+        facebook_token.expire_at = datetime.now() + timedelta(seconds=exp)
         facebook_token.save()
 
     @staticmethod
     def get_long_lived_access_token(user: User, short_lived_access_token: str):
-        """Generate long-live access token from short-live"""
+        """Generate long-live access token from short-live
+        Current logic: if token already exist, raise error
+        Suggest new logic: if exist, deactivate then call new short-live -> new long-live"""
         if FacebookToken.objects.filter(user=user, active=True).exists():
             raise PermissionDenied(message_code="PERMISSION_DENIED")
         try:

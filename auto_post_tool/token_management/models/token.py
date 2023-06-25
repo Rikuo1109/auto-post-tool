@@ -1,11 +1,9 @@
-from datetime import datetime, timedelta
+from datetime import timedelta, datetime
 from uuid import uuid4
-
 from django.conf import settings
 from django.db import models
 
 from user_account.models.user import User
-from utils.exceptions.exceptions import NotFound
 
 
 class LoginToken(models.Model):
@@ -55,13 +53,6 @@ class FacebookToken(models.Model):
     active = models.BooleanField(default=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=False, blank=False)
     expire_at = models.DateTimeField(null=True, blank=False)
-
-    def get_facebook_by_user(self, user):
-        try:
-            FacebookToken.objects.get(user=user, active=True)
-        except FacebookToken.DoesNotExist:
-            return False
-        return True
 
 
 class ZaloToken(models.Model):
