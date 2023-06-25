@@ -39,6 +39,4 @@ class UserFacebookTokenRequest(Schema):
 
 
 class UserZaloTokenRequest(Schema):
-    access_token: str
-    refresh_token: str
-    exp: int
+    oath_code: str

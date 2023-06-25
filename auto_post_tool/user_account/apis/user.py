@@ -9,14 +9,14 @@ from ..schema.payload import (
     UserPasswordResetRequest,
     UserRegisterRequest,
     UserUpdateInfoRequest,
-    UserZaloTokenRequest
+    UserZaloTokenRequest,
 )
 from ..schema.response import UserResponse, UserResponse2
 from ..services.data_validate import (
     validate_password,
     validate_register,
     validate_update_info,
-    validate_update_password
+    validate_update_password,
 )
 from router.authenticate import AuthBearer
 from token_management.models.token import ResetToken
@@ -53,7 +53,8 @@ class UserController:
 
     @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
     def get_me(self, request):
-        request.user.facebook_status = FacebookTokenService.check_facebook_token(user=request.user)
+        request.user.facebook_status = FacebookTokenService.check_exist_facebook_token(user=request.user)
+        request.user.zalo_status = ZaloTokenService.check_exist_zalo_token(user=request.user)
         return request.user
 
     @http_post("/update/password", auth=AuthBearer())
@@ -120,8 +121,8 @@ class UserController:
 
     @http_post("/connect/zalo-token", auth=AuthBearer())
     def connect_zalo_token(self, request, data: UserZaloTokenRequest):
-        pass
+        ZaloTokenService.call_access_token_from_oauth(request.user, data.oath_code)
 
     @http_post("/disconnect/zalo-token", auth=AuthBearer())
     def disconnect_zalo_token(self, request):
-        pass
+        ZaloTokenService.deactivate(request.user)
