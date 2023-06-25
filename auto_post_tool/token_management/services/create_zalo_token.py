@@ -43,6 +43,14 @@ class ZaloTokenService:
             raise ValidationError(message_code="INVALID_OAUTH_TOKEN")
 
     @staticmethod
+    def get_access_token(user: User):
+        try:
+            zalo_token = ZaloToken.objects.get(user=user, active=True)
+        except ZaloToken.DoesNotExist as exc:
+            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED")
+        return zalo_token.access_token
+
+    @staticmethod
     def get_refresh_token(user: User):
         try:
             zalo_token = ZaloToken.objects.get(user=user, active=True)
