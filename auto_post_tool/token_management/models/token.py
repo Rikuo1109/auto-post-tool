@@ -60,8 +60,7 @@ class ZaloToken(models.Model):
     First get new access & token
     When access expired, use refresh to create new access, active = False
     When access expire again, get new access & refresh
-
-    PROBLEM: ZALO ENTERPRISE ACCOUNT"""
+    """
 
     uid = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     user = models.ForeignKey(
