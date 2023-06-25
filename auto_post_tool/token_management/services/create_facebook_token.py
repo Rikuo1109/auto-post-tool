@@ -8,8 +8,6 @@ from token_management.models.token import FacebookToken
 from utils.exceptions import ValidationError, PermissionDenied, AuthenticationFailed
 from user_account.models.user import User
 
-FACEBOOK_ACCESS_TOKEN_URL = "https://graph.facebook.com/oauth/access_token"
-
 
 class FacebookTokenService:
     """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB"""
@@ -19,7 +17,7 @@ class FacebookTokenService:
         """function to create a facebook token in the DB"""
         encrypted_token = pbkdf2_sha256.hash(token)
         facebook_token = FacebookToken.objects.create(user=user, long_live_token=encrypted_token)
-        facebook_token.expire_at = datetime.now() + timedelta(sec=exp)
+        facebook_token.expire_at = datetime.now() + timedelta(seconds=exp)
         facebook_token.save()
 
     @staticmethod
@@ -31,7 +29,7 @@ class FacebookTokenService:
             raise PermissionDenied(message_code="PERMISSION_DENIED")
         try:
             response = requests.post(
-                FACEBOOK_ACCESS_TOKEN_URL,
+                settings.FACEBOOK_ACCESS_TOKEN_URL,
                 params={
                     "grant_type": "fb_exchange_token",
                     "client_id": settings.FACEBOOK_API_APP_ID,

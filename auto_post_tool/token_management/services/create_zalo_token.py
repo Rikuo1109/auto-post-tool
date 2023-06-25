@@ -7,20 +7,24 @@ from user_account.models.user import User
 from utils.exceptions import ValidationError, NotFound
 from utils.services.Zalo import ZaloService
 
-ZALO_ACCESS_TOKEN_URL = "https://oauth.zaloapp.com/v4/oa/access_token"
-
 
 class ZaloTokenService:
-    """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB"""
+    """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB
+    Flow:
+    1. get access from oath
+    2. check access: expire
+    3. get refresh
+    4. deactivate
+    5. get access from refresh"""
 
     @staticmethod
     def call_access_token_from_oauth(user: User, oath_code: str):
         """EXPECTED: oath_code returned from FE"""
-        if ZaloToken.objects.filter(user=user, active=True).exists():
+        if ZaloTokenService.check_exist_zalo_token(user=user):
             ZaloTokenService.deactivate(user=user)
         response = requests.request(
             "POST",
-            ZALO_ACCESS_TOKEN_URL,
+            settings.ZALO_ACCESS_TOKEN_URL,
             headers={
                 "secret_key": settings.ZALO_API_APP_SECRET,
                 "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
@@ -47,17 +51,17 @@ class ZaloTokenService:
         return zalo_token.refresh_token
 
     @staticmethod
-    def call_access_token_from_refresh(user: User):
-        if ZaloToken.objects.filter(user=user, active=True).exists():
+    def call_access_token_from_refresh(user: User, refresh_token: str):
+        if ZaloTokenService.check_exist_zalo_token(user=user):
             ZaloTokenService.deactivate(user=user)
         response = requests.request(
             "POST",
-            ZALO_ACCESS_TOKEN_URL,
+            settings.ZALO_ACCESS_TOKEN_URL,
             headers={
                 "secret_key": settings.ZALO_API_APP_SECRET,
                 "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
             },
-            data=ZaloService.generate_access_fefresh_link(refresh_token=ZaloTokenService.get_refresh_token(user=user)),
+            data=ZaloService.generate_access_fefresh_link(refresh_token=refresh_token),
         )
         if response.status_code == 200:
             response_data = response.json()
