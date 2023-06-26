@@ -29,7 +29,11 @@ class ZaloTokenService:
                 "secret_key": settings.ZALO_API_APP_SECRET,
                 "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
             },
-            data=ZaloService.generate_access_oath_link(oath_code=oath_code),
+            data=ZaloService(
+                app_id=settings.ZALO_API_APP_ID,
+                app_secret=settings.ZALO_API_APP_SECRET,
+                request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
+            ).generate_access_oath_link(oath_code=oath_code),
         )
         if response.status_code == 200:
             response_data = response.json()
@@ -66,8 +70,8 @@ class ZaloTokenService:
             "POST",
             settings.ZALO_ACCESS_TOKEN_URL,
             headers={
-                "secret_key": settings.ZALO_API_APP_SECRET,
-                "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
+                "secret_key": settings.ZALO_API_SECRET_KEY,
+                "Content-Type": settings.ZALO_API_REQUEST_CONTENT_TYPE,
             },
             data=ZaloService.generate_access_fefresh_link(refresh_token=refresh_token),
         )
@@ -88,7 +92,7 @@ class ZaloTokenService:
         encrypted_access_token = pbkdf2_sha256.hash(access_token)
         encrypted_refresh_token = pbkdf2_sha256.hash(refresh_token)
         zalo_token = ZaloToken(user=user, access_token=encrypted_access_token, refresh_token=encrypted_refresh_token)
-        zalo_token.expire_at = datetime.now() + timedelta(seconds=exp)
+        zalo_token.expire_at = datetime.now() + timedelta(seconds=int(exp))
         zalo_token.save()
 
     @staticmethod
