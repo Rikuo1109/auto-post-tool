@@ -1,11 +1,12 @@
-from datetime import timedelta, datetime
-import requests
+from datetime import datetime, timedelta
+
 from django.conf import settings
 
+import requests
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
-from utils.exceptions import ValidationError
 from user_account.models.user import User
+from utils.exceptions import ValidationError
 
 
 class FacebookTokenService:
@@ -56,4 +57,6 @@ class FacebookTokenService:
 
     @staticmethod
     def check_valid_facebook_token(token: FacebookToken):
+        if not token.expire_at:
+            return False
         return token.expire_at < datetime.now() and token.active
