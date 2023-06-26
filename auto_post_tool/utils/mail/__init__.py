@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
 
 from .payload import EmailPayload
 from .utils import EmailThread
@@ -32,3 +31,20 @@ class MailSenderService:
         self.use_tls = EMAIL_USE_TLS
         self.password = EMAIL_HOST_PASSWORD
         self.provider = EMAIL_HOST
+
+    def send_reset_password_email(self):
+        subject, body, to = EmailPayload.reset_password(user=self.recipients)
+        thread = EmailThread(
+            subject=subject,
+            body=body,
+            recipients=[to],
+            sender=self.sender,
+            messages=[],
+            auth_user=self.sender,
+            auth_password=self.password,
+            provider=self.provider,
+            port_number=self.port_number,
+            timeout=self.timeout,
+            use_tls=self.use_tls,
+        )
+        thread.run()

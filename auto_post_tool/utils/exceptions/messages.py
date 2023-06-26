@@ -25,21 +25,25 @@ ERROR_MESSAGES = {
     "USER_NOT_FOUND": "User not found",
     "EMAIL_HAS_BEEN_USED": "Email has been used",
     # Check login information
-    "INVALID_PASSWORD": "Invalid Password",
+    "INVALID_PASSWORD": "Password must contain at least 8 character and not contain any special character",
     # Check new password and old password
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
     "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
-    "RESET_TOKEN_NOT_FOUND": "Reset token not found",
-    "RESET_TOKEN_EXPIRED": "Reset token has expired",
+    "RESET_TOKEN_INVALID_OR_EXPIRED": "Reset token is invalid or expired",
     # Check data format
     "INVALID_FIRST_NAME": "Invalid first name",
     "INVALID_LAST_NAME": "Invalid last name",
     "INVALID_EMAIL": "Invalid email",
+<<<<<<< HEAD
     "INVALID_USERNAME": "Invalid username",
     "INVALID_PASSWORD": "Invalid password",
+=======
+    "INVALID_USERNAME": "Username must contain 8 characters",
+    "INVALID_EMAIL_PASSWORD": "Invalid email or password",
+>>>>>>> main
     "DATA_MISSING": "Missing data input",
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",

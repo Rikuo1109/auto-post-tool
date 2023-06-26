@@ -1,5 +1,6 @@
 import random
 import string
+from datetime import datetime
 
 from django.conf import settings
 from datetime import datetime
@@ -14,8 +15,7 @@ class ResetTokenService:
     @staticmethod
     def generator_token():
         return "".join(
-            random.choice(string.ascii_letters + string.digits)
-            for _ in range(int(settings.RESET_PASSWORD_TOKEN_LENGTH))
+            random.choice(string.ascii_letters + string.digits) for _ in range(settings.RESET_TOKEN_LENGTH)
         )
 
     @staticmethod

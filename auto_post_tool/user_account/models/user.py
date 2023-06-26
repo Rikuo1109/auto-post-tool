@@ -1,18 +1,25 @@
 from __future__ import annotations
 
 from typing import Any, Optional
+from uuid import uuid4
 
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
+from utils.exceptions.exceptions import NotFound
+
 
 class UserManager(BaseUserManager):  # type: ignore
     def create_user(
-        self, email: str, password: str, first_name: str = "admin", last_name: str = "admin", username: str = "admin"
+        self,
+        email: str,
+        password: str,
+        username: Optional[str] = None,
+        first_name: Optional[str] = None,
+        last_name: Optional[str] = None,
     ) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
-
         user: Any = User(email=self.normalize_email(email))
         user.first_name = first_name
         user.last_name = last_name
@@ -21,7 +28,7 @@ class UserManager(BaseUserManager):  # type: ignore
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email: str, password: Optional[str]) -> Any:
+    def create_superuser(self, email: str, password: str) -> Any:
         user = self.create_user(email, password)
         user.is_superuser = True
         user.is_staff = True
@@ -38,15 +45,12 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS: list[str] = []
 
-    email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
-    username = models.CharField(max_length=255, null=True)
+    uid = models.UUIDField(unique=True, default=uuid4, editable=False)
 
+    email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
+    username = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
-
-    facebook_access_token = models.TextField(null=True)
-    zalo_access_token = models.TextField(null=True)
-
     # Required by django admin
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -55,3 +59,11 @@ class User(AbstractUser):
 
     last_login = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now=False, auto_now_add=True)
+
+    @staticmethod
+    def get_user_by_email(email):
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise NotFound(message_code="USER_NOT_FOUND")
+        return user
