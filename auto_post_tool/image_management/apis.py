@@ -1,7 +1,5 @@
 from typing import List
 
-from django.shortcuts import render
-
 from ninja import File
 from ninja.files import UploadedFile
 from ninja_extra import api_controller, http_post
