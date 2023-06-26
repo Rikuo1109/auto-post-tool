@@ -24,7 +24,7 @@ from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
 from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_zalo_token import ZaloTokenService
-from utils.exceptions import AuthenticationFailed, NotFound, ParseError, ValidationError
+from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
 
 
@@ -86,15 +86,15 @@ class UserController:
     @http_post("/forgot-password")
     def forgot_password(self, data: UserEmailRequest):
         user = User.get_user_by_email(data.email)
-        MailSenderService(user=user).send_reset_password_email()
+        MailSenderService(recipients=[user]).send_reset_password_email()
         return True
 
     @http_post("/reset-password")
     def password_reset_confirm(self, data: UserPasswordResetRequest):
         try:
             reset_token = ResetToken.objects.get(token=data.token)
-        except ResetToken.DoesNotExist:
-            raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
+        except ResetToken.DoesNotExist as e:
+            raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
         validate_password(password=data.password)
