@@ -45,6 +45,8 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
 
+    uid = models.UUIDField(unique=True, default=uuid4)
+
     facebook_access_token = models.TextField(null=True)
     zalo_access_token = models.TextField(null=True)
 
