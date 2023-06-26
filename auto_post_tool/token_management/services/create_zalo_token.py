@@ -20,25 +20,16 @@ class ZaloTokenService:
     @staticmethod
     def call_access_token_from_oauth(user: User, oath_code: str):
         """EXPECTED: oath_code returned from FE"""
-        if ZaloTokenService.check_exist_zalo_token(user=user):
-            ZaloTokenService.deactivate(user=user)
-        response = requests.request(
-            "POST",
-            settings.ZALO_ACCESS_TOKEN_URL,
-            headers={
-                "secret_key": settings.ZALO_API_APP_SECRET,
-                "Content-Type": settings.ZALO_API_APP_REQUEST_CONTENT_TYPE,
-            },
-            data=ZaloService(
-                app_id=settings.ZALO_API_APP_ID,
-                app_secret=settings.ZALO_API_APP_SECRET,
-                request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
-            ).generate_access_oath_link(oath_code=oath_code),
-        )
+        ZaloTokenService.deactivate(user=user)
+        response = ZaloService(
+            app_id=settings.ZALO_API_APP_ID,
+            app_secret=settings.ZALO_API_APP_SECRET,
+            request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
+        ).get_request("authorization_code")
         if response.status_code == 200:
             response_data = response.json()
             ZaloTokenService.create_token(
-                exp=response_data.get("expires_in"),
+                exp=int(response_data.get("expires_in")),
                 user=user,
                 access_token=response_data.get("access_token"),
                 refresh_token=response_data.get("refresh_token"),
@@ -64,25 +55,16 @@ class ZaloTokenService:
 
     @staticmethod
     def call_access_token_from_refresh(user: User, refresh_token: str):
-        if ZaloTokenService.check_exist_zalo_token(user=user):
-            ZaloTokenService.deactivate(user=user)
-        response = requests.request(
-            "POST",
-            settings.ZALO_ACCESS_TOKEN_URL,
-            headers={
-                "secret_key": settings.ZALO_API_SECRET_KEY,
-                "Content-Type": settings.ZALO_API_REQUEST_CONTENT_TYPE,
-            },
-            data=ZaloService(
-                app_id=settings.ZALO_API_APP_ID,
-                app_secret=settings.ZALO_API_APP_SECRET,
-                request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
-            ).generate_access_fefresh_link(refresh_token=refresh_token),
-        )
+        ZaloTokenService.deactivate(user=user)
+        response = ZaloService(
+            app_id=settings.ZALO_API_APP_ID,
+            app_secret=settings.ZALO_API_APP_SECRET,
+            request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
+        ).get_request("refresh_token")
         if response.status_code == 200:
             response_data = response.json()
             ZaloTokenService.create_token(
-                exp=response_data.get("expires_in"),
+                exp=int(response_data.get("expires_in")),
                 user=user,
                 access_token=response_data.get("access_token"),
                 refresh_token=response_data.get("refresh_token"),
@@ -91,12 +73,12 @@ class ZaloTokenService:
             raise ValidationError(message_code="INVALID_ZALO_REFRESH_TOKEN")
 
     @staticmethod
-    def create_token(exp: str, user: User, access_token: str, refresh_token: str):
+    def create_token(exp: int, user: User, access_token: str, refresh_token: str):
         """function to create a facebook token"""
         encrypted_access_token = pbkdf2_sha256.hash(access_token)
         encrypted_refresh_token = pbkdf2_sha256.hash(refresh_token)
         zalo_token = ZaloToken(user=user, access_token=encrypted_access_token, refresh_token=encrypted_refresh_token)
-        zalo_token.expire_at = datetime.now() + timedelta(seconds=int(exp))
+        zalo_token.expire_at = datetime.now() + timedelta(seconds=exp)
         zalo_token.save()
 
     @staticmethod

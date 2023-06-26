@@ -1,11 +1,10 @@
 from datetime import timedelta, datetime
-
+import requests
 from django.conf import settings
 
-import requests
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
-from utils.exceptions import ValidationError, PermissionDenied
+from utils.exceptions import ValidationError
 from user_account.models.user import User
 
 
@@ -22,11 +21,8 @@ class FacebookTokenService:
 
     @staticmethod
     def get_long_lived_access_token(user: User, short_lived_access_token: str):
-        """Generate long-live access token from short-live
-        Current logic: if token already exist, raise error
-        Suggest new logic: if exist, deactivate then call new short-live -> new long-live"""
-        if FacebookToken.objects.filter(user=user, active=True).exists():
-            raise PermissionDenied(message_code="PERMISSION_DENIED")
+        """Generate long-live access token from short-live"""
+        FacebookTokenService.deactivate(user=user)
         try:
             response = requests.post(
                 settings.FACEBOOK_ACCESS_TOKEN_URL,
