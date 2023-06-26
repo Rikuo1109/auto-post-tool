@@ -44,7 +44,7 @@ class Service:
     def get_detail_post_service(self, uid):
         service = GetDetailPostService(uid)
         post = service()
-        post.managements = PostManagement.filter_by_post(post=post)[:10]
+        post.images = ImagePost.filter_by_post(post=post)
         return post
 
     def view_post_management_from_post_service(self, uid):

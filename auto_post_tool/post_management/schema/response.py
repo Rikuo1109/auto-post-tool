@@ -1,9 +1,10 @@
 from datetime import datetime
-from typing import Any, List, Optional
+from typing import List, Optional
 
-from ninja import ModelSchema, Schema
+from ninja import ModelSchema
 
 from ..models import Post, PostManagement
+from image_management.schema.response import ImagePostResponseSchema
 from utils.enums.post import PostManagementPlatFormEnum
 
 
@@ -24,7 +25,7 @@ class PostManagementResponseSchema(ModelSchema):
 
 
 class PostDetailResponse(PostContentResponseSchema):
-    pass
+    images: Optional[List[ImagePostResponseSchema]]
 
 
 class PostManagementResponse(ModelSchema):
