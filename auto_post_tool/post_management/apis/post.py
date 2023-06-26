@@ -66,6 +66,16 @@ class PostController:
         service = Service(request=request)
         service.create_post_management_service(uid=uid, data=payload)
 
+    @http_get("/{uid}/post-management", response=List[PostManagementResponse])
+    @paginate(Pagination)
+    def view_post_management(self, request, uid):
+        """
+        view all post management by a post
+        @uid: post uid
+        """
+        service = Service(request=request)
+        return service.view_post_management_from_post_service(uid=uid)
+
     @http_post("/post-management/{uid}/remove")
     def remove_post_management(self, request, uid):
         """

@@ -1,9 +1,10 @@
-from typing import List, Optional
+from datetime import datetime
+from typing import Any, List, Optional
 
-from ninja import ModelSchema
+from ninja import ModelSchema, Schema
 
 from ..models import Post, PostManagement
-from ninja import Field
+from utils.enums.post import PostManagementPlatFormEnum
 
 
 class PostContentResponseSchema(ModelSchema):
@@ -13,9 +14,13 @@ class PostContentResponseSchema(ModelSchema):
 
 
 class PostManagementResponseSchema(ModelSchema):
+    platform: PostManagementPlatFormEnum
+    auto_publish: bool
+    time_posting: datetime
+
     class Config:
         model = PostManagement
-        model_fields = ["uid", "post", "platform", "auto_publish", "time_posting"]
+        model_fields = ["uid"]
 
 
 class PostDetailResponse(PostContentResponseSchema):

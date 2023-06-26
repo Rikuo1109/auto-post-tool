@@ -3,7 +3,7 @@ from typing import List, Optional
 
 from ninja import FilterSchema, ModelSchema, Schema
 
-from ..models import Post, PostManagement
+from ..models import Post
 from ninja import Field
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
