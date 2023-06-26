@@ -25,7 +25,7 @@ class ZaloTokenService:
             app_id=settings.ZALO_API_APP_ID,
             app_secret=settings.ZALO_API_APP_SECRET,
             request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
-        ).get_request("authorization_code")
+        ).get_request("authorization_code", code=oath_code)
         if response.status_code == 200:
             response_data = response.json()
             ZaloTokenService.create_token(
@@ -60,7 +60,7 @@ class ZaloTokenService:
             app_id=settings.ZALO_API_APP_ID,
             app_secret=settings.ZALO_API_APP_SECRET,
             request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
-        ).get_request("refresh_token")
+        ).get_request("refresh_token", code=refresh_token)
         if response.status_code == 200:
             response_data = response.json()
             ZaloTokenService.create_token(

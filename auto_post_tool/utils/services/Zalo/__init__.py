@@ -27,7 +27,7 @@ class ZaloService(object):
             "POST",
             settings.ZALO_ACCESS_TOKEN_URL,
             headers={
-                "secret_key": settings.ZALO_API_SECRET_KEY,
+                "secret_key": settings.ZALO_API_APP_SECRET,
                 "Content-Type": settings.ZALO_API_REQUEST_CONTENT_TYPE,
             },
             data=self.generate_access_fefresh_data(refresh_token=code)
