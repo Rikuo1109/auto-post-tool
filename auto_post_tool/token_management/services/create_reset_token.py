@@ -36,4 +36,6 @@ class ResetTokenService:
 
     @staticmethod
     def check_valid(token: ResetToken):
+        if not token.expire_at:
+            return False
         return token.expire_at > datetime.now() and token.active
