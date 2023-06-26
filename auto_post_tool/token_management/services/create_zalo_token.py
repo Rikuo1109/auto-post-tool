@@ -21,11 +21,7 @@ class ZaloTokenService:
     def call_access_token_from_oauth(user: User, oath_code: str):
         """EXPECTED: oath_code returned from FE"""
         ZaloTokenService.deactivate(user=user)
-        response = ZaloService(
-            app_id=settings.ZALO_API_APP_ID,
-            app_secret=settings.ZALO_API_APP_SECRET,
-            request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
-        ).get_request("authorization_code", code=oath_code)
+        response = ZaloService().request_access_oath(oath_code=oath_code)
         if response.status_code == 200:
             response_data = response.json()
             ZaloTokenService.create_token(
@@ -42,7 +38,7 @@ class ZaloTokenService:
         try:
             zalo_token = ZaloToken.objects.get(user=user, active=True)
         except ZaloToken.DoesNotExist as exc:
-            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED")
+            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED") from exc
         return zalo_token.access_token
 
     @staticmethod
@@ -50,17 +46,13 @@ class ZaloTokenService:
         try:
             zalo_token = ZaloToken.objects.get(user=user, active=True)
         except ZaloToken.DoesNotExist as exc:
-            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED")
+            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED") from exc
         return zalo_token.refresh_token
 
     @staticmethod
     def call_access_token_from_refresh(user: User, refresh_token: str):
         ZaloTokenService.deactivate(user=user)
-        response = ZaloService(
-            app_id=settings.ZALO_API_APP_ID,
-            app_secret=settings.ZALO_API_APP_SECRET,
-            request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
-        ).get_request("refresh_token", code=refresh_token)
+        response = ZaloService().request_access_fefresh(refresh_token=refresh_token)
         if response.status_code == 200:
             response_data = response.json()
             ZaloTokenService.create_token(
