@@ -37,13 +37,8 @@ ERROR_MESSAGES = {
     "INVALID_FIRST_NAME": "Invalid first name",
     "INVALID_LAST_NAME": "Invalid last name",
     "INVALID_EMAIL": "Invalid email",
-<<<<<<< HEAD
-    "INVALID_USERNAME": "Invalid username",
-    "INVALID_PASSWORD": "Invalid password",
-=======
     "INVALID_USERNAME": "Username must contain 8 characters",
     "INVALID_EMAIL_PASSWORD": "Invalid email or password",
->>>>>>> main
     "DATA_MISSING": "Missing data input",
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
