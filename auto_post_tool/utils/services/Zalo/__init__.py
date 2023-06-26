@@ -8,7 +8,7 @@ class ZaloService(object):
         self.app_secret = settings.ZALO_API_APP_SECRET
         self.request_content_type = settings.ZALO_API_REQUEST_CONTENT_TYPE
 
-    def get_response(self, data):
+    def get_response(self, data: str):
         return requests.request(
             "POST",
             settings.ZALO_ACCESS_TOKEN_URL,
