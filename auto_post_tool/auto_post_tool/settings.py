@@ -228,8 +228,6 @@ STATICFILES_DIRS = ("/static/",)
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = os.environ.get("STATIC_URL")
 
-FRONTEND_HOST_URL = os.environ.get("BASE_UI_URL")
-
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
 
 JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
@@ -240,12 +238,16 @@ FACEBOOK_API_APP_ID = os.environ.get("FACEBOOK_API_APP_ID")
 FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
 FACEBOOK_API_VERSION = os.environ.get("FACEBOOK_API_VERSION")
 FACEBOOK_LONG_LIVE_TOKEN_LIFETIME = os.environ.get("FACEBOOK_LONG_LIVE_TOKEN_LIFETIME")
+FACEBOOK_ACCESS_TOKEN_URL = os.environ.get("FACEBOOK_ACCESS_TOKEN_URL")
 
 ZALO_API_APP_ID = os.environ.get("ZALO_API_APP_ID")
 ZALO_API_REQUEST_CONTENT_TYPE = os.environ.get("ZALO_API_REQUEST_CONTENT_TYPE")
-ZALO_API_SECRET_KEY = os.environ.get("ZALO_API_SECRET_KEY")
-FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
-
-ZALO_API_HOST = os.environ.get("ZALO_API_HOST")
+ZALO_API_APP_SECRET = os.environ.get("ZALO_API_APP_SECRET")
+ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
 
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
+
+
+NAME = os.environ.get("NAME")
+PASSWORD = os.environ.get("PASSWORD")
+EMAIL = os.environ.get("EMAIL")

@@ -1,4 +1,3 @@
-# payload.py
 from datetime import datetime
 
 from django.conf import settings
@@ -6,7 +5,6 @@ from django.template.loader import render_to_string
 
 from token_management.services.create_reset_token import ResetTokenService
 from user_account.models import User
-from user_account.services.create_reset_link import CreateResetLinkService
 
 
 BASE_MEDIA_HOST = settings.BASE_MEDIA_HOST
@@ -22,15 +20,14 @@ class EmailPayload:
         email = user.email
         subject = "Đặt lại mật khẩu"
 
-        reset_token = ResetTokenService().create_reset_token(user)
-        reset_link = CreateResetLinkService().create_reset_link(reset_token)
+        reset_token = ResetTokenService().create_reset_token(user=user)
 
         context = {
             "last_name": user.last_name,
             "first_name": user.first_name,
             "time": datetime.now,
-            "reset_link": reset_link,
-            "base_ui_url": settings.FRONTEND_HOST_URL,
+            "reset_link": f"{settings.BASE_UI_URL}/reset-password/{reset_token}",
+            "base_ui_url": BASE_UI_URL,
             "username": user.username,
         }
 

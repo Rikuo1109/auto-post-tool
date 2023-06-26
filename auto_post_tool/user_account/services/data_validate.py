@@ -1,9 +1,10 @@
 import re
 from utils.exceptions.exceptions import ValidationError
+from django.conf import settings
 
-NAME = r"^[^\d]+$"
-PASSWORD = r"[a-zA-Z0-9]{8,}$"
-EMAIL = r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+NAME = settings.NAME
+PASSWORD = settings.PASSWORD
+EMAIL = settings.EMAIL
 
 
 def validate_name(first_name, last_name):
@@ -28,29 +29,17 @@ def validate_email(email):
         raise ValidationError(message_code="INVALID_EMAIL")
 
 
-def validate_register(data:dict):
-    # TODO: Tạo regex cho contanst
-
-    try:
-        validate_name(data.get("first_name"), data.get("last_name"))
-        validate_password(data.get("password"))
-        validate_username(data.get("username"))
-        validate_email(data.get("email"))
-    except NameError:
-        raise ValidationError(message_code="DATA_MISSING")
+def validate_register(data: dict):
+    validate_name(data.get("first_name"), data.get("last_name"))
+    validate_password(password=data.get("password"))
+    validate_username(username=data.get("username"))
+    validate_email(email=data.get("email"))
 
 
-def validate_update_password(data:dict):
-    try:
-        validate_password(data.get("current_password"))
-        validate_password(data.get("new_password"))
-    except NameError:
-        raise ValidationError(message_code="DATA_MISSING")
+def validate_update_password(data: dict):
+    validate_password(password=data.get("new_password"))
 
 
-def validate_update_info(data:dict):
-    try:
-        validate_name(data.get("first_name"), data.get("last_name"))
-        validate_username(data.get("username"))
-    except NameError:
-        raise ValidationError(message_code="DATA_MISSING")
+def validate_update_info(data: dict):
+    validate_name(first_name=data.get("first_name"), last_name=data.get("last_name"))
+    validate_username(username=data.get("username"))
