@@ -1,10 +1,9 @@
-import requests
-from datetime import timedelta, datetime
-from django.conf import settings
+from datetime import datetime, timedelta
+
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import ZaloToken
 from user_account.models.user import User
-from utils.exceptions import ValidationError, NotFound
+from utils.exceptions import NotFound, ValidationError
 from utils.services.Zalo import ZaloService
 
 
@@ -83,4 +82,6 @@ class ZaloTokenService:
 
     @staticmethod
     def check_valid_zalo_token(token: ZaloToken):
+        if not token.expire_at:
+            return False
         return token.expire_at < datetime.now() and token.active

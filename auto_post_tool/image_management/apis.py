@@ -1,7 +1,5 @@
 from typing import List
 
-from django.shortcuts import render
-
 from ninja import File
 from ninja.files import UploadedFile
 from ninja_extra import api_controller, http_post
@@ -18,7 +16,7 @@ class ImageController:
         image.save()
 
     @http_post("/upload-multy")
-    def upload_image(self, request, files: List[UploadedFile] = File(...)):
+    def upload_images(self, request, files: List[UploadedFile] = File(...)):
         for image in files:
             image = ImagePost(source=image)
             image.save()

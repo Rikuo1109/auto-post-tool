@@ -14,9 +14,7 @@ class ResetTokenService:
 
     @staticmethod
     def generator_token():
-        return "".join(
-            random.choice(string.ascii_letters + string.digits) for _ in range(settings.RESET_TOKEN_LENGTH)
-        )
+        return "".join(random.choice(string.ascii_letters + string.digits) for _ in range(settings.RESET_TOKEN_LENGTH))
 
     @staticmethod
     def create_reset_token(user: User):
@@ -39,4 +37,6 @@ class ResetTokenService:
 
     @staticmethod
     def check_valid(token: ResetToken):
+        if not token.expire_at:
+            return False
         return token.expire_at > datetime.now() and token.active
