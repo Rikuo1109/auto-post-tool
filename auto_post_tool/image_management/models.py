@@ -18,3 +18,7 @@ class ImagePost(models.Model):
     )
     source = models.ImageField()
     date_updated = models.DateTimeField(auto_now_add=True)
+
+    @staticmethod
+    def filter_by_post(post):
+        return ImagePost.objects.filter(post=post)

@@ -19,10 +19,10 @@ class PostPayloadSchema(ModelSchema):
         model_fields = ["content", "post_type", "created_at"]
 
 
-class PostManagementPayloadSchema(ModelSchema):
-    class Config:
-        model = PostManagement
-        model_fields = ["platform", "auto_publish", "time_posting"]
+class PostManagementPayloadSchema(Schema):
+    platform: PostManagementPlatFormEnum
+    auto_publish: bool
+    time_posting: Optional[datetime]
 
 
 """

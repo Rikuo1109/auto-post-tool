@@ -25,10 +25,15 @@ class Service:
         return service()
 
     def get_matrix_post_service(self, filters, sorting, sort_type):
+        print("filter", filters)
+        print("sorting", sorting)
+        print("sort_type", sort_type)
         sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
+        print(self.request.user)
         posts = Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
         for post in posts:
             post.images = ImagePost.filter_by_post(post=post)
+        print(posts)
         return posts
 
     def get_matrix_post_management_service(self, filters, sorting, sort_type):

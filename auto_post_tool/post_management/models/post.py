@@ -62,6 +62,6 @@ class PostManagement(models.Model):
         return PostManagement.objects.filter(post=post)
 
     def full_clean(self, exclude=None, validate_unique=True):
-        if self.time_posting >= datetime.now():
-            self.auto_publish = True
+        if not self.auto_publish:
+            self.time_posting = datetime.now()
         return super().full_clean(exclude=["post", "status"], validate_unique=validate_unique)
