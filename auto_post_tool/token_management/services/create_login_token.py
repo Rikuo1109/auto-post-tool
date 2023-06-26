@@ -28,11 +28,14 @@ class LoginTokenService:
 
     @staticmethod
     def deactivate(token: str):
-        try:
-            login_token = LoginToken.objects.get(token=token)
-        except LoginToken.DoesNotExist as exc:
-            raise NotFound(message_code="LOGIN_TOKEN_NOT_FOUND")
-
+        login_token = LoginTokenService.get_login_token(token=token)
         login_token.deactivated_at = datetime.now()
         login_token.active = False
         login_token.save()
+
+    @staticmethod
+    def get_login_token(token: str):
+        try:
+            return LoginToken.objects.get(token=token)
+        except LoginToken.DoesNotExist as exc:
+            raise NotFound(message_code="LOGIN_TOKEN_NOT_FOUND")

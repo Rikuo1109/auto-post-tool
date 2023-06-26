@@ -30,10 +30,6 @@ ERROR_MESSAGES = {
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
     "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
-    "INVALID_LOGIN_TOKEN":"Invalid login token",
-    # Check reset token
-    "RESET_TOKEN_NOT_FOUND": "Reset token not found",
-    "RESET_TOKEN_EXPIRED":"Reset token has expired",
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
     "RESET_TOKEN_NOT_FOUND": "Reset token not found",
