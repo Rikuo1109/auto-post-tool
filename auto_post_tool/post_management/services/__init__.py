@@ -1,12 +1,8 @@
 from django.db import transaction
 
-from .post.create_post import CreatePostService
-from .post.get_detail_post import GetDetailPostService
-from .post.remove_post import RemovePostService
-from .post.update_detail_post import UpdatePostDetailService
-from .post_management.create_post_management import CreatePostManagementService
-from .post_management.remove_post_management import RemovePostManagementService
-from .post_management.update_post_management import UpdatePostManagementService
+from .post import CreatePostService, GetDetailPostService, RemovePostService, UpdatePostDetailService
+from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
+from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
 from utils.functions.filters import FiltersUtils
 
@@ -20,7 +16,7 @@ class Service:
         service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
         post = service()
         service = CreatePostManagementService(post=post, managements=data.managements)
-        service()
+        post_managements = service()
         return post
 
     def update_post_details_service(self, uid, data):
@@ -30,7 +26,10 @@ class Service:
 
     def get_matrix_post_service(self, filters, sorting, sort_type):
         sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
-        return Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
+        posts = Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
+        for post in posts:
+            post.images = ImagePost.filter_by_post(post=post)
+        return posts
 
     def get_matrix_post_management_service(self, filters, sorting, sort_type):
         sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)

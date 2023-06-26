@@ -246,4 +246,6 @@ ZALO_API_REQUEST_CONTENT_TYPE = os.environ.get("ZALO_API_REQUEST_CONTENT_TYPE")
 ZALO_API_SECRET_KEY = os.environ.get("ZALO_API_SECRET_KEY")
 FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 
+ZALO_API_HOST = os.environ.get("ZALO_API_HOST")
+
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
