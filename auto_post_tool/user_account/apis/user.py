@@ -1,4 +1,4 @@
-from ninja_extra import api_controller, http_get, http_post
+from ninja_extra import api_controller, http_get, http_post, http_put
 
 from ..models.user import User
 from ..schema.payload import (
@@ -32,11 +32,10 @@ from utils.mail import MailSenderService
 class UserController:
     @http_post("/login")
     def user_login(self, data: UserLoginRequest):
-        user = User().get_user_by_email(data.email)
+        user = User.get_user_by_email(data.email)
         if not user.check_password(data.password):
-            raise AuthenticationFailed(message_code="INVALID_PASSWORD")
-        access_token = LoginTokenService.create_token(user)
-        return {"access_token": access_token}
+            raise AuthenticationFailed(message_code="INVALID_EMAIL_PASSWORD")
+        return {"access_token": LoginTokenService().create_token(user)}
 
     @http_post("/register", response=UserResponse)
     def user_register(self, data: UserRegisterRequest):
@@ -81,48 +80,42 @@ class UserController:
 
     @http_post("/logout", auth=AuthBearer())
     def logout(self, request):
-        try:
-            access_token = request.headers.get("authorization", "").split("Bearer ")[-1]
-        except KeyError:
-            raise ParseError(message_code="PARSE_ERROR")
-        LoginTokenService.deactivate(access_token)
+        LoginTokenService.deactivate(token=request.auth)
         return True
 
     @http_post("/forgot-password")
     def forgot_password(self, data: UserEmailRequest):
-        user = User().get_user_by_email(data.email)
-        MailSenderService(user).send_reset_password_email()
+        user = User.get_user_by_email(data.email)
+        MailSenderService(user=user).send_reset_password_email()
         return True
 
     @http_post("/reset-password")
     def password_reset_confirm(self, data: UserPasswordResetRequest):
-        if not data.token:
-            raise ParseError(message_code="PARSE_ERROR")
         try:
             reset_token = ResetToken.objects.get(token=data.token)
         except ResetToken.DoesNotExist:
-            raise NotFound(message_code="RESET_TOKEN_NOT_FOUND")
-        user = reset_token.user
+            raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
         if not ResetTokenService.check_valid(reset_token):
-            raise ValidationError(message_code="RESET_TOKEN_EXPIRED")
-        validate_password(data.password)
+            raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
+        validate_password(password=data.password)
+        user = reset_token.user
         user.set_password(data.password)
         user.save()
-        ResetTokenService.deactivate(reset_token)
+        ResetTokenService.deactivate(token=reset_token)
         return True
 
-    @http_post("/connect/facebook-token", auth=AuthBearer())
+    @http_post("/connect/facebook", auth=AuthBearer())
     def connect_facebook_token(self, request, data: UserFacebookTokenRequest):
         FacebookTokenService.get_long_lived_access_token(request.user, data.token)
 
-    @http_post("/disconnect/facebook-token", auth=AuthBearer())
+    @http_put("/disconnect/facebook", auth=AuthBearer())
     def disconnect_facebook_token(self, request):
         FacebookTokenService.deactivate(request.user)
 
-    @http_post("/connect/zalo-token", auth=AuthBearer())
+    @http_post("/connect/zalo", auth=AuthBearer())
     def connect_zalo_token(self, request, data: UserZaloTokenRequest):
         ZaloTokenService.call_access_token_from_oauth(request.user, data.oath_code)
 
-    @http_post("/disconnect/zalo-token", auth=AuthBearer())
+    @http_put("/disconnect/zalo", auth=AuthBearer())
     def disconnect_zalo_token(self, request):
         ZaloTokenService.deactivate(request.user)
