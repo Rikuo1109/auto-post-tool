@@ -73,7 +73,11 @@ class ZaloTokenService:
                 "secret_key": settings.ZALO_API_SECRET_KEY,
                 "Content-Type": settings.ZALO_API_REQUEST_CONTENT_TYPE,
             },
-            data=ZaloService.generate_access_fefresh_link(refresh_token=refresh_token),
+            data=ZaloService(
+                app_id=settings.ZALO_API_APP_ID,
+                app_secret=settings.ZALO_API_APP_SECRET,
+                request_content_type=settings.ZALO_API_REQUEST_CONTENT_TYPE,
+            ).generate_access_fefresh_link(refresh_token=refresh_token),
         )
         if response.status_code == 200:
             response_data = response.json()
