@@ -228,8 +228,6 @@ STATICFILES_DIRS = ("/static/",)
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = os.environ.get("STATIC_URL")
 
-FRONTEND_HOST_URL = os.environ.get("BASE_UI_URL")
-
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
 
 JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
@@ -248,3 +246,8 @@ ZALO_API_APP_SECRET = os.environ.get("ZALO_API_APP_SECRET")
 ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
 
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
+
+
+NAME = os.environ.get("NAME")
+PASSWORD = os.environ.get("PASSWORD")
+EMAIL = os.environ.get("EMAIL")
