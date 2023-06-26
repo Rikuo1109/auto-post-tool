@@ -4,7 +4,7 @@ from django.conf import settings
 
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
-from utils.exceptions import ValidationError, PermissionDenied, AuthenticationFailed
+from utils.exceptions import ValidationError
 from user_account.models.user import User
 
 

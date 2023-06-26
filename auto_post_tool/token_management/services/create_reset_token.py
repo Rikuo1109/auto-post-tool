@@ -3,7 +3,7 @@ import string
 from datetime import datetime
 
 from django.conf import settings
-from datetime import datetime
+
 from token_management.models.token import ResetToken
 from user_account.models import User
 from utils.exceptions import ValidationError
@@ -15,7 +15,7 @@ class ResetTokenService:
     @staticmethod
     def generator_token():
         return "".join(
-            random.choice(string.ascii_letters + string.digits) for _ in range(int(settings.RESET_TOKEN_LENGTH))
+            random.choice(string.ascii_letters + string.digits) for _ in range(settings.RESET_TOKEN_LENGTH)
         )
 
     @staticmethod

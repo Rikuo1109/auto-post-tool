@@ -6,7 +6,7 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from utils.exceptions.exceptions import AuthenticationFailed
+from utils.exceptions.exceptions import NotFound
 
 
 class UserManager(BaseUserManager):  # type: ignore
@@ -36,7 +36,7 @@ class UserManager(BaseUserManager):  # type: ignore
         user.save(using=self._db)
         print("Superuser created successfully.")
         return user
-    
+
 
 class User(AbstractUser):
     objects = UserManager()
@@ -45,7 +45,7 @@ class User(AbstractUser):
 
     REQUIRED_FIELDS: list[str] = []
 
-    uid = models.UUIDField(unique=True, default=uuid4)
+    uid = models.UUIDField(unique=True, default=uuid4, editable=False)
 
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
     username = models.CharField(max_length=255, null=True, blank=True)
@@ -60,11 +60,10 @@ class User(AbstractUser):
     last_login = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now=False, auto_now_add=True)
 
-
-
-    def get_user_by_email(self, email):
+    @staticmethod
+    def get_user_by_email(email):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
-            raise AuthenticationFailed(message_code = "USER_NOT_FOUND")
+            raise NotFound(message_code="USER_NOT_FOUND")
         return user
