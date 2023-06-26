@@ -102,10 +102,10 @@ class UserController:
             reset_token = ResetToken.objects.get(token=data.token)
         except ResetToken.DoesNotExist:
             raise NotFound(message_code="RESET_TOKEN_NOT_FOUND")
-        user = reset_token.user
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_EXPIRED")
         validate_password(data.password)
+        user = reset_token.user
         user.set_password(data.password)
         user.save()
         ResetTokenService.deactivate(reset_token)
