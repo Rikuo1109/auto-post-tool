@@ -12,11 +12,11 @@ class FacebookTokenService:
     """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB"""
 
     @staticmethod
-    def create_token(exp: str, user: User, token: str):
+    def create_token(exp: int, user: User, token: str):
         """function to create a facebook token in the DB"""
         encrypted_token = pbkdf2_sha256.hash(token)
         facebook_token = FacebookToken.objects.create(user=user, long_live_token=encrypted_token)
-        facebook_token.expire_at = datetime.now() + timedelta(seconds=int(exp))
+        facebook_token.expire_at = datetime.now() + timedelta(seconds=exp)
         facebook_token.save()
 
     @staticmethod
@@ -41,7 +41,7 @@ class FacebookTokenService:
         if response.status_code == 200:
             response_data = response.json()
             FacebookTokenService.create_token(
-                exp=response_data.get("expires_in"), user=user, token=response_data.get("access_token")
+                exp=int(response_data.get("expires_in")), user=user, token=response_data.get("access_token")
             )
         else:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
