@@ -35,7 +35,7 @@ class UserController:
         user = User().get_user_by_email(data.email)
         if not user.check_password(data.password):
             raise AuthenticationFailed(message_code="INVALID_PASSWORD")
-        access_token = LoginTokenService().create_token(user)
+        access_token = LoginTokenService.create_token(user)
         return {"access_token": access_token}
 
     @http_post("/register", response=UserResponse)
