@@ -1,6 +1,4 @@
-import requests
 from datetime import timedelta, datetime
-from django.conf import settings
 from passlib.hash import pbkdf2_sha256
 from token_management.models.token import ZaloToken
 from user_account.models.user import User
