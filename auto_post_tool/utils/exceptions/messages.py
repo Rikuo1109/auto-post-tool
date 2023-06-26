@@ -30,10 +30,10 @@ ERROR_MESSAGES = {
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
     "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
-    "INVALID_LOGIN_TOKEN":"Invalid login token",
+    "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
     "RESET_TOKEN_NOT_FOUND": "Reset token not found",
-    "RESET_TOKEN_EXPIRED":"Reset token has expired",
+    "RESET_TOKEN_EXPIRED": "Reset token has expired",
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
     "RESET_TOKEN_NOT_FOUND": "Reset token not found",
@@ -52,4 +52,11 @@ ERROR_MESSAGES = {
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",
     "ZALO_TOKEN_NOT_CONNECTED": "Zalo not connected",
+    # Post errors
+    "POST_NOT_FOUND": "Post not found",
+    # Post management errors
+    "POST_MANAGEMENT_NOT_FOUND": "Post management not found",
+    # Facebook errors
+    "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
+    "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
 }

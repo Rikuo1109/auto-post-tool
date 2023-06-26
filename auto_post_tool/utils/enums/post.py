@@ -23,3 +23,9 @@ class PostManagementStatusEnum(TextChoices):
 class PostManagementPlatFormEnum(TextChoices):
     FACEBOOK = "FACEBOOK", "facebook"
     ZALO = "ZALO", "zalo"
+
+
+@unique
+class FacebookPlatFormEnum(TextChoices):
+    GROUP = "GROUP", "group"
+    PAGE = "PAGE", "page"

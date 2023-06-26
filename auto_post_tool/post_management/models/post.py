@@ -39,7 +39,7 @@ class PostManagement(models.Model):
         db_column="post_id",
     )
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
-    time_posting = models.DateTimeField(auto_now_add=True)
+    time_posting = models.DateTimeField(auto_now_add=False)
     auto_publish = models.BooleanField(default=False)
     status = models.CharField(
         max_length=16, choices=PostManagementStatusEnum.choices, default=PostManagementStatusEnum.PENDING

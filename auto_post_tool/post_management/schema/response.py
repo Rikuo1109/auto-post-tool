@@ -1,3 +1,5 @@
+from typing import List, Optional
+
 from ninja import ModelSchema
 
 from ..models import Post, PostManagement
