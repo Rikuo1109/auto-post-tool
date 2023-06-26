@@ -11,11 +11,7 @@ class LoginToken(models.Model):
 
     uid = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     user = models.ForeignKey(
-        to=User,
-        related_name="login_token_fk_user",
-        on_delete=models.CASCADE,
-        db_constraint=False,
-        db_column="user_uid",
+        to=User, related_name="login_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
     )
     token = models.TextField(editable=False, max_length=64, unique=True, null=False, blank=False)
     active = models.BooleanField(editable=True, default=True, null=False, blank=False)
@@ -28,11 +24,7 @@ class ResetToken(models.Model):
 
     uid = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     user = models.ForeignKey(
-        to=User,
-        related_name="reset_token_fk_user",
-        on_delete=models.CASCADE,
-        db_constraint=False,
-        db_column="user_uid",
+        to=User, related_name="reset_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
     )
     token = models.TextField(editable=False, max_length=64, null=False, blank=False)
     active = models.BooleanField(editable=True, default=True, null=False, blank=False)
@@ -68,16 +60,11 @@ class ZaloToken(models.Model):
     First get new access & token
     When access expired, use refresh to create new access, active = False
     When access expire again, get new access & refresh
-    
-    PROBLEM: ZALO ENTERPRISE ACCOUNT"""
+    """
 
     uid = models.UUIDField(default=uuid4, primary_key=True, editable=False)
     user = models.ForeignKey(
-        to=User,
-        related_name="zalo_token_fk_user",
-        on_delete=models.CASCADE,
-        db_constraint=False,
-        db_column="user_uid",
+        to=User, related_name="zalo_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
     )
     access_token = models.TextField(editable=False, unique=True, null=False, blank=False)
     refresh_token = models.TextField(editable=False, unique=False, null=False, blank=False)

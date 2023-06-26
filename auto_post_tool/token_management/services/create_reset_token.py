@@ -2,12 +2,13 @@ import random
 import string
 
 from django.conf import settings
-
+from datetime import datetime
 from token_management.models.token import ResetToken
 from user_account.models import User
+from utils.exceptions import ValidationError
 
 
-class CreateResetTokenService:
+class ResetTokenService:
     """Get the value of Reset token then turn it into a ResetToken Object in the DB"""
 
     @staticmethod
@@ -20,11 +21,22 @@ class CreateResetTokenService:
     @staticmethod
     def create_reset_token(user: User):
         """Generate token for reseting password"""
-        random_token = CreateResetTokenService.generator_token()
+        random_token = ResetTokenService.generator_token()
 
-        while not ResetToken.objects.filter(token=random_token).exists():
-            random_token = CreateResetTokenService.generator_token()
+        while ResetToken.objects.filter(token=random_token).exists():
+            random_token = ResetTokenService.generator_token()
 
         reset_token = ResetToken(token=random_token, user=user)
         reset_token.save()
         return random_token
+
+    @staticmethod
+    def deactivate(token: ResetToken):
+        if not ResetTokenService.check_valid(token=token):
+            raise ValidationError("VALIDATION_ERROR")
+        token.active = False
+        token.save()
+
+    @staticmethod
+    def check_valid(token: ResetToken):
+        return token.expire_at > datetime.now() and token.active
