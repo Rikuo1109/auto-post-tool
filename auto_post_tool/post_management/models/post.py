@@ -1,11 +1,11 @@
+from datetime import datetime
 from uuid import uuid4
 
 from django.db import models
-from datetime import datetime
 
 from user_account.models.user import User
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
-from utils.exceptions import NotFound
+from utils.exceptions import NotFound, ValidationError
 
 
 class Post(models.Model):
@@ -64,4 +64,7 @@ class PostManagement(models.Model):
     def full_clean(self, exclude=None, validate_unique=True):
         if not self.auto_publish:
             self.time_posting = datetime.now()
+        else:
+            if self.time_posting is None:
+                raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
         return super().full_clean(exclude=["post", "status"], validate_unique=validate_unique)

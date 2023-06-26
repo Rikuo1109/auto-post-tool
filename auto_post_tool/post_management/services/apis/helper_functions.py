@@ -1,0 +1,18 @@
+def get_user_id_facebook(user):
+    return "100013449046092"
+
+
+def get_page_id_facebook(user):
+    return "111255372005139"
+
+
+def get_group_id_facebook(user):
+    return "1034782201238472"
+
+
+def get_page_access_token_facebook(user):
+    return "EAAECSZAzYmwwBAOUB7xRASCBM0XI7oCz3zn2hrAhaCbZAIgdACgLMB3ZCbBtBNYZCZBvXwai7yVvNrk8gtmK15DIbiFDI3oTTSBBtYs8OBnyUz0mww89Vno3hVSRn7V1ITAyCBDNH1vZCmVpXtyyJSSbM4oqByGq9P6aHEme8hn8GBFzvim8XZBPFuCFskxdLISlgyXgGSlZAVFOMdIIZBLEBLeZBvey8QHLsZD"
+
+
+def get_group_access_token_facebook(user):
+    return "EAAECSZAzYmwwBAGlXTMYyE4hoZBgaqBpRQZAvpZBO1OvHtmawVOpq2fqwuVNfldY98jBg4c1tg7TZALnMJs3L7l0KhVU1mkaXV5a3ZBQVinD6JOJDkY2ZAyZBX0fZA8bO2ueoTqBBBMTtPD5MOXnZA2po2YcAZAk9w5LooPz45VA5lEUFVC4j4DqVDS5GC0fAzTGYLx7lnTu49OK6FSPAdjgLZAw4UqhCszLRy4ZD"

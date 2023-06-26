@@ -1,11 +1,10 @@
 from django.db import transaction
 
-from .apis.facebook import GroupsApiFacebookService, PagesApiFacebookService
+from .apis import ApiService
 from .post import CreatePostService, GetDetailPostService, RemovePostService, UpdatePostDetailService
 from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
 from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
-from utils.enums.post import FacebookPlatFormEnum, PostManagementPlatFormEnum
 from utils.functions.filters import FiltersUtils
 
 
@@ -17,8 +16,12 @@ class Service:
     def create_post_service(self, data):
         service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
         post = service()
+
         service = CreatePostManagementService(post=post, managements=data.managements)
         post_managements = service()
+
+        service = ApiService(post_managements)
+        service.publish_post_management_service()
         return post
 
     def update_post_details_service(self, uid, data):
@@ -65,35 +68,3 @@ class Service:
         post_management = PostManagement.get_by_uid(uid=uid)
         service = RemovePostManagementService(post_management=post_management)
         return service()
-
-    def publish_post_management_service(self, uid):
-        """
-        Publish post base on platform: FACEBOOK, ZALO
-        FACEBOOK:
-        * Personal to group
-        * Page to group
-        * Page to page
-        scheduled_publish_time (unix_timestamp, from 10 minutes to 75 days) just available in pages
-        formatting just available in groups
-        """
-        post_management = PostManagement.get_by_uid(uid=uid)
-        post = post_management.post
-        user_id = "100013449046092"
-        if post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
-            """TODO"""
-            select = FacebookPlatFormEnum.PAGE
-            """"""
-            if select == FacebookPlatFormEnum.PAGE:
-                page_id = "111255372005139"
-                access_token = "EAAECSZAzYmwwBAGlXTMYyE4hoZBgaqBpRQZAvpZBO1OvHtmawVOpq2fqwuVNfldY98jBg4c1tg7TZALnMJs3L7l0KhVU1mkaXV5a3ZBQVinD6JOJDkY2ZAyZBX0fZA8bO2ueoTqBBBMTtPD5MOXnZA2po2YcAZAk9w5LooPz45VA5lEUFVC4j4DqVDS5GC0fAzTGYLx7lnTu49OK6FSPAdjgLZAw4UqhCszLRy4ZD"
-                message = post.content
-                service = PagesApiFacebookService(access_token=access_token, page_id=page_id)
-                response = service.publish_feed(
-                    message=message, scheduled_publish_time_unix_timestamp=post_management.time_posting.timestamp()
-                )
-            elif select == FacebookPlatFormEnum.GROUP:
-                group_id = "1034782201238472"
-                message = """**Goodnight!**"""
-                access_token = "EAAECSZAzYmwwBAJAYQjfvZC3CvBZBV1v6snTWgCRg9DsSLptSogIZAZArir1QWPWqXDn6ZBgcayIdJWYjrFHfq72PjoAo837vz7Ffd4BJ5M3Fi728RXgdEnll3dYr119WX7CZB1MBMkzCKq7XNzFcCth8I2Cvfn14GmEUAY96iFFHZCgvZBmxZCnBH3uTgwd1ws61qyPwmE5K3crHpzZANPgz49b3av7ylz8iiTYPpbWw4ZAI4uZCuHroVnUZBtLF4qlJn3LEZD"
-                service = GroupsApiFacebookService(access_token=access_token, group_id=group_id)
-                response = service.publish_feed(message=message)
