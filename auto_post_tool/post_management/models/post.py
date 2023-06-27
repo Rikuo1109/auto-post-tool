@@ -3,6 +3,7 @@ from uuid import uuid4
 
 from django.db import models
 
+from image_management.models import ImagePost
 from user_account.models.user import User
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 from utils.exceptions import NotFound, ValidationError
@@ -16,6 +17,7 @@ class Post(models.Model):
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
     created_at = models.DateTimeField(auto_now_add=True)
+    images = models.ManyToManyField(ImagePost, related_name="posts", blank=True)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -40,7 +42,7 @@ class PostManagement(models.Model):
     )
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
     time_posting = models.DateTimeField(auto_now_add=False)
-    auto_publish = models.BooleanField(default=False)
+    auto_publish = models.BooleanField(blank=True)
     status = models.CharField(
         max_length=16, choices=PostManagementStatusEnum.choices, default=PostManagementStatusEnum.PENDING
     )

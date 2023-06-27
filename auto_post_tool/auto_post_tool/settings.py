@@ -234,6 +234,7 @@ JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
 
 RESET_TOKEN_LENGTH = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LENGTH")))
 
+FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 FACEBOOK_API_APP_ID = os.environ.get("FACEBOOK_API_APP_ID")
 FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
 FACEBOOK_API_VERSION = os.environ.get("FACEBOOK_API_VERSION")

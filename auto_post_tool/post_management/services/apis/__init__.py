@@ -13,12 +13,17 @@ class ApiService:
         * Personal to group
         * Page to group
         * Page to page
-        scheduled_publish_time (unix_timestamp, from 10 minutes to 75 days) just available in pages
-        formatting just available in groups
+        NOTE: scheduled_publish_time (unix_timestamp, from 10 minutes to 75 days) just available in pages
+        NOTE: formatting just available in groups
+        NOTE: if not auto_post: not publish anywhere
+            else if time_posting < now() -> publish rightnow
+            else -> schedule for posting
         """
         for post_management in self.post_managements:
+            if post_management.auto_publish is None:
+                continue
             if post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
-                select = FacebookPlatFormEnum.PAGE
+                select = FacebookPlatFormEnum.GROUP
                 if select == FacebookPlatFormEnum.PAGE:
                     service = PagesFacebookApiService(post_management=post_management)
                     return service.publish_feed()

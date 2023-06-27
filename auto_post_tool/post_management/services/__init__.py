@@ -16,6 +16,8 @@ class Service:
     def create_post_service(self, data):
         service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
         post = service()
+        if data.images is not None:
+            post.images.add(*ImagePost.filter_by_uids(data.images))
 
         service = CreatePostManagementService(post=post, managements=data.managements)
         post_managements = service()
@@ -32,8 +34,6 @@ class Service:
     def get_matrix_post_service(self, filters, sorting, sort_type):
         sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
         posts = Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
-        for post in posts:
-            post.images = ImagePost.filter_by_post(post=post)
         return posts
 
     def get_matrix_post_management_service(self, filters, sorting, sort_type):
@@ -44,7 +44,6 @@ class Service:
     def get_detail_post_service(self, uid):
         service = GetDetailPostService(uid)
         post = service()
-        post.images = ImagePost.filter_by_post(post=post)
         return post
 
     def view_post_management_from_post_service(self, uid):

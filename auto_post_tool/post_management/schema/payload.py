@@ -1,10 +1,10 @@
 from datetime import datetime
 from typing import List, Optional
 
-from ninja import FilterSchema, ModelSchema, Schema
+from ninja import Field, FilterSchema, ModelSchema, Schema
 
 from ..models import Post
-from ninja import Field
+from image_management.models import ImagePost
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
 
@@ -34,9 +34,16 @@ class PostManagementCreateRequest(Schema):
     managements: List[PostManagementPayloadSchema]
 
 
+class ImagePostRequestSchema(ModelSchema):
+    class Config:
+        model = ImagePost
+        model_fields = ["uid"]
+
+
 class PostRequest(Schema):
     content: Optional[str]
     post_type: PostTypeEnum
+    images: Optional[List[str]]
     managements: List[PostManagementPayloadSchema]
 
 

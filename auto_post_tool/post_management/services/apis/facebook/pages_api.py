@@ -24,17 +24,19 @@ class PagesFacebookApiService:
 
     def prepair_params(self):
         message = self.post_management.post.content
-        published = self.post_management.auto_publish
         if self.post_management.time_posting is None:
             raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
         scheduled_publish_time_unix_timestamp = self.post_management.time_posting.timestamp()
 
-        params = {"access_token": self.access_token, "message": message, "published": published}
+        params = {"access_token": self.access_token, "message": message, "published": True}
 
         if scheduled_publish_time_unix_timestamp is not None:
             params["published"] = False
             params["scheduled_publish_time"] = scheduled_publish_time_unix_timestamp
 
+        """TODO: open after hosting domain"""
+        # ...
+        """"""
         return params
 
     def publish_feed(self):
@@ -55,7 +57,7 @@ class PagesFacebookApiService:
         if response.status_code == 200:
             return response
         elif response.status_code == 400:
-            response_code = response.json().get("code")
+            response_code = response.json().get("error").get("code")
             if response_code == 100:
                 raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
             elif response_code == 190:
