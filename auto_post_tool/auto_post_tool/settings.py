@@ -248,6 +248,7 @@ ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
 
 
-NAME = os.environ.get("NAME")
-PASSWORD = os.environ.get("PASSWORD")
-EMAIL = os.environ.get("EMAIL")
+REGEX_MINIMUM_LENGTH = os.environ.get("REGEX_MINIMUM_LENGTH")
+REGEX_CONTAIN_NO_NUMBER = os.environ.get("REGEX_CONTAIN_NO_NUMBER")
+REGEX_CONTAIN_NUMBER_AND_LETTER = os.environ.get("REGEX_CONTAIN_NUMBER_AND_LETTER")
+REGEX_EMAIL = os.environ.get("REGEX_EMAIL")
