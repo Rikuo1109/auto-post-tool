@@ -5,7 +5,7 @@ from django.conf import settings
 import requests
 from token_management.models.token import FacebookToken, Group
 from user_account.models.user import User
-from utils.exceptions import NotAuthenticated, ValidationError, NotFound
+from utils.exceptions import NotAuthenticated, ValidationError
 
 
 class FacebookTokenService:
