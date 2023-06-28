@@ -42,11 +42,11 @@ class PostManagement(models.Model):
     )
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
     time_posting = models.DateTimeField(auto_now_add=False)
-    auto_publish = models.BooleanField(blank=True)
+    auto_publish = models.BooleanField()
     status = models.CharField(
         max_length=16, choices=PostManagementStatusEnum.choices, default=PostManagementStatusEnum.PENDING
     )
-    url = models.TextField(blank=True)
+    url = models.URLField(max_length=255)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -64,9 +64,10 @@ class PostManagement(models.Model):
         return PostManagement.objects.filter(post=post)
 
     def full_clean(self, exclude=None, validate_unique=True):
+        if self.auto_publish is None:
+            raise ValidationError(message_code="INVALID_FIELD")
         if not self.auto_publish:
             self.time_posting = datetime.now()
-        else:
-            if self.time_posting is None:
-                raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
+        elif self.auto_publish and self.time_posting is None:
+            raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
         return super().full_clean(exclude=["post", "status"], validate_unique=validate_unique)

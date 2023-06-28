@@ -43,7 +43,7 @@ class ImagePostRequestSchema(ModelSchema):
 class PostRequest(Schema):
     content: Optional[str]
     post_type: PostTypeEnum
-    images: Optional[List[str]]
+    images: List[str] = []
     managements: List[PostManagementPayloadSchema]
 
 

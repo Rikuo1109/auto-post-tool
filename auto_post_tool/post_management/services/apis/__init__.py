@@ -2,11 +2,11 @@ from .facebook import GroupsFacebookApiService, PagesFacebookApiService
 from utils.enums.post import FacebookPlatFormEnum, PostManagementPlatFormEnum
 
 
-class ApiService:
-    def __init__(self, post_managements):
-        self.post_managements = post_managements if isinstance(post_managements, list) else list(post_managements)
+class ApiPublishService:
+    def __init__(self, post_management):
+        self.post_management = post_management
 
-    def publish_post_management_service(self):
+    def __call__(self):
         """
         Publish post base on platform: FACEBOOK, ZALO
         FACEBOOK:
@@ -19,14 +19,11 @@ class ApiService:
             else if time_posting < now() -> publish rightnow
             else -> schedule for posting
         """
-        for post_management in self.post_managements:
-            if post_management.auto_publish is None:
-                continue
-            if post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
-                select = FacebookPlatFormEnum.GROUP
-                if select == FacebookPlatFormEnum.PAGE:
-                    service = PagesFacebookApiService(post_management=post_management)
-                    return service.publish_feed()
-                elif select == FacebookPlatFormEnum.GROUP:
-                    service = GroupsFacebookApiService(post_management=post_management)
-                    return service.publish_feed()
+        if self.post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
+            select = FacebookPlatFormEnum.PAGE
+            if select == FacebookPlatFormEnum.PAGE:
+                service = PagesFacebookApiService(post_management=self.post_management)
+                return service.publish_feed()
+            elif select == FacebookPlatFormEnum.GROUP:
+                service = GroupsFacebookApiService(post_management=self.post_management)
+                return service.publish_feed()

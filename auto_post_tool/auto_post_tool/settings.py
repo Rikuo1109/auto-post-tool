@@ -197,6 +197,7 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 # UID
 BASE_UI_URL = os.environ.get("BASE_UI_URL")
 BASE_MEDIA_HOST = os.environ.get("BASE_MEDIA_HOST")
+BASE_HOST = os.environ.get("BASE_HOST")
 
 # media directory in the root directory
 MEDIA_ROOT = os.path.join(BASE_DIR, str(os.environ.get("MEDIA_ROOT")))
@@ -252,3 +253,7 @@ REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
 NAME = os.environ.get("NAME")
 PASSWORD = os.environ.get("PASSWORD")
 EMAIL = os.environ.get("EMAIL")
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHILELIST = ("localhost:9999",)
