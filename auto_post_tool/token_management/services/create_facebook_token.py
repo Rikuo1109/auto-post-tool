@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 from django.conf import settings
 
 import requests
-from token_management.models.token import FacebookToken, Group
+from token_management.models.token import FacebookToken
 from user_account.models.user import User
-from utils.exceptions import NotAuthenticated, ValidationError
+from utils.exceptions import NotFound, ValidationError
 
 
 class FacebookTokenService:
@@ -50,7 +50,7 @@ class FacebookTokenService:
         try:
             facebook_token = FacebookToken.objects.get(user=user, active=True)
         except FacebookToken.DoesNotExist as exc:
-            raise NotAuthenticated(message_code="FACEBOOK_TOKEN_NOT_CONNECTED") from exc
+            raise NotFound(message_code="FACEBOOK_NOT_CONNECTED") from exc
         return facebook_token.long_live_token
 
     @staticmethod

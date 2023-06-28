@@ -1,7 +1,6 @@
 import random
 import string
 from datetime import datetime
-
 from django.conf import settings
 from token_management.models.token import ResetToken
 from user_account.models import User
