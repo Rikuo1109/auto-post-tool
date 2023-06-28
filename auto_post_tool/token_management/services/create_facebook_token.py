@@ -54,23 +54,6 @@ class FacebookTokenService:
         return facebook_token.long_live_token
 
     @staticmethod
-    def create_group(user: User, groups: list[str]):
-        for group in groups:
-            Group.objects.create(
-                user=user,
-                token=FacebookTokenService.get_token_by_user(user=user),
-                group_name=group.get("name"),
-                group_id=group.get("id"),
-            )
-
-    @staticmethod
-    def get_group_ids_by_token(token: str):
-        groups = Group.objects.filter(token=token)
-        if groups.exists():
-            raise NotFound(message_code="FACEBOOK_TOKEN_NOT_CONNECTED")
-        return [group.group_id for group in groups]
-
-    @staticmethod
     def deactivate(user: User):
         FacebookToken.objects.filter(user=user, active=True).update(active=False)
 
