@@ -79,7 +79,7 @@ class UserController:
             user.save()
             return True
 
-    @http_post("/logout", auth=AuthBearer())
+    @http_post("/logout")
     def logout(self, request):
         LoginTokenService.deactivate(token=request.auth)
         return True

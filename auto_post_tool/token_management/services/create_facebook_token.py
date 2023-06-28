@@ -57,10 +57,8 @@ class FacebookTokenService:
 
     @staticmethod
     def check_valid_facebook_token(token: FacebookToken):
-        result = True
-        if token.expire_at > datetime.now():
-            FacebookTokenService.deactivate(token.user)
-            result = False
-        elif token.active == False:
-            result = False
-        return result
+        if token.expire_at > datetime.now() or not (token.active):
+            FacebookTokenService.deactivate(user=token.user)
+            return False
+        return True
+
