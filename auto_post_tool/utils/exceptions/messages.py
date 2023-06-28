@@ -46,5 +46,8 @@ ERROR_MESSAGES = {
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",
-    "ZALO_TOKEN_NOT_CONNECTED": "Zalo not connected",
+    "ZALO_NOT_CONNECTED": "Zalo not connected",
+    # Twitter errors
+    "INVALID_TWITTER_REFRESH_TOKEN": "Invalid twitter refresh token",
+    "TWITTER_NOT_CONNECTED": "Twitter not connected",
 }
