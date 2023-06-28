@@ -27,6 +27,7 @@ from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_zalo_token import ZaloTokenService
 from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
+from utils.services.Facebook.get_user_info import get_user_id, get_user_page_info
 
 
 @api_controller(prefix_or_class="users", tags=["User"])
@@ -96,7 +97,7 @@ class UserController:
         try:
             reset_token = ResetToken.objects.get(token=data.token)
         except ResetToken.DoesNotExist as e:
-            raise NotFound(message_code="RESET_TOKEN_INVALID_OR_EXPIRED") from e
+            raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
         if validate_password(input_string=data.password):
@@ -121,3 +122,9 @@ class UserController:
     @http_put("/disconnect/zalo", auth=AuthBearer())
     def disconnect_zalo_token(self, request):
         ZaloTokenService.deactivate(request.user)
+
+    @http_get("/get/facebook/groupID", auth=AuthBearer())
+    def get_facebook_groupid(self, request):
+        access_token = FacebookTokenService.get_token_by_user(request.user)
+        user_id = get_user_id(token=access_token)
+        return get_user_page_info(token=access_token, user_id=user_id)
