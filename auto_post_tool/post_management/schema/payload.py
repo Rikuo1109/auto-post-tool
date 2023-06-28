@@ -23,6 +23,7 @@ class PostManagementPayloadSchema(Schema):
     platform: PostManagementPlatFormEnum
     auto_publish: bool
     time_posting: Optional[datetime]
+    entity: Optional[dict]
 
 
 """

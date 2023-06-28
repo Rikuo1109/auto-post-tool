@@ -70,4 +70,4 @@ class PostManagement(models.Model):
             self.time_posting = datetime.now()
         elif self.auto_publish and self.time_posting is None:
             raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
-        return super().full_clean(exclude=["post", "status"], validate_unique=validate_unique)
+        return super().full_clean(exclude=["post", "status", "url"], validate_unique=validate_unique)

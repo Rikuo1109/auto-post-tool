@@ -9,7 +9,7 @@ class PagesFacebookApiService:
         self.post_management = post_management
         user = post_management.post.user
         self.page_id = "111255372005139"
-        self.access_token = "EAAECSZAzYmwwBAPWUbkqUCoj8bbZAbdjPZBOZBXNCVWHXFBjLvM3EqapjZAsQZBvoCf0QlrVUz0QpjU6rVEZCa3zjQ1YQEtB7TcVjwoFpYiFLHySQ2yZBHZBnfgwLLWgeyyz3WsqOXt8kL5w3ZC7hqhYFSIUb2Ym4I9owqabxsKTdyFgAKO578674ZBJDCveNQIjsO0eZBHnGA709JFs6RvRE5tgJHmC4BOZB0YsZD"
+        self.access_token = "EAAECSZAzYmwwBAJzhjZAF4A11GSivnZBZCUtlcljHqk83b474sF7PA3ptvfTn1P50fV8gw9xFA1Dax4urTxVuOoKvjmoBDdt8tZBT4MXTAZBcZBtPN1xNZCA2ojNKii74n8ZCB0dv5MVBMa1dwTZAiog18ijoKhZBg2XciZChncOZBFi8O38XGMPQY9qKgsE0bQ1ZBsXIuMRqbB99atr6eqdBZCS7eYEeSVHA9TPTMZD"
         self.path = settings.FACEBOOK_API_HOST
         self.image_ids = list()
 
@@ -77,7 +77,7 @@ class PagesFacebookApiService:
         return {"access_token": self.access_token}
 
     def get_all_reactions(self):
-        if self.post_management.url is None:
+        if self.post_management.url == "":
             return 0
 
         params = self.prepair_params_interactions()
@@ -92,7 +92,7 @@ class PagesFacebookApiService:
         return len(return_response["data"])
 
     def get_all_comments(self):
-        if self.post_management.url is None:
+        if self.post_management.url == "":
             return 0
 
         params = self.prepair_params_interactions()
