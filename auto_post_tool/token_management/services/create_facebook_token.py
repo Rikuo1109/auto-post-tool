@@ -3,10 +3,9 @@ from datetime import datetime, timedelta
 from django.conf import settings
 
 import requests
-from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
 from user_account.models.user import User
-from utils.exceptions import ValidationError
+from utils.exceptions import NotFound, ValidationError
 
 
 class FacebookTokenService:
@@ -15,8 +14,7 @@ class FacebookTokenService:
     @staticmethod
     def create_token(exp: int, user: User, token: str):
         """function to create a facebook token in the DB"""
-        encrypted_token = pbkdf2_sha256.hash(token)
-        facebook_token = FacebookToken.objects.create(user=user, long_live_token=encrypted_token)
+        facebook_token = FacebookToken.objects.create(user=user, long_live_token=token)
         facebook_token.expire_at = datetime.now() + timedelta(seconds=exp)
         facebook_token.save()
 
@@ -48,6 +46,14 @@ class FacebookTokenService:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
 
     @staticmethod
+    def get_token_by_user(user: User):
+        try:
+            facebook_token = FacebookToken.objects.get(user=user, active=True)
+        except FacebookToken.DoesNotExist as exc:
+            raise NotFound(message_code="FACEBOOK_NOT_CONNECTED") from exc
+        return facebook_token.long_live_token
+
+    @staticmethod
     def deactivate(user: User):
         FacebookToken.objects.filter(user=user, active=True).update(active=False)
 
@@ -57,6 +63,7 @@ class FacebookTokenService:
 
     @staticmethod
     def check_valid_facebook_token(token: FacebookToken):
-        if not token.expire_at:
+        if token.expire_at > datetime.now() or not (token.active):
+            FacebookTokenService.deactivate(user=token.user)
             return False
-        return token.expire_at < datetime.now() and token.active
+        return True

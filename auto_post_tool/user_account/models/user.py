@@ -11,12 +11,7 @@ from utils.exceptions.exceptions import NotFound
 
 class UserManager(BaseUserManager):  # type: ignore
     def create_user(
-        self,
-        email: str,
-        password: str,
-        username: Optional[str] = None,
-        first_name: Optional[str] = None,
-        last_name: Optional[str] = None,
+        self, email: str, password: str, first_name: str = "admin", last_name: str = "admin", username: str = "admin"
     ) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
@@ -51,6 +46,12 @@ class User(AbstractUser):
     username = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
+
+    uid = models.UUIDField(unique=True, default=uuid4)
+
+    facebook_access_token = models.TextField(null=True)
+    zalo_access_token = models.TextField(null=True)
+
     # Required by django admin
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
