@@ -32,7 +32,7 @@ ERROR_MESSAGES = {
     "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
-    "RESET_TOKEN_INVALI_OR_EXPIRED": "Reset token is invalid or expired",
+    "RESET_TOKEN_INVALID_OR_EXPIRED": "Reset token is invalid or expired",
     # Check data format
     "INVALID_NAME": "First name and last name must contain no numbers",
     "INVALID_EMAIL": "Wrong email format",
@@ -42,7 +42,7 @@ ERROR_MESSAGES = {
     "DATA_MISSING": "Missing data input",
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
-    "FACEBOOK_TOKEN_NOT_CONNECTED": "Facebook not connected",
+    "FACEBOOK_NOT_CONNECTED": "Facebook not connected",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",
