@@ -66,6 +66,7 @@ class EmailThread(threading.Thread):
                 use_tls=self.use_tls,
                 timeout=self.timeout,
             )
+
             email_backend.send_messages([message])
 
         except Exception as e:
@@ -81,7 +82,7 @@ class EmailThread(threading.Thread):
 
             connection.send_messages(self.messages)
 
-    def run(self):
+    def run(self) -> None:
         if self.send_type == "normal":
             self.send_normal()
         else:
