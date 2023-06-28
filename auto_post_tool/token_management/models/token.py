@@ -71,3 +71,21 @@ class ZaloToken(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
     active = models.BooleanField(default=True, null=False, blank=False)
     expire_at = models.DateTimeField(null=True, blank=False)
+
+
+class Group(models.Model):
+    """Model representing group ids attachted to their corresponding token"""
+
+    uid = models.UUIDField(default=uuid4, primary_key=True, editable=False)
+    user = models.ForeignKey(
+        to=User, related_name="zalo_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
+    )
+    token = models.ForeignKey(
+        to=FacebookToken,
+        related_name="group_fk_token",
+        on_delete=models.CASCADE,
+        db_constraint=False,
+        db_column="token",
+    )
+    group_name = models.CharField(max_length=128, null=False, blank=False)
+    group_id = models.CharField(max_length=64, null=False, blank=False)

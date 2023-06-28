@@ -3,9 +3,9 @@ from datetime import datetime, timedelta
 from django.conf import settings
 
 import requests
-from token_management.models.token import FacebookToken
+from token_management.models.token import FacebookToken, Group
 from user_account.models.user import User
-from utils.exceptions import NotAuthenticated, ValidationError
+from utils.exceptions import NotAuthenticated, ValidationError, NotFound
 
 
 class FacebookTokenService:
@@ -52,6 +52,23 @@ class FacebookTokenService:
         except FacebookToken.DoesNotExist as exc:
             raise NotAuthenticated(message_code="FACEBOOK_TOKEN_NOT_CONNECTED") from exc
         return facebook_token.long_live_token
+
+    @staticmethod
+    def create_group(user: User, groups: list[str]):
+        for group in groups:
+            Group.objects.create(
+                user=user,
+                token=FacebookTokenService.get_token_by_user(user=user),
+                group_name=group.get("name"),
+                group_id=group.get("id"),
+            )
+
+    @staticmethod
+    def get_group_ids_by_token(token: str):
+        groups = Group.objects.filter(token=token)
+        if groups.exists():
+            raise NotFound(message_code="FACEBOOK_TOKEN_NOT_CONNECTED")
+        return [group.group_id for group in groups]
 
     @staticmethod
     def deactivate(user: User):
