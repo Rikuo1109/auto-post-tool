@@ -25,6 +25,8 @@ class Post(models.Model):
             return Post.objects.get(uid=uid)
         except Post.DoesNotExist as e:
             raise NotFound(message_code="POST_NOT_FOUND") from e
+        except Post.MultipleObjectsReturned as e:
+            raise ValidationError(message_code="NOT_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):

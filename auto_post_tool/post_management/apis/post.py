@@ -36,8 +36,8 @@ class PostController:
     def view_post_matrix(
         self,
         request,
-        sorting: str = SortingPostEnum.CREATED_AT,
-        sort_type: str = SortTypeEnum.ASC,
+        sorting: SortingPostEnum = SortingPostEnum.CREATED_AT,
+        sort_type: SortTypeEnum = SortTypeEnum.ASC,
         filters: PostFiltersRequest = Query(...),
     ):
         service = Service(request=request)
@@ -77,8 +77,8 @@ class PostController:
         self,
         request,
         uid,
-        sorting: str = SortingPostManagementEnum.TIME_POSTING,
-        sort_type: str = SortTypeEnum.ASC,
+        sorting: SortingPostManagementEnum = SortingPostManagementEnum.TIME_POSTING,
+        sort_type: SortTypeEnum = SortTypeEnum.ASC,
         filters: PostManagementFiltersRequest = Query(...),
     ):
         """
@@ -95,8 +95,8 @@ class PostController:
     def view_post_management_matrix(
         self,
         request,
-        sorting: str = SortingPostManagementEnum.TIME_POSTING,
-        sort_type: str = SortTypeEnum.ASC,
+        sorting: SortingPostManagementEnum = SortingPostManagementEnum.TIME_POSTING,
+        sort_type: SortTypeEnum = SortTypeEnum.ASC,
         filters: PostManagementFiltersRequest = Query(...),
     ):
         service = Service(request=request)

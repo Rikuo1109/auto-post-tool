@@ -3,6 +3,8 @@ from django.conf import settings
 import requests
 from ..services.required_items_service import RequiredItemsService
 from ..services.response_items_service import ResponseItemsService
+from ..services.update_status_service import UpdateStatusService
+from utils.enums.post import PostManagementStatusEnum
 from utils.exceptions import ValidationError
 
 
@@ -72,8 +74,11 @@ class PagesFacebookApiService:
         )
 
         return_response = self.handle_response(response)
+
         service = ResponseItemsService(self.post_management)
         service.save_item(item_key="page_post_id", item_value=return_response["id"])
+        service = UpdateStatusService(self.post_management)
+        service(PostManagementStatusEnum.SUCCESS)
         return return_response
 
     def prepair_params_interactions(self):
@@ -112,8 +117,8 @@ class PagesFacebookApiService:
     def handle_response(self, response):
         """
         handle response does not complete, please check by using response.json()
-        """
         print("response", response.json())
+        """
         if response.status_code == 200:
             return response.json()
         elif response.status_code == 400:

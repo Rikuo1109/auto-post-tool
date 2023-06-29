@@ -61,7 +61,7 @@ class User(AbstractUser):
     date_joined = models.DateTimeField(auto_now=False, auto_now_add=True)
 
     @staticmethod
-    def get_user_by_email(email):
+    def get_user_by_email(email:str):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:
