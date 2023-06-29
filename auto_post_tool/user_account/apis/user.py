@@ -93,7 +93,7 @@ class UserController:
             raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
-        BaseValidate.validate_password(password=data.password):
+        BaseValidate.validate_password(password=data.password)
         user = reset_token.user
         user.set_password(data.password)
         user.save()
