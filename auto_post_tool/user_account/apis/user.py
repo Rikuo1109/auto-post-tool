@@ -93,11 +93,11 @@ class UserController:
             raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
-        if BaseValidate.validate_password(password=data.password):
-            user = reset_token.user
-            user.set_password(data.password)
-            user.save()
-            ResetTokenService.deactivate(token=reset_token)
+        BaseValidate.validate_password(password=data.password):
+        user = reset_token.user
+        user.set_password(data.password)
+        user.save()
+        ResetTokenService.deactivate(token=reset_token)
 
     @http_post("/connect/facebook", auth=AuthBearer())
     def connect_facebook_token(self, request, data: UserFacebookTokenRequest):
@@ -115,7 +115,7 @@ class UserController:
     def disconnect_zalo_token(self, request):
         ZaloTokenService.deactivate(request.user)
 
-    @http_get("/get/facebook/pageID", auth=AuthBearer())
+    @http_get("/get/facebook/page_id", auth=AuthBearer())
     def get_facebook_groupid(self, request):
         access_token = FacebookTokenService.get_token_by_user(request.user)
         return get_user_fb_page_info(token=access_token)

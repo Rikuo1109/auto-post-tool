@@ -16,13 +16,6 @@ class BaseValidate:
 
     @staticmethod
     def validate_password(password: str):
-        # if not PasswordValidate.check_minimum_length(password=password):
-        #     raise ValidationError(message_code="INVALID_PASSWORD")
-        # if settings.PASSWORD_MUST_CONTAIN_NUMBER != "True":
-        #     return True
-        # if not PasswordValidate.check_contains_number(password=password):
-        #     raise ValidationError(message_code="INVALID_PASSWORD")
-        # return True
         if settings.PASSWORD_MINIMUM_LENGTH:
             if not BaseValidator.is_longger_than(value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)):
                 raise ValidationError(message_code="INVALID_PASSWORD")
