@@ -85,30 +85,32 @@ class PagesFacebookApiService:
         return {"access_token": self.access_token}
 
     def get_all_reactions(self):
-        if self.post_management.url == "":
+        try:
+            service = ResponseItemsService(self.post_management)
+            page_post_id = service.load_item(item_key="page_post_id")
+        except ValidationError:
             return 0
 
         params = self.prepair_params_interactions()
 
         response = requests.get(
-            "/".join([self.path, self.post_management.required_items["page_id"], "reactions"]),
-            params=params,
-            timeout=settings.REQUEST_TIMEOUT,
+            "/".join([self.path, page_post_id, "reactions"]), params=params, timeout=settings.REQUEST_TIMEOUT
         )
 
         return_response = self.handle_response(response)
         return len(return_response["data"])
 
     def get_all_comments(self):
-        if self.post_management.url == "":
+        try:
+            service = ResponseItemsService(self.post_management)
+            page_post_id = service.load_item(item_key="page_post_id")
+        except ValidationError:
             return 0
 
         params = self.prepair_params_interactions()
 
         response = requests.get(
-            "/".join([self.path, self.post_management.required_items["page_id"], "comments"]),
-            params=params,
-            timeout=settings.REQUEST_TIMEOUT,
+            "/".join([self.path, page_post_id, "comments"]), params=params, timeout=settings.REQUEST_TIMEOUT
         )
 
         return_response = self.handle_response(response)

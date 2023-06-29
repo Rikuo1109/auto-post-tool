@@ -1,5 +1,5 @@
-from .required_items_service import RequiredItemsService
 from ..facebook.pages_api import PagesFacebookApiService
+from .required_items_service import RequiredItemsService
 from utils.enums.post import PostManagementPlatFormEnum
 
 

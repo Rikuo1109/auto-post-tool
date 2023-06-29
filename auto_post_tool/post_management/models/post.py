@@ -17,7 +17,7 @@ class Post(models.Model):
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
     created_at = models.DateTimeField(auto_now_add=True)
-    images = models.ManyToManyField(ImagePost, related_name="posts", blank=True)
+    images = models.ManyToManyField(to=ImagePost, related_name="posts_mm_iamges", blank=True, db_constraint=False)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -26,7 +26,7 @@ class Post(models.Model):
         except Post.DoesNotExist as e:
             raise NotFound(message_code="POST_NOT_FOUND") from e
         except Post.MultipleObjectsReturned as e:
-            raise ValidationError(message_code="NOT_FOUND") from e
+            raise ValidationError(message_code="MORE_THAN_ONE_POST_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):
@@ -58,6 +58,8 @@ class PostManagement(models.Model):
             return PostManagement.objects.get(uid=uid)
         except PostManagement.DoesNotExist as e:
             raise NotFound(message_code="POST_MANAGEMENT_NOT_FOUND") from e
+        except Post.MultipleObjectsReturned as e:
+            raise ValidationError(message_code="MORE_THAN_ONE_POST_MANAGEMENT_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):
