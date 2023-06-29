@@ -1,9 +1,12 @@
 from django.db import transaction
 
-from post_management.services.post_management.get_interactions import GetInteractionsService
-
 from .post import CreatePostService, GetDetailPostService, RemovePostService, UpdatePostDetailService
-from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
+from .post_management import (
+    CreatePostManagementService,
+    GetInteractionsService,
+    RemovePostManagementService,
+    UpdatePostManagementService,
+)
 from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
 from post_management.services.apis import ApiPublishService
@@ -19,6 +22,7 @@ class Service:
     def create_post_service(self, data):
         service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
         post = service()
+
         if len(data.images) > 0:
             post.images.add(*ImagePost.filter_by_uids(data.images))
 

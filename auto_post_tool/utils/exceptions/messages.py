@@ -47,6 +47,8 @@ ERROR_MESSAGES = {
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
     "FACEBOOK_NOT_CONNECTED": "Facebook not connected",
+    "FACEBOOK_NOT_FOUND_PAGE": "Facebook not found page",
+    "FACEBOOK_NOT_FOUND_GROUP": "Facebook not found group",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",

@@ -29,7 +29,6 @@ class UserManager(BaseUserManager):  # type: ignore
         user.is_staff = True
         user.is_active = True
         user.save(using=self._db)
-        print("Superuser created successfully.")
         return user
 
 
