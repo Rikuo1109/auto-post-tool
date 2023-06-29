@@ -7,15 +7,17 @@ from token_management.models.token import FacebookToken
 from user_account.models.user import User
 from utils.exceptions import NotFound, ValidationError
 
+SUCCESS_CODE = 200
+
 
 class FacebookTokenService:
     """Get the value of access token from FE then turn it into a ThirdPartyToken Object in the DB"""
 
     @staticmethod
-    def create_token(exp: int, user: User, token: str):
+    def create_token(expire_time: int, user: User, token: str):
         """function to create a facebook token in the DB"""
         facebook_token = FacebookToken.objects.create(user=user, long_live_token=token)
-        facebook_token.expire_at = datetime.now() + timedelta(seconds=exp)
+        facebook_token.expire_at = datetime.now() + timedelta(seconds=expire_time)
         facebook_token.save()
 
     @staticmethod
@@ -36,14 +38,14 @@ class FacebookTokenService:
             )
         except TimeoutError as exc:
             raise TimeoutError("Request timed out") from exc
-
-        if response.status_code == 200:
-            response_data = response.json()
-            FacebookTokenService.create_token(
-                exp=int(response_data.get("expires_in")), user=user, token=response_data.get("access_token")
-            )
-        else:
+        if response.status_code is not SUCCESS_CODE:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
+        response_data = response.json()
+        FacebookTokenService.create_token(
+            expire_time=int(response_data.get("expires_in", settings.FACEBOOK_LONG_LIVE_TOKEN_LIFETIME)),
+            user=user,
+            token=response_data.get("access_token"),
+        )
 
     @staticmethod
     def get_token_by_user(user: User):
@@ -63,4 +65,7 @@ class FacebookTokenService:
 
     @staticmethod
     def check_valid_facebook_token(token: FacebookToken):
-        return token.expire_at < datetime.now() and token.active
+        if token.expire_at > datetime.now() or not (token.active):
+            FacebookTokenService.deactivate(user=token.user)
+            return False
+        return True
