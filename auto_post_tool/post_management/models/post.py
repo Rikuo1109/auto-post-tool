@@ -17,7 +17,7 @@ class Post(models.Model):
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
     created_at = models.DateTimeField(auto_now_add=True)
-    images = models.ManyToManyField(ImagePost, related_name="posts", blank=True)
+    images = models.ManyToManyField(to=ImagePost, related_name="posts_mm_iamges", blank=True, db_constraint=False)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -25,6 +25,8 @@ class Post(models.Model):
             return Post.objects.get(uid=uid)
         except Post.DoesNotExist as e:
             raise NotFound(message_code="POST_NOT_FOUND") from e
+        except Post.MultipleObjectsReturned as e:
+            raise ValidationError(message_code="MORE_THAN_ONE_POST_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):
@@ -46,7 +48,9 @@ class PostManagement(models.Model):
     status = models.CharField(
         max_length=16, choices=PostManagementStatusEnum.choices, default=PostManagementStatusEnum.PENDING
     )
-    url = models.URLField(max_length=255)
+    url = models.URLField(max_length=255, blank=True)
+    required_items = models.TextField(blank=True)
+    response_items = models.TextField(blank=True)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -54,6 +58,8 @@ class PostManagement(models.Model):
             return PostManagement.objects.get(uid=uid)
         except PostManagement.DoesNotExist as e:
             raise NotFound(message_code="POST_MANAGEMENT_NOT_FOUND") from e
+        except Post.MultipleObjectsReturned as e:
+            raise ValidationError(message_code="MORE_THAN_ONE_POST_MANAGEMENT_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):
@@ -63,11 +69,11 @@ class PostManagement(models.Model):
     def filter_by_post(post):
         return PostManagement.objects.filter(post=post)
 
-    def full_clean(self, exclude=None, validate_unique=True):
+    def full_clean(self, exclude=["post", "status"], validate_unique=True):
         if self.auto_publish is None:
             raise ValidationError(message_code="INVALID_FIELD")
         if not self.auto_publish:
             self.time_posting = datetime.now()
         elif self.auto_publish and self.time_posting is None:
             raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
-        return super().full_clean(exclude=["post", "status", "url"], validate_unique=validate_unique)
+        return super().full_clean(exclude=exclude, validate_unique=validate_unique)

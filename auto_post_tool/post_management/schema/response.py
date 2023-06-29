@@ -24,13 +24,13 @@ class PostManagementDetailResponse(ModelSchema):
 
     class Config:
         model = PostManagement
-        model_fields = ["uid", "platform", "auto_publish", "time_posting"]
+        model_fields = ["uid", "platform", "auto_publish", "time_posting", "status"]
 
 
 class PostManagementMatrixResponse(ModelSchema):
     class Config:
         model = PostManagement
-        model_fields = ["uid", "platform", "auto_publish", "time_posting"]
+        model_fields = ["uid", "platform", "auto_publish", "time_posting", "status"]
 
 
 class PostManagementUidResponse(ModelSchema):

@@ -1,6 +1,10 @@
 from django.conf import settings
 
 import requests
+from ..services.required_items_service import RequiredItemsService
+from ..services.response_items_service import ResponseItemsService
+from ..services.update_status_service import UpdateStatusService
+from utils.enums.post import PostManagementStatusEnum
 from utils.exceptions import ValidationError
 
 
@@ -8,8 +12,9 @@ class PagesFacebookApiService:
     def __init__(self, post_management):
         self.post_management = post_management
         user = post_management.post.user
-        self.page_id = "111255372005139"
-        self.access_token = "EAAECSZAzYmwwBAJzhjZAF4A11GSivnZBZCUtlcljHqk83b474sF7PA3ptvfTn1P50fV8gw9xFA1Dax4urTxVuOoKvjmoBDdt8tZBT4MXTAZBcZBtPN1xNZCA2ojNKii74n8ZCB0dv5MVBMa1dwTZAiog18ijoKhZBg2XciZChncOZBFi8O38XGMPQY9qKgsE0bQ1ZBsXIuMRqbB99atr6eqdBZCS7eYEeSVHA9TPTMZD"
+        service = RequiredItemsService(post_management=self.post_management)
+        self.page_id = service.load_item(item_key="page_id")
+        self.access_token = service.load_item(item_key="access_token")
         self.path = settings.FACEBOOK_API_HOST
         self.image_ids = list()
 
@@ -69,36 +74,43 @@ class PagesFacebookApiService:
         )
 
         return_response = self.handle_response(response)
-        self.post_management.url = return_response["id"]
-        self.post_management.save()
+
+        service = ResponseItemsService(self.post_management)
+        service.save_item(item_key="page_post_id", item_value=return_response["id"])
+        service = UpdateStatusService(self.post_management)
+        service(PostManagementStatusEnum.SUCCESS)
         return return_response
 
     def prepair_params_interactions(self):
         return {"access_token": self.access_token}
 
     def get_all_reactions(self):
-        if self.post_management.url == "":
+        try:
+            service = ResponseItemsService(self.post_management)
+            page_post_id = service.load_item(item_key="page_post_id")
+        except ValidationError:
             return 0
 
         params = self.prepair_params_interactions()
 
         response = requests.get(
-            "/".join([self.path, self.post_management.url, "reactions"]),
-            params=params,
-            timeout=settings.REQUEST_TIMEOUT,
+            "/".join([self.path, page_post_id, "reactions"]), params=params, timeout=settings.REQUEST_TIMEOUT
         )
 
         return_response = self.handle_response(response)
         return len(return_response["data"])
 
     def get_all_comments(self):
-        if self.post_management.url == "":
+        try:
+            service = ResponseItemsService(self.post_management)
+            page_post_id = service.load_item(item_key="page_post_id")
+        except ValidationError:
             return 0
 
         params = self.prepair_params_interactions()
 
         response = requests.get(
-            "/".join([self.path, self.post_management.url, "comments"]), params=params, timeout=settings.REQUEST_TIMEOUT
+            "/".join([self.path, page_post_id, "comments"]), params=params, timeout=settings.REQUEST_TIMEOUT
         )
 
         return_response = self.handle_response(response)
@@ -107,6 +119,7 @@ class PagesFacebookApiService:
     def handle_response(self, response):
         """
         handle response does not complete, please check by using response.json()
+        print("response", response.json())
         """
         if response.status_code == 200:
             return response.json()

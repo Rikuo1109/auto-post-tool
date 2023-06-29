@@ -24,27 +24,38 @@ ERROR_MESSAGES = {
     # Check user existence
     "USER_NOT_FOUND": "User not found",
     "EMAIL_HAS_BEEN_USED": "Email has been used",
-    # Check login information
-    "INVALID_PASSWORD": "Password must contain at least 8 character and not contain any special character",
     # Check new password and old password
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
     "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
-    "RESET_TOKEN_INVALI_OR_EXPIRED": "Reset token is invalid or expired",
+    "RESET_TOKEN_NOT_FOUND": "Reset token not found",
+    "RESET_TOKEN_EXPIRED": "Reset token has expired",
+    # Check reset token
+    "RESET_TOKEN_INVALID_OR_EXPIRED": "Reset token is invalid or expired",
     # Check data format
-    "INVALID_FIRST_NAME": "Invalid first name",
-    "INVALID_LAST_NAME": "Invalid last name",
-    "INVALID_EMAIL": "Invalid email",
+    "INVALID_NAME": "First name and last name must contain no numbers",
+    "INVALID_EMAIL": "Wrong email format",
+    "INVALID_PASSWORD": "Password must contain at least 8 characters and contain at least 1 number and 1 letter",
     "INVALID_USERNAME": "Username must contain 8 characters",
     "INVALID_EMAIL_PASSWORD": "Invalid email or password",
     "DATA_MISSING": "Missing data input",
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
-    "FACEBOOK_TOKEN_NOT_CONNECTED": "Facebook not connected",
+    "FACEBOOK_NOT_CONNECTED": "Facebook not connected",
+    "MATERIAL_NOT_FOUND": "Material not found",
+    "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
+    "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
+    "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",
     "ZALO_TOKEN_NOT_CONNECTED": "Zalo not connected",
+    # Post errors
+    "POST_NOT_FOUND": "Post not found",
+    "MORE_THAN_ONE_POST_FOUND": "More than one post found",
+    # Post management errors
+    "POST_MANAGEMENT_NOT_FOUND": "Post management not found",
+    "MORE_THAN_ONE_POST_MANAGEMENT_FOUND": "More than one post management found",
 }
