@@ -1,9 +1,8 @@
 from django.conf import settings
 
 import requests
-
-from .services import RequiredItemsService, ResponseItemsService
-
+from ..services.required_items_service import RequiredItemsService
+from ..services.response_items_service import ResponseItemsService
 from utils.exceptions import ValidationError
 
 
@@ -11,9 +10,9 @@ class PagesFacebookApiService:
     def __init__(self, post_management):
         self.post_management = post_management
         user = post_management.post.user
-        service = RequiredItemsService(self.post_management)
-        self.page_id = service.load_page_id()
-        self.access_token = "EAAECSZAzYmwwBAD8katdZB35ZCMtb5hepIoQmuXJexFUtewAbfIvs1ZC82SZCZAGqVQcaqSn1OPiIxBvA2vvOtGfXN7qmWguwWt2HkZC7sO9J48WDT7tjqK4U2lxVIm5ywx9359tLaPSEADAFFWNk5YOOZC446Oz8XZBCNzTqrBDSg6bdqAkWQ2iZASFNoiMIKwR5BLmMAU0NEdFz6syRrRq4v5KAXSbvfwuMZD"
+        service = RequiredItemsService(post_management=self.post_management)
+        self.page_id = service.load_item(item_key="page_id")
+        self.access_token = service.load_item(item_key="access_token")
         self.path = settings.FACEBOOK_API_HOST
         self.image_ids = list()
 
@@ -74,7 +73,7 @@ class PagesFacebookApiService:
 
         return_response = self.handle_response(response)
         service = ResponseItemsService(self.post_management)
-        service.save_page_post_id(return_response["id"])
+        service.save_item(item_key="page_post_id", item_value=return_response["id"])
         return return_response
 
     def prepair_params_interactions(self):
@@ -114,7 +113,7 @@ class PagesFacebookApiService:
         """
         handle response does not complete, please check by using response.json()
         """
-        print(response.json())
+        print("response", response.json())
         if response.status_code == 200:
             return response.json()
         elif response.status_code == 400:

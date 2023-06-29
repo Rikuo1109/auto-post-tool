@@ -1,15 +1,10 @@
 from django.db import transaction
 
+from .apis.services import ApiGetInteractionsService, ApiPublishService
 from .post import CreatePostService, GetDetailPostService, RemovePostService, UpdatePostDetailService
-from .post_management import (
-    CreatePostManagementService,
-    GetInteractionsService,
-    RemovePostManagementService,
-    UpdatePostManagementService,
-)
+from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
 from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
-from post_management.services.apis import ApiPublishService
 from utils.functions.filters import FiltersUtils
 from utils.functions.validator import ValidatorsUtils
 
@@ -54,7 +49,7 @@ class Service:
     def view_post_management_detail_service(self, uid):
         post_management = PostManagement.get_by_uid(uid=uid)
         ValidatorsUtils.validator_user_post_management(user=self.request.user, post_management=post_management)
-        service = GetInteractionsService(post_management)
+        service = ApiGetInteractionsService(post_management)
         post_management.reactions = service.get_all_reactions()
         post_management.comments = service.get_all_comments()
         post_management.content = post_management.post.content
