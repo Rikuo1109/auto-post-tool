@@ -1,37 +1,41 @@
-from ._abstract import StringValidate
 from utils.exceptions.exceptions import ValidationError
+from django.conf import settings
+from .validate_password import PasswordValidate
+from .validate_username import UsernameValidate
+from .validate_name import NameValidate
+from .validate_email import EmailValidate
 
 
 class BaseValidate:
     @staticmethod
     def validate_username(username: str):
-        result = StringValidate.check_minimum_length(input=username)
-        if not result:
+        if not UsernameValidate.check_minimum_length(username=username):
             raise ValidationError(message_code="INVALID_USERNAME")
-        return result
+        return True
 
     @staticmethod
     def validate_password(password: str):
-        result = StringValidate.check_minimum_length(
-            input=password
-        ) and StringValidate.check_contains_number_and_letter(input=password)
-        if not result:
+        if not PasswordValidate.check_minimum_length(password=password):
             raise ValidationError(message_code="INVALID_PASSWORD")
-        return result
+        if settings.PASSWORD_MUST_CONTAIN_NUMBER != "True":
+            return True
+        if not PasswordValidate.check_contains_number(password=password):
+            raise ValidationError(message_code="INVALID_PASSWORD")
+        return True
 
     @staticmethod
     def validate_name(name: str):
-        result = StringValidate.check_no_contains_number(input=name)
-        if not result:
+        if settings.NAME_CANT_CONTAIN_NUMBER != "True":
+            return True
+        if NameValidate.check_contains_number(name=name):
             raise ValidationError(message_code="INVALID_NAME")
-        return result
+        return True
 
     @staticmethod
     def validate_email(email: str):
-        result = StringValidate.check_email_format(input=email)
-        if not result:
+        if not EmailValidate.check_email_format(email=email):
             raise ValidationError(message_code="INVALID_EMAIL")
-        return result
+        return True
 
     @staticmethod
     def validate_register(data: dict):
