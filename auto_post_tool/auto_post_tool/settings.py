@@ -121,7 +121,9 @@ DATABASES = {
 # JWT Settings
 ACCESS_TOKEN_LIFETIME = int(str(os.environ.get("ACCESS_TOKEN_LIFETIME")))
 REFRESH_TOKEN_LIFETIME = int(str(os.environ.get("REFRESH_TOKEN_LIFETIME")))
-RESET_PASSWORD_TOKEN_LIFETIME = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LIFETIME")))
+RESET_PASSWORD_TOKEN_LIFETIME = int(
+    str(os.environ.get("RESET_PASSWORD_TOKEN_LIFETIME"))
+)
 
 
 NINJA_JWT = {
@@ -153,7 +155,9 @@ NINJA_JWT = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {
+        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
+    },
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -211,13 +215,33 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {"format": "[%(asctime)s] [%(levelname)s] %(message)s", "datefmt": "%d/%b/%Y %H:%M:%S"},
-        "color_formatter": {"()": "utils.logging.formatter.Formatter"},  # colored output
+        "verbose": {
+            "format": "[%(asctime)s] [%(levelname)s] %(message)s",
+            "datefmt": "%d/%b/%Y %H:%M:%S",
+        },
+        "color_formatter": {
+            "()": "utils.logging.formatter.Formatter"
+        },  # colored output
     },
-    "handlers": {"console_handler": {"class": "logging.StreamHandler", "formatter": "color_formatter"}},
+    "handlers": {
+        "console_handler": {
+            "class": "logging.StreamHandler",
+            "formatter": "color_formatter",
+        }
+    },
     "loggers": {
-        "": {"level": "DEBUG", "handlers": ["console_handler"], "propagate": False, "formatter": "color_formatter"},
-        "API": {"level": "DEBUG", "handlers": ["console_handler"], "propagate": False, "formatter": "color_formatter"},
+        "": {
+            "level": "DEBUG",
+            "handlers": ["console_handler"],
+            "propagate": False,
+            "formatter": "color_formatter",
+        },
+        "API": {
+            "level": "DEBUG",
+            "handlers": ["console_handler"],
+            "propagate": False,
+            "formatter": "color_formatter",
+        },
     },
 }
 
@@ -240,8 +264,11 @@ FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
 FACEBOOK_API_VERSION = os.environ.get("FACEBOOK_API_VERSION")
 FACEBOOK_LONG_LIVE_TOKEN_LIFETIME = os.environ.get("FACEBOOK_LONG_LIVE_TOKEN_LIFETIME")
 FACEBOOK_ACCESS_TOKEN_URL = os.environ.get("FACEBOOK_ACCESS_TOKEN_URL")
+FACEBOOK_GET_USERID_URL = os.environ.get("FACEBOOK_GET_USERID_URL")
+FACEBOOK_GET_USER_PAGES_URL = os.environ.get("FACEBOOK_GET_USER_PAGES_URL")
 
 ZALO_API_APP_ID = os.environ.get("ZALO_API_APP_ID")
+API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
 ZALO_API_APP_SECRET = os.environ.get("ZALO_API_APP_SECRET")
 ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
 
@@ -260,8 +287,15 @@ TWITTER_ACCESS_TOKEN_SECRET = os.environ.get("TWITTER_ACCESS_TOKEN_SECRET")
 TWITTER_BEARER_TOKEN = os.environ.get("TWITTER_BEARER_TOKEN")
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
 
-API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
+# password rules
+PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER")
+PASSWORD_MINIMUM_LENGTH = os.environ.get("PASSWORD_MINIMUM_LENGTH")
 
-NAME = os.environ.get("NAME")
-PASSWORD = os.environ.get("PASSWORD")
-EMAIL = os.environ.get("EMAIL")
+# username rules
+USERNAME_MINIMUM_LENGTH = os.environ.get("USERNAME_MINIMUM_LENGTH")
+
+# name rules
+NAME_CANT_CONTAIN_NUMBER = os.environ.get("NAME_CANT_CONTAIN_NUMBER")
+
+
+SUCCESS_CODE = os.environ.get("SUCCESS_CODE")
