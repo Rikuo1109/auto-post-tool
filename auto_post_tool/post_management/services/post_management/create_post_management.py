@@ -1,3 +1,5 @@
+import json
+
 from django.db import transaction
 
 from post_management.models.post import Post, PostManagement
@@ -13,7 +15,11 @@ class CreatePostManagementService:
         post_managements = []
         for _ in self.managements:
             post_management = PostManagement(
-                post=self.post, platform=_.platform, auto_publish=_.auto_publish, time_posting=_.time_posting
+                post=self.post,
+                platform=_.platform,
+                auto_publish=_.auto_publish,
+                time_posting=_.time_posting,
+                required_items=json.dumps(_.required_items),
             )
             post_management.full_clean()
             post_managements.append(post_management)

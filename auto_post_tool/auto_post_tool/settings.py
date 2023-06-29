@@ -197,6 +197,7 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 # UID
 BASE_UI_URL = os.environ.get("BASE_UI_URL")
 BASE_MEDIA_HOST = os.environ.get("BASE_MEDIA_HOST")
+BASE_HOST = os.environ.get("BASE_HOST")
 
 # media directory in the root directory
 MEDIA_ROOT = os.path.join(BASE_DIR, str(os.environ.get("MEDIA_ROOT")))
@@ -234,6 +235,7 @@ JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
 
 RESET_TOKEN_LENGTH = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LENGTH")))
 
+FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 FACEBOOK_API_APP_ID = os.environ.get("FACEBOOK_API_APP_ID")
 FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
 FACEBOOK_API_VERSION = os.environ.get("FACEBOOK_API_VERSION")
@@ -243,11 +245,42 @@ FACEBOOK_GET_USERID_URL = os.environ.get("FACEBOOK_GET_USERID_URL")
 FACEBOOK_GET_USER_PAGES_URL = os.environ.get("FACEBOOK_GET_USER_PAGES_URL")
 
 ZALO_API_APP_ID = os.environ.get("ZALO_API_APP_ID")
+
+ZALO_API_REQUEST_CONTENT_TYPE = os.environ.get("ZALO_API_REQUEST_CONTENT_TYPE")
+ZALO_API_SECRET_KEY = os.environ.get("ZALO_API_SECRET_KEY")
+FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
+
+ZALO_API_HOST = os.environ.get("ZALO_API_HOST")
+
 API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
 ZALO_API_APP_SECRET = os.environ.get("ZALO_API_APP_SECRET")
 ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
 
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
+
+
+MINIMUM_LENGTH = os.environ.get("MINIMUM_LENGTH")
+CONTAIN_NO_NUMBER = os.environ.get("CONTAIN_NO_NUMBER")
+CONTAIN_NUMBER_AND_LETTER = os.environ.get("CONTAIN_NUMBER_AND_LETTER")
+EMAIL = os.environ.get("EMAIL")
+
+NAME = os.environ.get("NAME")
+PASSWORD = os.environ.get("PASSWORD")
+EMAIL = os.environ.get("EMAIL")
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHILELIST = ("localhost:9999",)
+REGEX_MINIMUM_LENGTH = os.environ.get("REGEX_MINIMUM_LENGTH")
+REGEX_CONTAIN_NO_NUMBER = os.environ.get("REGEX_CONTAIN_NO_NUMBER")
+REGEX_CONTAIN_NUMBER_AND_LETTER = os.environ.get("REGEX_CONTAIN_NUMBER_AND_LETTER")
+REGEX_EMAIL = os.environ.get("REGEX_EMAIL")
+
+SUCCESS_CODE = os.environ.get("SUCCESS_CODE")
+
+# Github
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPO = os.environ.get("GITHUB_REPO")
 
 # password rules
 PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER")
@@ -261,3 +294,4 @@ NAME_CANT_CONTAIN_NUMBER = os.environ.get("NAME_CANT_CONTAIN_NUMBER")
 
 
 SUCCESS_CODE = os.environ.get("SUCCESS_CODE")
+

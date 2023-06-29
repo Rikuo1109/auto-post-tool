@@ -13,8 +13,8 @@ class LoginToken(models.Model):
     user = models.ForeignKey(
         to=User, related_name="login_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
     )
-    token = models.TextField(max_length=64, unique=True, null=False, blank=False)
-    active = models.BooleanField(default=True, null=False, blank=False)
+    token = models.TextField(editable=False, max_length=64, unique=True, null=False, blank=False)
+    active = models.BooleanField(editable=True, default=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=False, blank=False)
     deactivated_at = models.DateTimeField(null=True)
 
@@ -26,8 +26,8 @@ class ResetToken(models.Model):
     user = models.ForeignKey(
         to=User, related_name="reset_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
     )
-    token = models.TextField(max_length=64, null=False, blank=False)
-    active = models.BooleanField(default=True, null=False, blank=False)
+    token = models.TextField(editable=False, max_length=64, null=False, blank=False)
+    active = models.BooleanField(editable=True, default=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
     expire_at = models.DateTimeField(null=True, blank=False)
 
@@ -49,7 +49,7 @@ class FacebookToken(models.Model):
         db_constraint=False,
         db_column="user_uid",
     )
-    long_live_token = models.TextField(unique=True, null=False, blank=False)
+    long_live_token = models.TextField(editable=False, unique=True, null=False, blank=False)
     active = models.BooleanField(default=True, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, auto_now=False, null=False, blank=False)
     expire_at = models.DateTimeField(null=True, blank=False)
@@ -66,8 +66,8 @@ class ZaloToken(models.Model):
     user = models.ForeignKey(
         to=User, related_name="zalo_token_fk_user", on_delete=models.CASCADE, db_constraint=False, db_column="user_uid"
     )
-    access_token = models.TextField(unique=True, null=False, blank=False)
-    refresh_token = models.TextField(unique=False, null=False, blank=False)
+    access_token = models.TextField(editable=False, unique=True, null=False, blank=False)
+    refresh_token = models.TextField(editable=False, unique=False, null=False, blank=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False, blank=False)
     active = models.BooleanField(default=True, null=False, blank=False)
     expire_at = models.DateTimeField(null=True, blank=False)

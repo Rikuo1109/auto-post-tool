@@ -3,9 +3,10 @@ from datetime import datetime, timedelta
 from django.conf import settings
 
 import requests
+from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
 from user_account.models.user import User
-from utils.exceptions import NotFound, ValidationError
+from utils.exceptions import ValidationError
 
 SUCCESS_CODE = 200
 
@@ -48,14 +49,6 @@ class FacebookTokenService:
         )
 
     @staticmethod
-    def get_token_by_user(user: User):
-        try:
-            facebook_token = FacebookToken.objects.get(user=user, active=True)
-        except FacebookToken.DoesNotExist as exc:
-            raise NotFound(message_code="FACEBOOK_NOT_CONNECTED") from exc
-        return facebook_token.long_live_token
-
-    @staticmethod
     def deactivate(user: User):
         FacebookToken.objects.filter(user=user, active=True).update(active=False)
 
@@ -69,3 +62,4 @@ class FacebookTokenService:
             FacebookTokenService.deactivate(user=token.user)
             return False
         return True
+

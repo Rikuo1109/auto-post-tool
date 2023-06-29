@@ -1,14 +1,12 @@
 from django.db import transaction
 
-from .post.create_post import CreatePostService
-from .post.get_detail_post import GetDetailPostService
-from .post.remove_post import RemovePostService
-from .post.update_detail_post import UpdatePostDetailService
-from .post_management.create_post_management import CreatePostManagementService
-from .post_management.remove_post_management import RemovePostManagementService
-from .post_management.update_post_management import UpdatePostManagementService
+from .apis.services import ApiGetInteractionsService, ApiPublishService
+from .post import CreatePostService, GetDetailPostService, RemovePostService, UpdatePostDetailService
+from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
+from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
 from utils.functions.filters import FiltersUtils
+from utils.functions.validator import ValidatorsUtils
 
 
 class Service:
@@ -19,18 +17,23 @@ class Service:
     def create_post_service(self, data):
         service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
         post = service()
+
+        if len(data.images) > 0:
+            post.images.add(*ImagePost.filter_by_uids(data.images))
+
         service = CreatePostManagementService(post=post, managements=data.managements)
-        service()
-        return post
+        return service()
 
     def update_post_details_service(self, uid, data):
         post = Post.get_by_uid(uid=uid)
+        ValidatorsUtils.validator_user_post(user=self.request.user, post=post)
         service = UpdatePostDetailService(post=post, data=data)
         return service()
 
     def get_matrix_post_service(self, filters, sorting, sort_type):
         sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
-        return Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
+        posts = Post.objects.filter(filters.get_filter_expression(), user__exact=self.request.user).order_by(sort_field)
+        return posts
 
     def get_matrix_post_management_service(self, filters, sorting, sort_type):
         sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
@@ -39,23 +42,50 @@ class Service:
 
     def get_detail_post_service(self, uid):
         service = GetDetailPostService(uid)
-        return service()
+        post = service()
+        ValidatorsUtils.validator_user_post(user=self.request.user, post=post)
+        return post
+
+    def view_post_management_detail_service(self, uid):
+        post_management = PostManagement.get_by_uid(uid=uid)
+        ValidatorsUtils.validator_user_post_management(user=self.request.user, post_management=post_management)
+        service = ApiGetInteractionsService(post_management)
+        post_management.reactions = service.get_all_reactions()
+        post_management.comments = service.get_all_comments()
+        post_management.content = post_management.post.content
+        post_management.images = post_management.post.images
+        return post_management
+
+    def view_post_management_of_post_service(self, uid, filters, sorting, sort_type):
+        post = Post.get_by_uid(uid=uid)
+        ValidatorsUtils.validator_user_post(user=self.request.user, post=post)
+        sort_field = FiltersUtils.get_format_sort_type(sorting=sorting, sort_type=sort_type)
+        return PostManagement.objects.filter(filters.get_filter_expression(), post=post).order_by(sort_field)
 
     def remove_post_service(self, uid):
-        service = RemovePostService(uid)
+        post = Post.get_by_uid(uid=uid)
+        ValidatorsUtils.validator_user_post(user=self.request.user, post=post)
+        service = RemovePostService(post)
         service()
 
     def create_post_management_service(self, uid, data):
         post = Post.get_by_uid(uid=uid)
         service = CreatePostManagementService(post=post, managements=data.managements)
-        service()
+        return service()
 
     def update_post_management_service(self, uid, data):
         post_management = PostManagement.get_by_uid(uid=uid)
+        ValidatorsUtils.validator_user_post_management(user=self.request.user, post_management=post_management)
         service = UpdatePostManagementService(post_management=post_management, management=data)
-        service()
+        return service()
 
     def remove_post_management_service(self, uid):
         post_management = PostManagement.get_by_uid(uid=uid)
+        ValidatorsUtils.validator_user_post_management(user=self.request.user, post_management=post_management)
         service = RemovePostManagementService(post_management=post_management)
+        return service()
+
+    def publish_post_management_service(self, uid):
+        post_management = PostManagement.get_by_uid(uid=uid)
+        service = ApiPublishService(post_management)
         return service()
