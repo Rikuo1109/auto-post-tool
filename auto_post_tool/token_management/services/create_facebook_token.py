@@ -42,9 +42,7 @@ class FacebookTokenService:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
         response_data = response.json()
         FacebookTokenService.create_token(
-            expire_time=int(response_data.get("expires_in"))
-            if response_data.get("expires_in") is not None
-            else int(settings.FACEBOOK_LONG_LIVE_TOKEN_LIFETIME),
+            expire_time=int(response_data.get("expires_in", settings.FACEBOOK_LONG_LIVE_TOKEN_LIFETIME)),
             user=user,
             token=response_data.get("access_token"),
         )

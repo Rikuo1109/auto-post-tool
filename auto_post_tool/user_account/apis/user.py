@@ -36,16 +36,18 @@ class UserController:
 
     @http_post("/register", response=UserResponse)
     def user_register(self, data: UserRegisterRequest):
-        if BaseValidate.validate_register(data=data.dict()):
-            if User.objects.filter(email=data.email).exists():
-                raise ValidationError(message_code="EMAIL_HAS_BEEN_USED")
-            return User.objects.create_user(
-                username=data.username,
-                first_name=data.first_name,
-                last_name=data.last_name,
-                email=data.email,
-                password=data.password,
-            )
+        BaseValidate.validate_register(data=data.dict())
+
+        if User.objects.filter(email=data.email).exists():
+            raise ValidationError(message_code="EMAIL_HAS_BEEN_USED")
+
+        return User.objects.create_user(
+            username=data.username,
+            first_name=data.first_name,
+            last_name=data.last_name,
+            email=data.email,
+            password=data.password,
+        )
 
     @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
     def get_me(self, request):
@@ -55,23 +57,23 @@ class UserController:
 
     @http_post("/update/password", auth=AuthBearer())
     def change_password(self, request, data: UserChangePassword):
-        if BaseValidate.validate_password(password=data.new_password):
-            user = request.user
-            if data.current_password == data.new_password:
-                raise AuthenticationFailed(message_code="SAME_PASSWORD")
-            if not user.check_password(data.current_password):
-                raise AuthenticationFailed(message_code="INVALID_PASSWORD")
-            user.set_password(data.new_password)
-            user.save()
+        BaseValidate.validate_password(password=data.new_password)
+        user = request.user
+        if data.current_password == data.new_password:
+            raise AuthenticationFailed(message_code="SAME_PASSWORD")
+        if not user.check_password(data.current_password):
+            raise AuthenticationFailed(message_code="INVALID_PASSWORD")
+        user.set_password(data.new_password)
+        user.save()
 
     @http_post("/update/info", auth=AuthBearer())
     def update_info(self, request, data: UserUpdateInfoRequest):
-        if BaseValidate.validate_info(data=data.dict()):
-            user = request.user
-            user.first_name = data.first_name
-            user.last_name = data.last_name
-            user.username = data.username
-            user.save()
+        BaseValidate.validate_info(data=data.dict())
+        user = request.user
+        user.first_name = data.first_name
+        user.last_name = data.last_name
+        user.username = data.username
+        user.save()
 
     @http_post("/logout", auth=AuthBearer())
     def logout(self, request):
@@ -79,9 +81,9 @@ class UserController:
 
     @http_post("/forgot-password", response=bool)
     def forgot_password(self, data: UserEmailRequest):
-        if BaseValidate.validate_email(email=data.email):
-            user = User.get_user_by_email(data.email)
-            MailSenderService(recipients=[user]).send_reset_password_email()
+        BaseValidate.validate_email(email=data.email)
+        user = User.get_user_by_email(data.email)
+        MailSenderService(recipients=[user]).send_reset_password_email()
 
     @http_post("/reset-password")
     def password_reset_confirm(self, data: UserPasswordResetRequest):
@@ -91,11 +93,11 @@ class UserController:
             raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
-        if BaseValidate.validate_password(password=data.password):
-            user = reset_token.user
-            user.set_password(data.password)
-            user.save()
-            ResetTokenService.deactivate(token=reset_token)
+        BaseValidate.validate_password(password=data.password)
+        user = reset_token.user
+        user.set_password(data.password)
+        user.save()
+        ResetTokenService.deactivate(token=reset_token)
 
     @http_post("/connect/facebook", auth=AuthBearer())
     def connect_facebook_token(self, request, data: UserFacebookTokenRequest):
@@ -113,7 +115,7 @@ class UserController:
     def disconnect_zalo_token(self, request):
         ZaloTokenService.deactivate(request.user)
 
-    @http_get("/get/facebook/pageID", auth=AuthBearer())
+    @http_get("/get/facebook/page_id", auth=AuthBearer())
     def get_facebook_groupid(self, request):
         access_token = FacebookTokenService.get_token_by_user(request.user)
         return get_user_fb_page_info(token=access_token)
