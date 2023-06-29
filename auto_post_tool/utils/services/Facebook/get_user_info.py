@@ -1,11 +1,13 @@
 import requests
 from django.conf import settings
-from utils.exceptions.exceptions import NotFound, 
+from utils.exceptions.exceptions import NotFound
 
 
 def get_user_fb_id(token: str):
     try:
-        response = requests.get(settings.FACEBOOK_GET_USERID_URL, params={"access_token": token})
+        response = requests.get(
+            settings.FACEBOOK_GET_USERID_URL, params={"access_token": token}
+        )
     except Exception:
         raise SystemError("Invalid Token")
     try:
@@ -19,14 +21,19 @@ def get_user_fb_page_info(token: str):
     user_id = get_user_fb_id(token)
     try:
         response = requests.get(
-            f"https://graph.facebook.com/{user_id}", params={"fields": "accounts", "access_token": token}
+            f"https://graph.facebook.com/{user_id}",
+            params={"fields": "accounts", "access_token": token},
         )
     except Exception:
         raise SystemError("Invalid Token")
     try:
         page_data = response.json().get("accounts").get("data")
         return [
-            {"name": page.get("name"), "page_id": page.get("id"), "page_access_token": page.get("access_token")}
+            {
+                "name": page.get("name"),
+                "page_id": page.get("id"),
+                "page_access_token": page.get("access_token"),
+            }
             for page in page_data
         ]
     except AttributeError:
