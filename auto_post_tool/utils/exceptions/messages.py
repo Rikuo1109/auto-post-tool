@@ -48,6 +48,8 @@ ERROR_MESSAGES = {
     "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
     "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
     "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
+    "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
+    "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",

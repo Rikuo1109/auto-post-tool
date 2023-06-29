@@ -4,7 +4,7 @@ from passlib.hash import pbkdf2_sha256
 from token_management.models.token import ZaloToken
 from user_account.models.user import User
 from utils.exceptions import NotFound, ValidationError
-from utils.services.Zalo import ZaloService
+from utils.services.zalo import ZaloService
 
 
 class ZaloTokenService:

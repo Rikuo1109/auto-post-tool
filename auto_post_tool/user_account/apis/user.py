@@ -12,12 +12,8 @@ from ..schema.payload import (
     UserZaloTokenRequest,
 )
 from ..schema.response import UserResponse, UserResponse2
-from ..services.data_validate import (
-    validate_password,
-    validate_register,
-    validate_update_info,
-    validate_update_password,
-)
+
+from utils.services.data_validate import BaseValidate
 from router.authenticate import AuthBearer
 from token_management.models.token import ResetToken
 from token_management.services.create_facebook_token import FacebookTokenService
@@ -26,22 +22,25 @@ from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_zalo_token import ZaloTokenService
 from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
+from utils.services.facebook.get_user_info import get_user_fb_page_info
 
 
 @api_controller(prefix_or_class="users", tags=["User"])
 class UserController:
     @http_post("/login")
     def user_login(self, data: UserLoginRequest):
-        user = User.get_user_by_email(data.email)
+        user = User.get_user_by_email(email=data.email)
         if not user.check_password(data.password):
             raise AuthenticationFailed(message_code="INVALID_EMAIL_PASSWORD")
         return {"access_token": LoginTokenService().create_token(user)}
 
     @http_post("/register", response=UserResponse)
     def user_register(self, data: UserRegisterRequest):
-        validate_register(data=data.dict())
+        BaseValidate.validate_register(data=data.dict())
+
         if User.objects.filter(email=data.email).exists():
             raise ValidationError(message_code="EMAIL_HAS_BEEN_USED")
+
         return User.objects.create_user(
             username=data.username,
             first_name=data.first_name,
@@ -58,7 +57,7 @@ class UserController:
 
     @http_post("/update/password", auth=AuthBearer())
     def change_password(self, request, data: UserChangePassword):
-        validate_update_password(data=data.dict())
+        BaseValidate.validate_password(password=data.new_password)
         user = request.user
         if data.current_password == data.new_password:
             raise AuthenticationFailed(message_code="SAME_PASSWORD")
@@ -66,28 +65,25 @@ class UserController:
             raise AuthenticationFailed(message_code="INVALID_PASSWORD")
         user.set_password(data.new_password)
         user.save()
-        return True
 
     @http_post("/update/info", auth=AuthBearer())
     def update_info(self, request, data: UserUpdateInfoRequest):
-        validate_update_info(data=data.dict())
+        BaseValidate.validate_info(data=data.dict())
         user = request.user
         user.first_name = data.first_name
         user.last_name = data.last_name
         user.username = data.username
         user.save()
-        return True
 
     @http_post("/logout", auth=AuthBearer())
     def logout(self, request):
         LoginTokenService.deactivate(token=request.auth)
-        return True
 
-    @http_post("/forgot-password")
+    @http_post("/forgot-password", response=bool)
     def forgot_password(self, data: UserEmailRequest):
+        BaseValidate.validate_email(email=data.email)
         user = User.get_user_by_email(data.email)
         MailSenderService(recipients=[user]).send_reset_password_email()
-        return True
 
     @http_post("/reset-password")
     def password_reset_confirm(self, data: UserPasswordResetRequest):
@@ -97,12 +93,11 @@ class UserController:
             raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
-        validate_password(password=data.password)
+        BaseValidate.validate_password(password=data.password)
         user = reset_token.user
         user.set_password(data.password)
         user.save()
         ResetTokenService.deactivate(token=reset_token)
-        return True
 
     @http_post("/connect/facebook", auth=AuthBearer())
     def connect_facebook_token(self, request, data: UserFacebookTokenRequest):
@@ -119,3 +114,8 @@ class UserController:
     @http_put("/disconnect/zalo", auth=AuthBearer())
     def disconnect_zalo_token(self, request):
         ZaloTokenService.deactivate(request.user)
+
+    @http_get("/get/facebook/page_id", auth=AuthBearer())
+    def get_facebook_groupid(self, request):
+        access_token = FacebookTokenService.get_token_by_user(request.user)
+        return get_user_fb_page_info(token=access_token)
