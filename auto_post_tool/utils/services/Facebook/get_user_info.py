@@ -17,7 +17,6 @@ def get_user_fb_page_info(token: str):
     response = requests.get(
         f"https://graph.facebook.com/{user_id}", params={"fields": "accounts", "access_token": token}
     )
-    print(response.json())
     try:
         page_data = response.json().get("accounts").get("data")
         page_info = [

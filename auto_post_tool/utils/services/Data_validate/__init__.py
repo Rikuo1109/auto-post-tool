@@ -1,39 +1,48 @@
 from utils.exceptions.exceptions import ValidationError
 from django.conf import settings
-from .validate_password import PasswordValidate
-from .validate_username import UsernameValidate
-from .validate_name import NameValidate
-from .validate_email import EmailValidate
+
+
+from .base import BaseValidator
 
 
 class BaseValidate:
     @staticmethod
     def validate_username(username: str):
-        if not UsernameValidate.check_minimum_length(username=username):
-            raise ValidationError(message_code="INVALID_USERNAME")
+        if settings.USERNAME_MINIMUM_LENGTH:
+            if not BaseValidator.is_longger_than(value=username, max_length=int(settings.USERNAME_MINIMUM_LENGTH)):
+                raise ValidationError(message_code="INVALID_USERNAME")
+            return True
         return True
 
     @staticmethod
     def validate_password(password: str):
-        if not PasswordValidate.check_minimum_length(password=password):
-            raise ValidationError(message_code="INVALID_PASSWORD")
-        if settings.PASSWORD_MUST_CONTAIN_NUMBER != "True":
-            return True
-        if not PasswordValidate.check_contains_number(password=password):
-            raise ValidationError(message_code="INVALID_PASSWORD")
+        # if not PasswordValidate.check_minimum_length(password=password):
+        #     raise ValidationError(message_code="INVALID_PASSWORD")
+        # if settings.PASSWORD_MUST_CONTAIN_NUMBER != "True":
+        #     return True
+        # if not PasswordValidate.check_contains_number(password=password):
+        #     raise ValidationError(message_code="INVALID_PASSWORD")
+        # return True
+        if settings.PASSWORD_MINIMUM_LENGTH:
+            if not BaseValidator.is_longger_than(value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)):
+                raise ValidationError(message_code="INVALID_PASSWORD")
+            if settings.PASSWORD_MUST_CONTAIN_NUMBER == "False":
+                return True
+            if not BaseValidator.is_contain_number(value=password):
+                raise ValidationError(message_code="INVALID_PASSWORD")
         return True
 
     @staticmethod
     def validate_name(name: str):
-        if settings.NAME_CANT_CONTAIN_NUMBER != "True":
+        if settings.NAME_CANT_CONTAIN_NUMBER == "False":
             return True
-        if NameValidate.check_contains_number(name=name):
+        if BaseValidator.is_contain_number(value=name):
             raise ValidationError(message_code="INVALID_NAME")
         return True
 
     @staticmethod
     def validate_email(email: str):
-        if not EmailValidate.check_email_format(email=email):
+        if not BaseValidator.check_email_format(value=email):
             raise ValidationError(message_code="INVALID_EMAIL")
         return True
 
