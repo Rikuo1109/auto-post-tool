@@ -123,7 +123,7 @@ class UserController:
     def disconnect_zalo_token(self, request):
         ZaloTokenService.deactivate(request.user)
 
-    @http_get("/get/facebook/groupID", auth=AuthBearer())
+    @http_get("/get/facebook/pageID", auth=AuthBearer())
     def get_facebook_groupid(self, request):
         access_token = FacebookTokenService.get_token_by_user(request.user)
         user_id = get_user_id(token=access_token)

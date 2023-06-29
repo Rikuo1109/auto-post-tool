@@ -40,7 +40,7 @@ class FacebookTokenService:
         if response.status_code == 200:
             response_data = response.json()
             FacebookTokenService.create_token(
-                exp=int(response_data.get("expires_in")), user=user, token=response_data.get("access_token")
+                exp=int(settings.FACEBOOK_LONG_LIVE_TOKEN_LIFETIME), user=user, token=response_data.get("access_token")
             )
         else:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
@@ -67,4 +67,3 @@ class FacebookTokenService:
             FacebookTokenService.deactivate(user=token.user)
             return False
         return True
-
