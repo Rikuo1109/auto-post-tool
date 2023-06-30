@@ -3,12 +3,10 @@ from datetime import datetime, timedelta
 from django.conf import settings
 
 import requests
-from passlib.hash import pbkdf2_sha256
 from token_management.models.token import FacebookToken
 from user_account.models.user import User
-from utils.exceptions import ValidationError
+from utils.exceptions import NotFound, ValidationError
 
-SUCCESS_CODE = 200
 
 SUCCESS_CODE = 200
 

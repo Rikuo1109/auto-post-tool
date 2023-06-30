@@ -79,7 +79,7 @@ class UserController:
     def logout(self, request):
         LoginTokenService.deactivate(token=request.auth)
 
-    @http_post("/forgot-password", response=bool)
+    @http_post("/forgot-password")
     def forgot_password(self, data: UserEmailRequest):
         BaseValidate.validate_email(email=data.email)
         user = User.get_user_by_email(data.email)
