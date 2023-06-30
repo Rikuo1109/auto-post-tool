@@ -49,6 +49,14 @@ class FacebookTokenService:
         )
 
     @staticmethod
+    def get_token_by_user(user: User):
+        try:
+            facebook_token = FacebookToken.objects.get(user=user, active=True)
+        except FacebookToken.DoesNotExist as exc:
+            raise NotFound(message_code="FACEBOOK_NOT_CONNECTED") from exc
+        return facebook_token.long_live_token
+
+    @staticmethod
     def deactivate(user: User):
         FacebookToken.objects.filter(user=user, active=True).update(active=False)
 

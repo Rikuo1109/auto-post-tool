@@ -7,6 +7,7 @@ from image_management.models import ImagePost
 from user_account.models.user import User
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 from utils.exceptions import NotFound, ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class Post(models.Model):
@@ -27,6 +28,8 @@ class Post(models.Model):
             raise NotFound(message_code="POST_NOT_FOUND") from e
         except Post.MultipleObjectsReturned as e:
             raise ValidationError(message_code="MORE_THAN_ONE_POST_FOUND") from e
+        except DjangoValidationError:
+            raise ValidationError(message_code="INVALID_UID")
 
     @staticmethod
     def filter_by_user(user):
@@ -58,8 +61,10 @@ class PostManagement(models.Model):
             return PostManagement.objects.get(uid=uid)
         except PostManagement.DoesNotExist as e:
             raise NotFound(message_code="POST_MANAGEMENT_NOT_FOUND") from e
-        except Post.MultipleObjectsReturned as e:
+        except PostManagement.MultipleObjectsReturned as e:
             raise ValidationError(message_code="MORE_THAN_ONE_POST_MANAGEMENT_FOUND") from e
+        except DjangoValidationError:
+            raise ValidationError(message_code="INVALID_UID")
 
     @staticmethod
     def filter_by_user(user):

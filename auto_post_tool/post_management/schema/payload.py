@@ -72,6 +72,6 @@ class PostFiltersRequest(FilterSchema):
 class PostManagementFiltersRequest(FilterSchema):
     platform: Optional[PostManagementPlatFormEnum] = Field(q=["platform__iexact"])
     auto_publish: Optional[bool] = Field(q=["auto_publish__exact"])
-    status: Optional[PostManagementStatusEnum] = Field(q=["platform__iexact"])
-    min_time: Optional[datetime] = Field(q=["created_at__gte"])
-    max_time: Optional[datetime] = Field(q=["created_at__lte"])
+    status: Optional[PostManagementStatusEnum] = Field(q=["status__iexact"])
+    min_time: Optional[datetime] = Field(q=["time_posting__gte"])
+    max_time: Optional[datetime] = Field(q=["time_posting__lte"])

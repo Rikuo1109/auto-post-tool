@@ -19,6 +19,7 @@ ERROR_MESSAGES = {
     "MISSING_FIELD": "Missing field",
     # Raise when a field is invalid (e.g. wrong type)
     "INVALID_FIELD": "Invalid field",
+    "INVALID_UID": "Invalid uid",
     # Validation errors
     "INVALID_ARGUMENTS": "Invalid arguments",
     # Check user existence
