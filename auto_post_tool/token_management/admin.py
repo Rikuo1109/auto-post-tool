@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import LoginToken, ResetToken, FacebookToken, TwitterToken, ZaloToken
+from .models import LoginToken, ResetToken, FacebookToken, TwitterToken, ZaloToken, LinkedInToken
 
 
 # Register your models here.
@@ -26,4 +26,9 @@ class ZaloTokenAdmin(admin.ModelAdmin):
 
 @admin.register(TwitterToken)
 class TwitterTokenAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(LinkedInToken)
+class LinkedInTokenAdmin(admin.ModelAdmin):
     pass
