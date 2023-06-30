@@ -66,7 +66,6 @@ class EmailThread(threading.Thread):
                 use_tls=self.use_tls,
                 timeout=self.timeout,
             )
-
             email_backend.send_messages([message])
 
         except Exception as e:

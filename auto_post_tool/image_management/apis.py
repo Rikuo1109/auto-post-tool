@@ -7,6 +7,8 @@ from ninja import File
 from ninja.files import UploadedFile
 from ninja_extra import api_controller, http_post
 
+from image_management.services import push_image
+
 from .models import ImagePost
 from image_management.schema.response import ImagePostResponseSchema
 from image_management.services import push_image

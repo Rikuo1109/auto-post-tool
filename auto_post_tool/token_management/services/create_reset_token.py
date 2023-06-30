@@ -1,7 +1,9 @@
 import random
 import string
 from datetime import datetime
+
 from django.conf import settings
+from datetime import datetime
 from token_management.models.token import ResetToken
 from user_account.models import User
 from utils.exceptions import ValidationError
@@ -35,4 +37,6 @@ class ResetTokenService:
 
     @staticmethod
     def check_valid(token: ResetToken):
+        if not token.expire_at:
+            return False
         return token.expire_at > datetime.now() and token.active
