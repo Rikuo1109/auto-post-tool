@@ -19,6 +19,8 @@ django-ninja-extra==0.18.7
 django-ninja-jwt==5.2.5
 orjson==3.8.10
 
+# Image
+Pillow==9.0.1
 
 # Facebook
 python-facebook-api==0.15.0

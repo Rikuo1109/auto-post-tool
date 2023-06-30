@@ -1,11 +1,12 @@
+from datetime import datetime
 from uuid import uuid4
 
 from django.db import models
-from datetime import datetime
 
+from image_management.models import ImagePost
 from user_account.models.user import User
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
-from utils.exceptions import NotFound
+from utils.exceptions import NotFound, ValidationError
 
 
 class Post(models.Model):
@@ -16,6 +17,7 @@ class Post(models.Model):
     content = models.TextField()
     post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
     created_at = models.DateTimeField(auto_now_add=True)
+    images = models.ManyToManyField(to=ImagePost, related_name="posts_mm_iamges", blank=True, db_constraint=False)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -23,6 +25,8 @@ class Post(models.Model):
             return Post.objects.get(uid=uid)
         except Post.DoesNotExist as e:
             raise NotFound(message_code="POST_NOT_FOUND") from e
+        except Post.MultipleObjectsReturned as e:
+            raise ValidationError(message_code="MORE_THAN_ONE_POST_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):
@@ -44,7 +48,9 @@ class PostManagement(models.Model):
     status = models.CharField(
         max_length=16, choices=PostManagementStatusEnum.choices, default=PostManagementStatusEnum.PENDING
     )
-    url = models.TextField(blank=True)
+    url = models.URLField(max_length=255, blank=True)
+    required_items = models.TextField(blank=True)
+    response_items = models.TextField(blank=True)
 
     @staticmethod
     def get_by_uid(uid: str):
@@ -52,6 +58,8 @@ class PostManagement(models.Model):
             return PostManagement.objects.get(uid=uid)
         except PostManagement.DoesNotExist as e:
             raise NotFound(message_code="POST_MANAGEMENT_NOT_FOUND") from e
+        except Post.MultipleObjectsReturned as e:
+            raise ValidationError(message_code="MORE_THAN_ONE_POST_MANAGEMENT_FOUND") from e
 
     @staticmethod
     def filter_by_user(user):
@@ -61,7 +69,11 @@ class PostManagement(models.Model):
     def filter_by_post(post):
         return PostManagement.objects.filter(post=post)
 
-    def full_clean(self, exclude=None, validate_unique=True):
-        if self.time_posting >= datetime.now():
-            self.auto_publish = True
-        return super().full_clean(exclude=["post", "status"], validate_unique=validate_unique)
+    def full_clean(self, exclude=["post", "status"], validate_unique=True):
+        if self.auto_publish is None:
+            raise ValidationError(message_code="INVALID_FIELD")
+        if not self.auto_publish:
+            self.time_posting = datetime.now()
+        elif self.auto_publish and self.time_posting is None:
+            raise ValidationError(message_code="INVALID_SCHEDULED_PUBLISH_TIME")
+        return super().full_clean(exclude=exclude, validate_unique=validate_unique)

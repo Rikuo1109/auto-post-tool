@@ -21,6 +21,9 @@ orjson==3.8.10
 PyJWT==2.7.0
 djangorestframework-simplejwt==5.2.2
 
+# Image
+Pillow==9.0.1
+
 
 # Facebook
 python-facebook-api==0.15.0
