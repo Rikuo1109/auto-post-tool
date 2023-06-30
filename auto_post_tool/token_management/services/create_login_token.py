@@ -1,7 +1,8 @@
-import jwt
-
 from datetime import datetime, timedelta
+
 from django.conf import settings
+
+import jwt
 from token_management.models.token import LoginToken
 from user_account.models.user import User
 from utils.exceptions import NotFound
