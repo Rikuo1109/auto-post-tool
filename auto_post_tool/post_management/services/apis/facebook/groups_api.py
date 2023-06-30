@@ -32,7 +32,7 @@ class GroupsFacebookApiService:
             "access_token": self.access_token,
             "message": self.post_management.post.content,
             "formatting": PostTypeFormatEnum.MARKDOWN,
-            "attached_media": [{"media_fbid": image_id} for image_id in self.image_ids],
+            "attached_media": str([{"media_fbid": image_id} for image_id in self.image_ids]),
         }
 
     def prepair_params_photos(self, source):
@@ -72,6 +72,41 @@ class GroupsFacebookApiService:
         service = UpdateStatusService(self.post_management)
         service(PostManagementStatusEnum.SUCCESS)
         return return_response
+
+    def prepair_params_interactions(self):
+        return {"access_token": self.access_token}
+
+    def get_all_reactions(self):
+        try:
+            service = ResponseItemsService(self.post_management)
+            group_post_id = service.load_item(item_key="group_post_id")
+        except ValidationError:
+            return 0
+
+        params = self.prepair_params_interactions()
+
+        response = requests.get(
+            "/".join([self.path, group_post_id, "reactions"]), params=params, timeout=settings.REQUEST_TIMEOUT
+        )
+
+        return_response = self.handle_response(response)
+        return len(return_response["data"])
+
+    def get_all_comments(self):
+        try:
+            service = ResponseItemsService(self.post_management)
+            group_post_id = service.load_item(item_key="group_post_id")
+        except ValidationError:
+            return 0
+
+        params = self.prepair_params_interactions()
+
+        response = requests.get(
+            "/".join([self.path, group_post_id, "comments"]), params=params, timeout=settings.REQUEST_TIMEOUT
+        )
+
+        return_response = self.handle_response(response)
+        return len(return_response["data"])
 
     def handle_response(self, response):
         if response.status_code == 200:

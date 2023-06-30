@@ -1,4 +1,5 @@
 from ..facebook.pages_api import PagesFacebookApiService
+from ..facebook.groups_api import GroupsFacebookApiService
 from .required_items_service import RequiredItemsService
 from utils.enums.post import PostManagementPlatFormEnum
 
@@ -14,6 +15,9 @@ class ApiGetInteractionsService:
             if "page_id" in required_items:
                 service = PagesFacebookApiService(post_management=self.post_management)
                 return service.get_all_reactions()
+            elif "group_id" in required_items:
+                service = GroupsFacebookApiService(post_management=self.post_management)
+                return service.get_all_reactions()
 
     def get_all_comments(self):
         if self.post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
@@ -21,4 +25,7 @@ class ApiGetInteractionsService:
             required_items = service.load_required_items()
             if "page_id" in required_items:
                 service = PagesFacebookApiService(post_management=self.post_management)
+                return service.get_all_comments()
+            elif "group_id" in required_items:
+                service = GroupsFacebookApiService(post_management=self.post_management)
                 return service.get_all_comments()
