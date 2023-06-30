@@ -8,6 +8,7 @@ from token_management.models.token import FacebookToken
 from user_account.models.user import User
 from utils.exceptions import ValidationError
 
+
 SUCCESS_CODE = 200
 
 
@@ -62,4 +63,3 @@ class FacebookTokenService:
             FacebookTokenService.deactivate(user=token.user)
             return False
         return True
-

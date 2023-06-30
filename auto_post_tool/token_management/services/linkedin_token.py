@@ -1,8 +1,10 @@
 from datetime import datetime, timedelta
+
 from token_management.models.token import LinkedInToken
 from user_account.models.user import User
 from utils.exceptions import NotFound, ValidationError
 from utils.services.linkedin import LinkedInService
+
 
 SUCCESS_CODE = 200
 
@@ -23,9 +25,7 @@ class LinkedInTokenService:
         if response.status_code == SUCCESS_CODE:
             response_data = response.json()
             LinkedInToken.create_token(
-                user=user,
-                exp=int(response_data.get("expires_in")),
-                access_token=response_data.get("access_token"),
+                user=user, exp=int(response_data.get("expires_in")), access_token=response_data.get("access_token")
             )
         else:
             raise ValidationError(message_code="INVALID_OAUTH_TOKEN")

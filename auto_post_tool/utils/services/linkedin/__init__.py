@@ -1,5 +1,6 @@
-import requests
 from django.conf import settings
+
+import requests
 
 
 class LinkedInService(object):
@@ -8,9 +9,7 @@ class LinkedInService(object):
         return requests.request(
             "POST",
             settings.LINKEDIN_ACCESS_TOKEN_URL,
-            headers={
-                "Content-Type": settings.API_REQUEST_CONTENT_TYPE,
-            },
+            headers={"Content-Type": settings.API_REQUEST_CONTENT_TYPE},
             data=data,
         )
 

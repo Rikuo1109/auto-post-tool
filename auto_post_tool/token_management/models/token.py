@@ -1,5 +1,6 @@
-from datetime import timedelta, datetime
+from datetime import datetime, timedelta
 from uuid import uuid4
+
 from django.conf import settings
 from django.db import models
 

@@ -1,5 +1,6 @@
-import requests
 from django.conf import settings
+
+import requests
 from utils.encoding import EncodingService
 
 

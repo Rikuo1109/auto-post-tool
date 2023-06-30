@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+
 from token_management.models.token import TwitterToken
 from user_account.models.user import User
 from utils.exceptions import NotFound, ValidationError
@@ -18,9 +19,7 @@ class TwitterTokenService:
     def call_access_token_from_oauth(user: User, oath_code: str, code_verifier: str):
         """EXPECTED: oath_code returned from FE"""
         TwitterTokenService.deactivate(user=user)
-        response = TwitterService().request_access_oath(
-            oath_code=oath_code, code_verifier=code_verifier
-        )
+        response = TwitterService().request_access_oath(oath_code=oath_code, code_verifier=code_verifier)
         if response.status_code == 200:
             response_data = response.json()
             TwitterTokenService.create_token(
@@ -66,9 +65,7 @@ class TwitterTokenService:
     @staticmethod
     def create_token(user: User, access_token: str, refresh_token: str, exp: int):
         """function to create a facebook token"""
-        twitter_token = TwitterToken(
-            user=user, access_token=access_token, refresh_token=refresh_token
-        )
+        twitter_token = TwitterToken(user=user, access_token=access_token, refresh_token=refresh_token)
         twitter_token.expire_at = datetime.now() + timedelta(seconds=exp)
         twitter_token.save()
 
