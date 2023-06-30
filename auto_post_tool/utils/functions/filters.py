@@ -12,4 +12,4 @@ class FiltersUtils:
             return sorting
         elif sort_type == SortTypeEnum.DESC:
             return f"-{sorting}"
-        raise ValidationError(message_code="VALIDATION_ERROR")
+        raise ValidationError(message_code="INVALID_FIELD")

@@ -12,7 +12,12 @@ from ..schema.payload import (
     PostManagementUpdateRequest,
     PostRequest,
 )
-from ..schema.response import PostDetailResponse, PostManagementResponse
+from ..schema.response import (
+    PostDetailResponse,
+    PostManagementDetailResponse,
+    PostManagementMatrixResponse,
+    PostManagementUidResponse,
+)
 from ..services import Service
 from router.authenticate import AuthBearer
 from router.paginate import Pagination
@@ -21,30 +26,30 @@ from utils.enums.common import SortingPostEnum, SortingPostManagementEnum, SortT
 
 @api_controller(prefix_or_class="/posts", tags=["Post"], auth=AuthBearer())
 class PostController:
-    @http_post("/create")
-    def create_new_post(self, request, payload: PostRequest):
+    @http_post("/create", response=List[PostManagementUidResponse])
+    def create_post(self, request, payload: PostRequest):
         service = Service(request=request)
-        service.create_post_service(data=payload)
+        return service.create_post_service(data=payload)
 
     @http_get("/matrix", response=List[PostDetailResponse])
     @paginate(Pagination)
-    def get_view_all(
+    def view_post_matrix(
         self,
         request,
-        sorting: str = SortingPostEnum.CREATED_AT,
-        sort_type: str = SortTypeEnum.ASC,
+        sorting: SortingPostEnum = SortingPostEnum.CREATED_AT,
+        sort_type: SortTypeEnum = SortTypeEnum.ASC,
         filters: PostFiltersRequest = Query(...),
     ):
         service = Service(request=request)
         return service.get_matrix_post_service(filters=filters, sorting=sorting, sort_type=sort_type)
 
     @http_get("/{uid}/detail", response=PostDetailResponse)
-    def get_view_post(self, request, uid):
+    def view_post_detail(self, request, uid):
         service = Service(request=request)
         return service.get_detail_post_service(uid=uid)
 
     @http_post("/{uid}/update")
-    def update_detail_post(self, request, uid, payload: PostDetailUpdateRequest):
+    def update_post_detail(self, request, uid, payload: PostDetailUpdateRequest):
         service = Service(request=request)
         service.update_post_details_service(uid=uid, data=payload)
 
@@ -66,6 +71,46 @@ class PostController:
         service = Service(request=request)
         service.create_post_management_service(uid=uid, data=payload)
 
+    @http_get("/{uid}/post-management", response=List[PostManagementMatrixResponse])
+    @paginate(Pagination)
+    def view_post_management_of_post(
+        self,
+        request,
+        uid,
+        sorting: SortingPostManagementEnum = SortingPostManagementEnum.TIME_POSTING,
+        sort_type: SortTypeEnum = SortTypeEnum.ASC,
+        filters: PostManagementFiltersRequest = Query(...),
+    ):
+        """
+        view all post management created by a post
+        @uid: post uid
+        """
+        service = Service(request=request)
+        return service.view_post_management_of_post_service(
+            uid=uid, filters=filters, sorting=sorting, sort_type=sort_type
+        )
+
+    @http_get("/post-management/matrix", response=List[PostManagementMatrixResponse])
+    @paginate(Pagination)
+    def view_post_management_matrix(
+        self,
+        request,
+        sorting: SortingPostManagementEnum = SortingPostManagementEnum.TIME_POSTING,
+        sort_type: SortTypeEnum = SortTypeEnum.ASC,
+        filters: PostManagementFiltersRequest = Query(...),
+    ):
+        service = Service(request=request)
+        return service.get_matrix_post_management_service(filters=filters, sorting=sorting, sort_type=sort_type)
+
+    @http_get("/post-management/{uid}/detail", response=PostManagementDetailResponse)
+    def view_post_management_detail(self, request, uid):
+        """
+        view only one post management
+        @uid: post-management uid
+        """
+        service = Service(request=request)
+        return service.view_post_management_detail_service(uid=uid)
+
     @http_post("/post-management/{uid}/remove")
     def remove_post_management(self, request, uid):
         """
@@ -75,18 +120,6 @@ class PostController:
         service = Service(request=request)
         service.remove_post_management_service(uid=uid)
 
-    @http_get("/post-management/matrix", response=List[PostManagementResponse])
-    @paginate(Pagination)
-    def get_matrix_post_management(
-        self,
-        request,
-        sorting: str = SortingPostManagementEnum.TIME_POSTING,
-        sort_type: str = SortTypeEnum.ASC,
-        filters: PostManagementFiltersRequest = Query(...),
-    ):
-        service = Service(request=request)
-        return service.get_matrix_post_management_service(filters=filters, sorting=sorting, sort_type=sort_type)
-
     @http_post("/post-management/{uid}/update")
     def update_post_management(self, request, uid, payload: PostManagementUpdateRequest):
         """
@@ -95,3 +128,12 @@ class PostController:
         """
         service = Service(request=request)
         service.update_post_management_service(uid=uid, data=payload)
+
+    @http_post("/post-management/{uid}/publish")
+    def publish_post_management(self, request, uid):
+        """
+        publish a post management
+        @uid: post-management uid
+        """
+        service = Service(request=request)
+        return service.publish_post_management_service(uid=uid)
