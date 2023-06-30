@@ -26,3 +26,7 @@ python-facebook-api==0.15.0
 requests==2.31.0
 
 PyJWT==2.7.0
+
+# Github
+PyGithub==1.59.0
+github==1.2.7
