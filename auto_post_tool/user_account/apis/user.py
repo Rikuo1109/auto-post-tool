@@ -60,9 +60,9 @@ class UserController:
         BaseValidate.validate_password(password=data.new_password)
         user = request.user
         if data.current_password == data.new_password:
-            raise AuthenticationFailed(message_code="SAME_PASSWORD")
+            raise ValidationError(message_code="SAME_PASSWORD")
         if not user.check_password(data.current_password):
-            raise AuthenticationFailed(message_code="INVALID_PASSWORD")
+            raise ValidationError(message_code="INVALID_PASSWORD")
         user.set_password(data.new_password)
         user.save()
 

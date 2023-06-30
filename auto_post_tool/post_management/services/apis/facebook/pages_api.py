@@ -44,7 +44,7 @@ class PagesFacebookApiService:
     def prepair_params_photos(self, source):
         return {
             "access_token": self.access_token,
-            "url": "https://github.com/tri218138/Horus-Auto-Post-Images/blob/main/" + source.name + "?raw=true",
+            "url": f"https://github.com/{settings.GITHUB_REPO}/blob/main/" + source.name + "?raw=true",
             "published": False,
             "temporary": True,
         }
