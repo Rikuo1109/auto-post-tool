@@ -37,7 +37,7 @@ class ZaloTokenService:
         try:
             zalo_token = ZaloToken.objects.get(user=user, active=True)
         except ZaloToken.DoesNotExist as exc:
-            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED") from exc
+            raise NotFound(message_code="ZALO_NOT_CONNECTED") from exc
         return zalo_token.access_token
 
     @staticmethod
@@ -45,7 +45,7 @@ class ZaloTokenService:
         try:
             zalo_token = ZaloToken.objects.get(user=user, active=True)
         except ZaloToken.DoesNotExist as exc:
-            raise NotFound(message_code="ZALO_TOKEN_NOT_CONNECTED") from exc
+            raise NotFound(message_code="ZALO_NOT_CONNECTED") from exc
         return zalo_token.refresh_token
 
     @staticmethod
@@ -81,7 +81,8 @@ class ZaloTokenService:
         return ZaloToken.objects.filter(user=user, active=True).exists()
 
     @staticmethod
-    def check_valid_zalo_token(token: ZaloToken):
-        if not token.expire_at:
+    def check_valid_zalo_token(user: User, token: ZaloToken):
+        if token.expire_at >= datetime.now() or not token.active:
+            ZaloTokenService.deactivate(user=user)
             return False
-        return token.expire_at < datetime.now() and token.active
+        return True

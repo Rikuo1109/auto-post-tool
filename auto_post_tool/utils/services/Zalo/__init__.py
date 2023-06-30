@@ -1,21 +1,19 @@
-import requests
 from django.conf import settings
+
+import requests
 
 
 class ZaloService(object):
     def __init__(self):
         self.app_id = settings.ZALO_API_APP_ID
         self.app_secret = settings.ZALO_API_APP_SECRET
-        self.request_content_type = settings.ZALO_API_REQUEST_CONTENT_TYPE
+        self.request_content_type = settings.API_REQUEST_CONTENT_TYPE
 
     def get_response(self, data: str):
         return requests.request(
             "POST",
             settings.ZALO_ACCESS_TOKEN_URL,
-            headers={
-                "secret_key": settings.ZALO_API_APP_SECRET,
-                "Content-Type": settings.ZALO_API_REQUEST_CONTENT_TYPE,
-            },
+            headers={"secret_key": self.app_secret, "Content-Type": self.request_content_type},
             data=data,
         )
 
