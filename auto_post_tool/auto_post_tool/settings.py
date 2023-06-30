@@ -121,9 +121,7 @@ DATABASES = {
 # JWT Settings
 ACCESS_TOKEN_LIFETIME = int(str(os.environ.get("ACCESS_TOKEN_LIFETIME")))
 REFRESH_TOKEN_LIFETIME = int(str(os.environ.get("REFRESH_TOKEN_LIFETIME")))
-RESET_PASSWORD_TOKEN_LIFETIME = int(
-    str(os.environ.get("RESET_PASSWORD_TOKEN_LIFETIME"))
-)
+RESET_PASSWORD_TOKEN_LIFETIME = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LIFETIME")))
 
 
 NINJA_JWT = {
@@ -155,9 +153,7 @@ NINJA_JWT = {
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
 
 AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"
-    },
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
@@ -202,6 +198,7 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 BASE_UI_URL = os.environ.get("BASE_UI_URL")
 BASE_MEDIA_HOST = os.environ.get("BASE_MEDIA_HOST")
 CALL_BACK_URL = os.environ.get("CALL_BACK_URL")
+BASE_HOST = os.environ.get("BASE_HOST")
 
 # media directory in the root directory
 MEDIA_ROOT = os.path.join(BASE_DIR, str(os.environ.get("MEDIA_ROOT")))
@@ -215,33 +212,13 @@ LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "formatters": {
-        "verbose": {
-            "format": "[%(asctime)s] [%(levelname)s] %(message)s",
-            "datefmt": "%d/%b/%Y %H:%M:%S",
-        },
-        "color_formatter": {
-            "()": "utils.logging.formatter.Formatter"
-        },  # colored output
+        "verbose": {"format": "[%(asctime)s] [%(levelname)s] %(message)s", "datefmt": "%d/%b/%Y %H:%M:%S"},
+        "color_formatter": {"()": "utils.logging.formatter.Formatter"},  # colored output
     },
-    "handlers": {
-        "console_handler": {
-            "class": "logging.StreamHandler",
-            "formatter": "color_formatter",
-        }
-    },
+    "handlers": {"console_handler": {"class": "logging.StreamHandler", "formatter": "color_formatter"}},
     "loggers": {
-        "": {
-            "level": "DEBUG",
-            "handlers": ["console_handler"],
-            "propagate": False,
-            "formatter": "color_formatter",
-        },
-        "API": {
-            "level": "DEBUG",
-            "handlers": ["console_handler"],
-            "propagate": False,
-            "formatter": "color_formatter",
-        },
+        "": {"level": "DEBUG", "handlers": ["console_handler"], "propagate": False, "formatter": "color_formatter"},
+        "API": {"level": "DEBUG", "handlers": ["console_handler"], "propagate": False, "formatter": "color_formatter"},
     },
 }
 
@@ -259,6 +236,7 @@ JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
 
 RESET_TOKEN_LENGTH = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LENGTH")))
 
+FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 FACEBOOK_API_APP_ID = os.environ.get("FACEBOOK_API_APP_ID")
 FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
 FACEBOOK_API_VERSION = os.environ.get("FACEBOOK_API_VERSION")
@@ -268,6 +246,13 @@ FACEBOOK_GET_USERID_URL = os.environ.get("FACEBOOK_GET_USERID_URL")
 FACEBOOK_GET_USER_PAGES_URL = os.environ.get("FACEBOOK_GET_USER_PAGES_URL")
 
 ZALO_API_APP_ID = os.environ.get("ZALO_API_APP_ID")
+
+ZALO_API_REQUEST_CONTENT_TYPE = os.environ.get("ZALO_API_REQUEST_CONTENT_TYPE")
+ZALO_API_SECRET_KEY = os.environ.get("ZALO_API_SECRET_KEY")
+FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
+
+ZALO_API_HOST = os.environ.get("ZALO_API_HOST")
+
 API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
 ZALO_API_APP_SECRET = os.environ.get("ZALO_API_APP_SECRET")
 ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
@@ -290,6 +275,29 @@ REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
 LINKEDIN_ACCESS_TOKEN_ID = os.environ.get("LINKEDIN_ACCESS_TOKEN_ID")
 LINKEDIN_CLIENT_ID = os.environ.get("LINKEDIN_CLIENT_ID")
 LINKEDIN_CLIENT_SECRET = os.environ.get("LINKEDIN_CLIENT_SECRET")
+
+MINIMUM_LENGTH = os.environ.get("MINIMUM_LENGTH")
+CONTAIN_NO_NUMBER = os.environ.get("CONTAIN_NO_NUMBER")
+CONTAIN_NUMBER_AND_LETTER = os.environ.get("CONTAIN_NUMBER_AND_LETTER")
+EMAIL = os.environ.get("EMAIL")
+
+NAME = os.environ.get("NAME")
+PASSWORD = os.environ.get("PASSWORD")
+EMAIL = os.environ.get("EMAIL")
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHILELIST = ("localhost:9999",)
+REGEX_MINIMUM_LENGTH = os.environ.get("REGEX_MINIMUM_LENGTH")
+REGEX_CONTAIN_NO_NUMBER = os.environ.get("REGEX_CONTAIN_NO_NUMBER")
+REGEX_CONTAIN_NUMBER_AND_LETTER = os.environ.get("REGEX_CONTAIN_NUMBER_AND_LETTER")
+REGEX_EMAIL = os.environ.get("REGEX_EMAIL")
+
+SUCCESS_CODE = os.environ.get("SUCCESS_CODE")
+
+# Github
+GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
+GITHUB_REPO = os.environ.get("GITHUB_REPO")
 
 # password rules
 PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER")

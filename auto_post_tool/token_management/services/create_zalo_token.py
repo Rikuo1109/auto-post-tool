@@ -1,4 +1,6 @@
 from datetime import datetime, timedelta
+
+from passlib.hash import pbkdf2_sha256
 from token_management.models.token import ZaloToken
 from user_account.models.user import User
 from utils.exceptions import NotFound, ValidationError
@@ -64,7 +66,9 @@ class ZaloTokenService:
     @staticmethod
     def create_token(exp: int, user: User, access_token: str, refresh_token: str):
         """function to create a facebook token"""
-        zalo_token = ZaloToken(user=user, access_token=access_token, refresh_token=refresh_token)
+        encrypted_access_token = pbkdf2_sha256.hash(access_token)
+        encrypted_refresh_token = pbkdf2_sha256.hash(refresh_token)
+        zalo_token = ZaloToken(user=user, access_token=encrypted_access_token, refresh_token=encrypted_refresh_token)
         zalo_token.expire_at = datetime.now() + timedelta(seconds=exp)
         zalo_token.save()
 
