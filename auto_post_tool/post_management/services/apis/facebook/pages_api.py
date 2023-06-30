@@ -6,6 +6,7 @@ from ..services.response_items_service import ResponseItemsService
 from ..services.update_status_service import UpdateStatusService
 from utils.enums.post import PostManagementStatusEnum
 from utils.exceptions import ValidationError
+from utils.functions.markdown_to_text import markdown_to_text
 
 
 class PagesFacebookApiService:
@@ -30,7 +31,7 @@ class PagesFacebookApiService:
     def prepair_params_feed(self):
         params = {
             "access_token": self.access_token,
-            "message": self.post_management.post.content,
+            "message": markdown_to_text(self.post_management.post.content),
             "published": True,
             "attached_media": str([{"media_fbid": image_id} for image_id in self.image_ids]),
         }
@@ -44,7 +45,7 @@ class PagesFacebookApiService:
     def prepair_params_photos(self, source):
         return {
             "access_token": self.access_token,
-            "url": "https://github.com/tri218138/Horus-Auto-Post-Images/blob/main/" + source.name + "?raw=true",
+            "url": f"https://github.com/{settings.GITHUB_REPO}/blob/main/" + source.name + "?raw=true",
             "published": False,
             "temporary": True,
         }

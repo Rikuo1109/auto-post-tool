@@ -19,6 +19,7 @@ ERROR_MESSAGES = {
     "MISSING_FIELD": "Missing field",
     # Raise when a field is invalid (e.g. wrong type)
     "INVALID_FIELD": "Invalid field",
+    "INVALID_UID": "Invalid uid",
     # Validation errors
     "INVALID_ARGUMENTS": "Invalid arguments",
     # Check user existence
@@ -48,12 +49,13 @@ ERROR_MESSAGES = {
     "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
     "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
     "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
-    "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
-    "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",
-    "ZALO_TOKEN_NOT_CONNECTED": "Zalo not connected",
+    "ZALO_NOT_CONNECTED": "Zalo not connected",
+    # Twitter errors
+    "INVALID_TWITTER_REFRESH_TOKEN": "Invalid twitter refresh token",
+    "TWITTER_NOT_CONNECTED": "Twitter not connected",
     # Post errors
     "POST_NOT_FOUND": "Post not found",
     "MORE_THAN_ONE_POST_FOUND": "More than one post found",

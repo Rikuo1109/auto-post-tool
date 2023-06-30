@@ -29,3 +29,12 @@ Pillow==9.0.1
 python-facebook-api==0.15.0
 
 requests==2.31.0
+
+# Github
+PyGithub==1.59.0
+github==1.2.7
+
+# markdown
+bs4==0.0.1
+beautifulsoup4==4.12.2
+Markdown==3.4.3

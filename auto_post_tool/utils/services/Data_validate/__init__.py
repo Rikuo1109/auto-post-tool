@@ -1,7 +1,5 @@
 from utils.exceptions.exceptions import ValidationError
 from django.conf import settings
-
-
 from .base import BaseValidator
 
 
@@ -9,7 +7,9 @@ class BaseValidate:
     @staticmethod
     def validate_username(username: str):
         if settings.USERNAME_MINIMUM_LENGTH:
-            if not BaseValidator.is_longger_than(value=username, max_length=int(settings.USERNAME_MINIMUM_LENGTH)):
+            if not BaseValidator.is_longger_than(
+                value=username, max_length=int(settings.USERNAME_MINIMUM_LENGTH)
+            ):
                 raise ValidationError(message_code="INVALID_USERNAME")
             return True
         return True
@@ -17,7 +17,9 @@ class BaseValidate:
     @staticmethod
     def validate_password(password: str):
         if settings.PASSWORD_MINIMUM_LENGTH:
-            if not BaseValidator.is_longger_than(value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)):
+            if not BaseValidator.is_longger_than(
+                value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)
+            ):
                 raise ValidationError(message_code="INVALID_PASSWORD")
             if settings.PASSWORD_MUST_CONTAIN_NUMBER == "False":
                 return True

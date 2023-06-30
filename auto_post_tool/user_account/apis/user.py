@@ -60,9 +60,9 @@ class UserController:
         BaseValidate.validate_password(password=data.new_password)
         user = request.user
         if data.current_password == data.new_password:
-            raise AuthenticationFailed(message_code="SAME_PASSWORD")
+            raise ValidationError(message_code="SAME_PASSWORD")
         if not user.check_password(data.current_password):
-            raise AuthenticationFailed(message_code="INVALID_PASSWORD")
+            raise ValidationError(message_code="INVALID_PASSWORD")
         user.set_password(data.new_password)
         user.save()
 
@@ -79,7 +79,7 @@ class UserController:
     def logout(self, request):
         LoginTokenService.deactivate(token=request.auth)
 
-    @http_post("/forgot-password", response=bool)
+    @http_post("/forgot-password")
     def forgot_password(self, data: UserEmailRequest):
         BaseValidate.validate_email(email=data.email)
         user = User.get_user_by_email(data.email)
