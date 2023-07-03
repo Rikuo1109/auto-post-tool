@@ -66,7 +66,7 @@ class UserController:
         user = register_token.user
         user.is_verified = True
         user.save()
-        RegisterTokenService.deactivate(register_token)
+        RegisterTokenService.deactivate(user)
         return True
 
     @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
