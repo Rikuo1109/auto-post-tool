@@ -24,6 +24,7 @@ ERROR_MESSAGES = {
     # Check user existence
     "USER_NOT_FOUND": "User not found",
     "EMAIL_HAS_BEEN_USED": "Email has been used",
+    "USER_UNVERIFIED": "User is not verified",
     # Check new password and old password
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
@@ -31,9 +32,10 @@ ERROR_MESSAGES = {
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
     "RESET_TOKEN_NOT_FOUND": "Reset token not found",
-    "RESET_TOKEN_EXPIRED": "Reset token has expired",
     # Check reset token
     "RESET_TOKEN_INVALID_OR_EXPIRED": "Reset token is invalid or expired",
+    # Check register token
+    "REGISTER_TOKEN_INVALID_OR_EXPIRED": "Register token is invalid or expired",
     # Check data format
     "INVALID_NAME": "First name and last name must contain no numbers",
     "INVALID_EMAIL": "Wrong email format",

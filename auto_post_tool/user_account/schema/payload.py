@@ -5,8 +5,11 @@ class UserRegisterRequest(Schema):
     first_name: str
     last_name: str
     email: str
-    username: str
     password: str
+
+
+class UserRegisterCheckRequest(Schema):
+    token: str
 
 
 class UserLoginRequest(Schema):
@@ -22,7 +25,6 @@ class UserChangePassword(Schema):
 class UserUpdateInfoRequest(Schema):
     first_name: str
     last_name: str
-    username: str
 
 
 class UserEmailRequest(Schema):
