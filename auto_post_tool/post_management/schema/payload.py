@@ -44,7 +44,7 @@ UPDATE FIELDS
 class PostDetailUpdateRequest(Schema):
     title: Optional[str]
     content: Optional[str]
-    post_type: Optional[PostTypeEnum]
+    post_type: List[str]
 
 
 """
