@@ -38,3 +38,6 @@ github==1.2.7
 bs4==0.0.1
 beautifulsoup4==4.12.2
 Markdown==3.4.3
+
+# Firebase
+Pyrebase4==4.7.1
