@@ -8,7 +8,7 @@ NOT_CONTAIN_SPACE = "^(?=.*\s).+$"
 class BaseValidator(object):
     @staticmethod
     def is_longer_than(value: str, max_length: int) -> bool:
-        return bool(len(value) > max_length)
+        return bool(len(value) >= max_length)
 
     @staticmethod
     def is_contain_number(value: str) -> bool:

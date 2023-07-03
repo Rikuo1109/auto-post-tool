@@ -21,6 +21,7 @@ class EmailPayload:
         """
         user = User.get_user_by_email(email=email)
         subject = "Đặt lại mật khẩu"
+        ResetTokenService.deactivate(user)
 
         reset_token = ResetTokenService().create_reset_token(user=user)
 
@@ -43,7 +44,7 @@ class EmailPayload:
         """
         user = User.get_user_by_email(email=email)
         subject = "Đăng ký tài khoản"
-        RegisterTokenService.deactivate(token=RegisterTokenService.get_token_by_user(user=user))
+        RegisterTokenService.deactivate(user)
 
         context = {
             "last_name": user.last_name,

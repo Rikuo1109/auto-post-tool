@@ -47,7 +47,7 @@ class MailSenderService:
             timeout=self.timeout,
             use_tls=self.use_tls,
         )
-        thread.run()
+        thread.start()
 
     def send_register_email(self):
         subject, body, to = EmailPayload.verify_email(email=self.recipients[0])
@@ -64,4 +64,4 @@ class MailSenderService:
             timeout=self.timeout,
             use_tls=self.use_tls,
         )
-        thread.run()
+        thread.start()

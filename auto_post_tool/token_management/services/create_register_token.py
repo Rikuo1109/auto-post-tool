@@ -31,22 +31,11 @@ class RegisterTokenService:
         return random_token
 
     @staticmethod
-    def deactivate(token: RegisterToken):
-        if not RegisterTokenService.check_valid(token=token):
-            raise ValidationError("VALIDATION_ERROR")
-        token.active = False
-        token.save()
+    def deactivate(user: User):
+        for token in RegisterToken.objects.filter(user=user, active=True):
+            token.active = False
+            token.save()
 
     @staticmethod
     def check_valid(token: RegisterToken):
-        if not token.expire_at:
-            return False
         return token.expire_at > datetime.now() and token.active
-
-    @staticmethod
-    def get_token_by_user(user: User):
-        try:
-            register_token = RegisterToken.objects.get(user=user, active=True)
-        except RegisterToken.DoesNotExist as exc:
-            raise NotFound(message_code="USER_NOT_FOUND") from exc
-        return register_token

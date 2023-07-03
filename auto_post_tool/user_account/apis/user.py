@@ -12,7 +12,7 @@ from ..schema.payload import (
     UserZaloTokenRequest,
     UserRegisterCheckRequest,
 )
-from ..schema.response import UserResponse, UserResponse2
+from ..schema.response import UserResponse2
 
 from utils.services.data_validate import BaseValidate
 from router.authenticate import AuthBearer
@@ -21,7 +21,7 @@ from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
 from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_register_token import RegisterTokenService
-from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
+from utils.exceptions import AuthenticationFailed, NotFound, ValidationError, PermissionDenied
 from utils.mail import MailSenderService
 from utils.services.facebook.get_user_info import get_user_fb_page_info
 
@@ -49,6 +49,9 @@ class UserController:
 
     @http_post("/email-verify")
     def verify_email(self, data: UserEmailRequest):
+        user = User.get_user_by_email(email=data.email)
+        if user.is_verified:
+            raise PermissionDenied(message_code="USER_ALREADY_ACTIVE")
         MailSenderService(recipients=[data.email]).send_register_email()
         return True
 
@@ -106,11 +109,13 @@ class UserController:
         try:
             reset_token = ResetToken.objects.get(token=data.token)
         except ResetToken.DoesNotExist as e:
-            raise NotFound(message_code="RESET_TOKEN_INVALI_OR_EXPIRED") from e
+            raise NotFound(message_code="RESET_TOKEN_INVALID_OR_EXPIRED") from e
         if not ResetTokenService.check_valid(reset_token):
-            raise ValidationError(message_code="RESET_TOKEN_INVALI_OR_EXPIRED")
+            raise ValidationError(message_code="RESET_TOKEN_INVALID_OR_EXPIRED")
         BaseValidate.validate_password(password=data.password)
         user = reset_token.user
+        if user.check_password(data.password):
+            raise AuthenticationFailed(message_code="SAME_PASSWORD")
         user.set_password(data.password)
         user.save()
         ResetTokenService.deactivate(token=reset_token)

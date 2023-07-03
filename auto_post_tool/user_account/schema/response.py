@@ -11,4 +11,4 @@ class UserResponse(ModelSchema):
 
 class UserResponse2(UserResponse):
     facebook_status: bool
-    zalo_status: bool
+    # zalo_status: bool

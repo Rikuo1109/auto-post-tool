@@ -25,6 +25,7 @@ ERROR_MESSAGES = {
     "USER_NOT_FOUND": "User not found",
     "EMAIL_HAS_BEEN_USED": "Email has been used",
     "USER_UNVERIFIED": "User is not verified",
+    "USER_ALREADY_ACTIVE": "User is already active",
     # Check new password and old password
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
