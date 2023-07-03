@@ -70,9 +70,7 @@ class UserController:
     def update_info(self, request, data: UserUpdateInfoRequest):
         BaseValidate.validate_info(data=data.dict())
         user = request.user
-        user.first_name = data.first_name
-        user.last_name = data.last_name
-        user.username = data.username
+        user.__dict__.update({key: value for key, value in data.dict().items() if value is not None})
         user.save()
 
     @http_post("/logout", auth=AuthBearer())

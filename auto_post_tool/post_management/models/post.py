@@ -15,8 +15,9 @@ class Post(models.Model):
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name="post_fk_user", db_constraint=False, db_column="user_id"
     )
+    title = models.TextField(max_length=128, blank=True, null=True)
     content = models.TextField()
-    post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
+    post_type = models.CharField(max_length=32, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ManyToManyField(to=ImagePost, related_name="posts_mm_iamges", blank=True, db_constraint=False)
 

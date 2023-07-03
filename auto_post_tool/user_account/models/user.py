@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import Any, Optional
 from uuid import uuid4
 
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
@@ -60,8 +61,10 @@ class User(AbstractUser):
     last_login = models.DateTimeField(auto_now=False, auto_now_add=False, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now=False, auto_now_add=True)
 
+    avatar = models.URLField(default=settings.DEFAULT_AVATAR, blank=True)
+
     @staticmethod
-    def get_user_by_email(email:str):
+    def get_user_by_email(email: str):
         try:
             user = User.objects.get(email=email)
         except User.DoesNotExist:

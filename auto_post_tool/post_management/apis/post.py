@@ -9,11 +9,11 @@ from ..schema.payload import (
     PostFiltersRequest,
     PostManagementCreateRequest,
     PostManagementFiltersRequest,
-    PostManagementUpdateRequest,
     PostRequest,
 )
 from ..schema.response import (
     PostDetailResponse,
+    PostMatrixResponse,
     PostManagementDetailResponse,
     PostManagementMatrixResponse,
     PostManagementUidResponse,
@@ -31,7 +31,7 @@ class PostController:
         service = Service(request=request)
         return service.create_post_service(data=payload)
 
-    @http_get("/matrix", response=List[PostDetailResponse])
+    @http_get("/matrix", response=List[PostMatrixResponse])
     @paginate(Pagination)
     def view_post_matrix(
         self,
@@ -119,15 +119,6 @@ class PostController:
         """
         service = Service(request=request)
         service.remove_post_management_service(uid=uid)
-
-    @http_post("/post-management/{uid}/update")
-    def update_post_management(self, request, uid, payload: PostManagementUpdateRequest):
-        """
-        update only one post management per time
-        @uid: post-management uid
-        """
-        service = Service(request=request)
-        service.update_post_management_service(uid=uid, data=payload)
 
     @http_post("/post-management/{uid}/publish")
     def publish_post_management(self, request, uid):

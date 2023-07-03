@@ -67,7 +67,7 @@ class PagesFacebookApiService:
         """
         self.image_ids = []
         for image in self.post_management.post.images.all():
-            self.image_ids.append(self.publish_image(source=image.source)["id"])
+            self.image_ids.append(self.publish_image(source=image.url)["id"])
         params = self.prepair_params_feed()
 
         response = requests.post(

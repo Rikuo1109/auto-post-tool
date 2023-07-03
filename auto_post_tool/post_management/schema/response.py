@@ -9,16 +9,23 @@ from image_management.schema.response import ImagePostResponseSchema
 class PostContentResponseSchema(ModelSchema):
     class Config:
         model = Post
-        model_fields = ["uid", "content", "post_type", "created_at"]
+        model_fields = ["uid", "title", "content", "post_type", "created_at"]
 
 
 class PostDetailResponse(PostContentResponseSchema):
     images: Optional[List[ImagePostResponseSchema]]
 
 
+class PostMatrixResponse(ModelSchema):
+    class Config:
+        model = Post
+        model_fields = ["uid", "title", "post_type", "created_at"]
+
+
 class PostManagementDetailResponse(ModelSchema):
     reactions: Optional[int]
     comments: Optional[int]
+    title: str
     content: str
     images: Optional[List[ImagePostResponseSchema]]
 

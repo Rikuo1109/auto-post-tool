@@ -14,14 +14,3 @@ def markdown_to_text(markdown_string):
     text = "".join(soup.findAll(text=True))
 
     return text
-
-
-markdown_text = """
-**in dam**
-*in nghieng*
-#Title large
-> Hello
-
-"""
-
-print(markdown_to_text(markdown_text))
