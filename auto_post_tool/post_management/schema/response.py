@@ -38,9 +38,3 @@ class PostManagementMatrixResponse(ModelSchema):
     class Config:
         model = PostManagement
         model_fields = ["uid", "platform", "auto_publish", "time_posting", "status"]
-
-
-class PostManagementUidResponse(ModelSchema):
-    class Config:
-        model = PostManagement
-        model_fields = ["uid"]

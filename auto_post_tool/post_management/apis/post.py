@@ -10,13 +10,13 @@ from ..schema.payload import (
     PostManagementCreateRequest,
     PostManagementFiltersRequest,
     PostRequest,
+    PublishPostManagementRequest,
 )
 from ..schema.response import (
     PostDetailResponse,
-    PostMatrixResponse,
     PostManagementDetailResponse,
     PostManagementMatrixResponse,
-    PostManagementUidResponse,
+    PostMatrixResponse,
 )
 from ..services import Service
 from router.authenticate import AuthBearer
@@ -26,10 +26,10 @@ from utils.enums.common import SortingPostEnum, SortingPostManagementEnum, SortT
 
 @api_controller(prefix_or_class="/posts", tags=["Post"], auth=AuthBearer())
 class PostController:
-    @http_post("/create", response=List[PostManagementUidResponse])
+    @http_post("/create")
     def create_post(self, request, payload: PostRequest):
         service = Service(request=request)
-        return service.create_post_service(data=payload)
+        service.create_post_service(data=payload)
 
     @http_get("/matrix", response=List[PostMatrixResponse])
     @paginate(Pagination)
@@ -90,18 +90,6 @@ class PostController:
             uid=uid, filters=filters, sorting=sorting, sort_type=sort_type
         )
 
-    @http_get("/post-management/matrix", response=List[PostManagementMatrixResponse])
-    @paginate(Pagination)
-    def view_post_management_matrix(
-        self,
-        request,
-        sorting: SortingPostManagementEnum = SortingPostManagementEnum.TIME_POSTING,
-        sort_type: SortTypeEnum = SortTypeEnum.ASC,
-        filters: PostManagementFiltersRequest = Query(...),
-    ):
-        service = Service(request=request)
-        return service.get_matrix_post_management_service(filters=filters, sorting=sorting, sort_type=sort_type)
-
     @http_get("/post-management/{uid}/detail", response=PostManagementDetailResponse)
     def view_post_management_detail(self, request, uid):
         """
@@ -120,11 +108,11 @@ class PostController:
         service = Service(request=request)
         service.remove_post_management_service(uid=uid)
 
-    @http_post("/post-management/{uid}/publish")
-    def publish_post_management(self, request, uid):
+    @http_post("/post-managements/publish")
+    def publish_post_managements(self, request, payload: PublishPostManagementRequest):
         """
-        publish a post management
+        publish list post management
         @uid: post-management uid
         """
         service = Service(request=request)
-        return service.publish_post_management_service(uid=uid)
+        return service.publish_post_managements_service(data=payload)

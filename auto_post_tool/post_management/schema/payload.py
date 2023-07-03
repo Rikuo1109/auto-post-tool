@@ -1,10 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 
-from ninja import Field, FilterSchema, ModelSchema, Schema
+from ninja import Field, FilterSchema, Schema
 
-from ..models import Post
-from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
+from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum
 
 
 """
@@ -33,6 +32,10 @@ class PostRequest(Schema):
     content: Optional[str]
     post_type: List[str]
     images: List[str] = []
+
+
+class PublishPostManagementRequest(Schema):
+    post_uid: str
     managements: List[PostManagementPayloadSchema]
 
 
@@ -53,10 +56,10 @@ FILTER FIELDS
 
 
 class PostFiltersRequest(FilterSchema):
-    search: Optional[str] = Field(q=["content__icontains"])
-    min_time: Optional[datetime] = Field(q=["created_at__gte"])
-    max_time: Optional[datetime] = Field(q=["created_at__lte"])
-    post_type: Optional[List[str]]
+    search: Optional[str]
+    min_time: Optional[datetime]
+    max_time: Optional[datetime]
+    post_type: Optional[str]
 
 
 class PostManagementFiltersRequest(FilterSchema):

@@ -1,15 +1,16 @@
 import json
 from datetime import datetime
+from typing import List
 from uuid import uuid4
 
 from django.conf import settings
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import models
 
 from image_management.models import ImagePost
 from user_account.models.user import User
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 from utils.exceptions import NotFound, ValidationError
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class Post(models.Model):
