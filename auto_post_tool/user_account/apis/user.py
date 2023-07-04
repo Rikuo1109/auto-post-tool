@@ -7,7 +7,6 @@ from ..schema.payload import (
     UserPasswordResetRequest,
     UserRegisterRequest,
     UserUpdateInfoRequest,
-    UserRegisterCheckRequest,
 )
 from ..schema.response import GetUserResponse
 
