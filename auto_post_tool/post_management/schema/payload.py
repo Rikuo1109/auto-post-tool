@@ -30,7 +30,7 @@ class PostManagementCreateRequest(Schema):
 class PostRequest(Schema):
     title: str
     content: Optional[str]
-    post_types: List[str] = []
+    post_type: List[str] = []
     images: List[str] = []
 
 
@@ -47,7 +47,7 @@ UPDATE FIELDS
 class PostDetailUpdateRequest(Schema):
     title: Optional[str]
     content: Optional[str]
-    post_types: List[str] = []
+    post_type: List[str] = []
 
 
 """
