@@ -23,9 +23,9 @@ class ApiGetInteractionsService:
             if service is None:
                 return
             data = service.get_all_insights()
-            self.reactions = data["reactions"]["data"]
-            self.comments = data["comments"]["data"]
-            self.shares = data["shares"]["data"]
+            self.reactions = data.get("reactions", {}).get("data", {})
+            self.comments = data.get("comments", {}).get("data", {})
+            self.shares = data("shares", {}).get("data", {})
 
     def get_all_reactions(self):
         return self.reactions
