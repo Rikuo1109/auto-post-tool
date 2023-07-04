@@ -47,7 +47,6 @@ class Service:
     def get_detail_post_service(self, uid):
         service = GetDetailPostService(uid)
         post = service()
-        post.set_type_list()
         ValidatorsUtils.validator_user_post(user=self.request.user, post=post)
         return post
 
