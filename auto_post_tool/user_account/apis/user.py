@@ -33,8 +33,7 @@ class UserController:
         user = User.get_user_by_email(email=data.email)
         if not user.check_password(data.password):
             raise AuthenticationFailed(message_code="INVALID_EMAIL_PASSWORD")
-        if not user.is_verified:
-            raise AuthenticationFailed(message_code="USER_UNVERIFIED")
+        RegisterTokenService.is_verified(user=user)
         return {"access_token": LoginTokenService().create_token(user)}
 
     @http_post("/register")
@@ -50,19 +49,13 @@ class UserController:
     @http_post("/email-verify")
     def verify_email(self, data: UserEmailRequest):
         user = User.get_user_by_email(email=data.email)
-        if user.is_verified:
-            raise PermissionDenied(message_code="USER_ALREADY_ACTIVE")
+        RegisterTokenService.is_verified(user=user)
         MailSenderService(recipients=[data.email]).send_register_email()
         return True
 
     @http_put("/register-check")
     def user_register_check(self, data: UserRegisterCheckRequest):
-        try:
-            register_token = RegisterToken.objects.get(token=data.token)
-        except RegisterToken.DoesNotExist as e:
-            raise NotFound(message_code="REGISTER_TOKEN_INVALID_OR_EXPIRED") from e
-        if not RegisterTokenService.check_valid(register_token):
-            raise ValidationError(message_code="REGISTER_TOKEN_INVALID_OR_EXPIRED")
+        register_token = RegisterTokenService.get_register_token(data.token)
         user = register_token.user
         user.is_verified = True
         user.save()
@@ -72,7 +65,6 @@ class UserController:
     @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
     def get_me(self, request):
         request.user.facebook_status = FacebookTokenService.check_exist_facebook_token(user=request.user)
-        # request.user.zalo_status = ZaloTokenService.check_exist_zalo_token(user=request.user)
         return request.user
 
     @http_put("/update/password", auth=AuthBearer())
