@@ -1,3 +1,5 @@
+import json
+
 from django.db import transaction
 
 from .apis.services import ApiGetInteractionsService

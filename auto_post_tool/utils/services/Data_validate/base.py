@@ -2,7 +2,11 @@ import re
 
 CONTAIN_NUMBER = "^(?=.*\d).+$"
 EMAIL = "^[\w+\.-]+@[\w+\.-]+\.\w+$"
-NOT_CONTAIN_SPACE = "^(?=.*\s).+$"
+CONTAIN_SPACE = "^(?=.*\s).+$"
+"""First name and last name must contain no numbers, 
+no spaces allowed at the beginning or at the end, 
+no two consecutive spaces in the middle."""
+NAME_CONTAIN_SPACE = "^(?!.*\s$)(?!.*^\s)(?!.*\s{2,}).*$"
 
 
 class BaseValidator(object):
@@ -20,4 +24,8 @@ class BaseValidator(object):
 
     @staticmethod
     def is_contain_space(value: str):
-        return bool(re.match(NOT_CONTAIN_SPACE, value))
+        return bool(re.match(CONTAIN_SPACE, value))
+
+    @staticmethod
+    def is_contain_space_name(value: str):
+        return not bool(re.match(NAME_CONTAIN_SPACE, value))

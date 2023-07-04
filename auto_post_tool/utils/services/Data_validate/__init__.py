@@ -9,9 +9,9 @@ class BaseValidate:
         if settings.PASSWORD_MINIMUM_LENGTH:
             if not BaseValidator.is_longer_than(value=password, max_length=settings.PASSWORD_MINIMUM_LENGTH):
                 raise ValidationError(message_code="INVALID_PASSWORD")
-            if settings.PASSWORD_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space(value=password):
+            if settings.PASSWORD_NOT_CONTAIN_SPACE and BaseValidator.is_contain_space(value=password):
                 raise ValidationError(message_code="INVALID_PASSWORD")
-            if settings.PASSWORD_MUST_CONTAIN_NUMBER == "False":
+            if settings.PASSWORD_MUST_CONTAIN_NUMBER:
                 return True
             if not BaseValidator.is_contain_number(value=password):
                 raise ValidationError(message_code="INVALID_PASSWORD")
@@ -23,7 +23,7 @@ class BaseValidate:
             return True
         if BaseValidator.is_contain_number(value=name):
             raise ValidationError(message_code="INVALID_NAME")
-        if settings.NAME_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space(value=name):
+        if settings.NAME_NOT_CONTAIN_SPACE and BaseValidator.is_contain_space_name(value=name):
             raise ValidationError(message_code="INVALID_NAME")
         return True
 
@@ -39,7 +39,6 @@ class BaseValidate:
             BaseValidate.validate_name(name=data.get("first_name"))
             and BaseValidate.validate_name(name=data.get("last_name"))
             and BaseValidate.validate_email(email=data.get("email"))
-            and BaseValidate.validate_password(password=data.get("password"))
         )
 
     @staticmethod

@@ -253,6 +253,15 @@ FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ
 API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
 
+MINIMUM_LENGTH = os.environ.get("MINIMUM_LENGTH")
+CONTAIN_NO_NUMBER = os.environ.get("CONTAIN_NO_NUMBER")
+CONTAIN_NUMBER_AND_LETTER = os.environ.get("CONTAIN_NUMBER_AND_LETTER")
+EMAIL = os.environ.get("EMAIL")
+
+NAME = os.environ.get("NAME")
+PASSWORD = os.environ.get("PASSWORD")
+EMAIL = os.environ.get("EMAIL")
+
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_WHILELIST = ("localhost:9999",)
@@ -262,9 +271,9 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = os.environ.get("GITHUB_REPO")
 
 # password rules
-PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER")
+PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER") == "False"
 PASSWORD_MINIMUM_LENGTH = int(os.environ.get("PASSWORD_MINIMUM_LENGTH"))
-PASSWORD_NOT_CONTAIN_SPACE = os.environ.get("PASSWORD_NOT_CONTAIN_SPACE")
+PASSWORD_NOT_CONTAIN_SPACE = os.environ.get("PASSWORD_NOT_CONTAIN_SPACE") == "True"
 
 # name rules
 NAME_CANT_CONTAIN_NUMBER = os.environ.get("NAME_CANT_CONTAIN_NUMBER")
@@ -275,4 +284,6 @@ SUCCESS_CODE = os.environ.get("SUCCESS_CODE")
 FIREBASE_STORAGE_BUCKET = str(os.environ.get("FIREBASE_STORAGE_BUCKET"))
 DEFAULT_AVATAR = str(os.environ.get("DEFAULT_AVATAR"))
 # post type
-NAME_NOT_CONTAIN_SPACE = os.environ.get("NAME_NOT_CONTAIN_SPACE")
+NAME_NOT_CONTAIN_SPACE = os.environ.get("NAME_NOT_CONTAIN_SPACE") == "True"
+# post type
+DEFAULT_POST_TYPE = os.environ.get("DEFAULT_POST_TYPE")
