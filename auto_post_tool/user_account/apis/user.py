@@ -19,7 +19,6 @@ from token_management.models.token import ResetToken
 from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
 from token_management.services.create_reset_token import ResetTokenService
-from token_management.services.create_zalo_token import ZaloTokenService
 from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
 from utils.services.facebook.get_user_info import get_user_fb_page_info
@@ -52,7 +51,6 @@ class UserController:
     @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
     def get_me(self, request):
         request.user.facebook_status = FacebookTokenService.check_exist_facebook_token(user=request.user)
-        request.user.zalo_status = ZaloTokenService.check_exist_zalo_token(user=request.user)
         return request.user
 
     @http_post("/update/password", auth=AuthBearer())
@@ -106,14 +104,6 @@ class UserController:
     @http_put("/disconnect/facebook", auth=AuthBearer())
     def disconnect_facebook_token(self, request):
         FacebookTokenService.deactivate(request.user)
-
-    @http_post("/connect/zalo", auth=AuthBearer())
-    def connect_zalo_token(self, request, data: UserZaloTokenRequest):
-        ZaloTokenService.call_access_token_from_oauth(request.user, data.oath_code)
-
-    @http_put("/disconnect/zalo", auth=AuthBearer())
-    def disconnect_zalo_token(self, request):
-        ZaloTokenService.deactivate(request.user)
 
     @http_get("/get/facebook/page_id", auth=AuthBearer())
     def get_facebook_groupid(self, request):

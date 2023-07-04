@@ -7,7 +7,7 @@ from .post import CreatePostService, GetDetailPostService, RemovePostService, Up
 from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
 from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
-from schema.payload import PostRequest
+from ..schema.payload import PostRequest
 from utils.functions.filters import FiltersUtils
 from utils.functions.validator import ValidatorsUtils
 
