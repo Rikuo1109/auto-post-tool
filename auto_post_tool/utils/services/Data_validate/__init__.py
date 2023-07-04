@@ -25,7 +25,7 @@ class BaseValidate:
             return True
         if BaseValidator.is_contain_number(value=name):
             raise ValidationError(message_code="INVALID_NAME")
-        if settings.NAME_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space(value=name):
+        if settings.NAME_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space_name(value=name):
             raise ValidationError(message_code="INVALID_NAME")
         return True
 

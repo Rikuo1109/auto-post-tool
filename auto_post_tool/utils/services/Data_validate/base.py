@@ -3,6 +3,7 @@ import re
 CONTAIN_NUMBER = "^(?=.*\d).+$"
 EMAIL = "^[\w+\.-]+@[\w+\.-]+\.\w+$"
 NOT_CONTAIN_SPACE = "^(?=.*\s).+$"
+NAME_NOT_CONTAIN_SPACE = "^(?!.*\s$)(?!.*^\s)(?!.*\s{2,}).*$"
 
 
 class BaseValidator(object):
@@ -21,3 +22,7 @@ class BaseValidator(object):
     @staticmethod
     def is_contain_space(value: str):
         return bool(re.match(NOT_CONTAIN_SPACE, value))
+
+    @staticmethod
+    def is_contain_space_name(value: str):
+        return not bool(re.match(NAME_NOT_CONTAIN_SPACE, value))
