@@ -276,5 +276,4 @@ FIREBASE_KEY_PATH = str(os.environ.get("FIREBASE_KEY_PATH"))
 FIREBASE_STORAGE_BUCKET = str(os.environ.get("FIREBASE_STORAGE_BUCKET"))
 DEFAULT_AVATAR = str(os.environ.get("DEFAULT_AVATAR"))
 # post type
-DEFAULT_POST_TYPE = os.environ.get("DEFAULT_POST_TYPE")
 NAME_NOT_CONTAIN_SPACE = os.environ.get("NAME_NOT_CONTAIN_SPACE")
