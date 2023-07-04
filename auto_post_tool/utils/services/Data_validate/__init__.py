@@ -5,21 +5,11 @@ from .base import BaseValidator
 
 class BaseValidate:
     @staticmethod
-    def validate_username(username: str):
-        if settings.USERNAME_MINIMUM_LENGTH:
-            if not BaseValidator.is_longger_than(
-                value=username, max_length=int(settings.USERNAME_MINIMUM_LENGTH)
-            ):
-                raise ValidationError(message_code="INVALID_USERNAME")
-            return True
-        return True
-
-    @staticmethod
     def validate_password(password: str):
         if settings.PASSWORD_MINIMUM_LENGTH:
-            if not BaseValidator.is_longger_than(
-                value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)
-            ):
+            if not BaseValidator.is_longer_than(value=password, max_length=settings.PASSWORD_MINIMUM_LENGTH):
+                raise ValidationError(message_code="INVALID_PASSWORD")
+            if settings.PASSWORD_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space(value=password):
                 raise ValidationError(message_code="INVALID_PASSWORD")
             if settings.PASSWORD_MUST_CONTAIN_NUMBER == "False":
                 return True
@@ -32,6 +22,8 @@ class BaseValidate:
         if settings.NAME_CANT_CONTAIN_NUMBER == "False":
             return True
         if BaseValidator.is_contain_number(value=name):
+            raise ValidationError(message_code="INVALID_NAME")
+        if settings.NAME_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space(value=name):
             raise ValidationError(message_code="INVALID_NAME")
         return True
 
@@ -47,14 +39,11 @@ class BaseValidate:
             BaseValidate.validate_name(name=data.get("first_name"))
             and BaseValidate.validate_name(name=data.get("last_name"))
             and BaseValidate.validate_email(email=data.get("email"))
-            and BaseValidate.validate_username(username=data.get("username"))
             and BaseValidate.validate_password(password=data.get("password"))
         )
 
     @staticmethod
     def validate_info(data: dict):
-        return (
-            BaseValidate.validate_name(name=data.get("first_name"))
-            and BaseValidate.validate_name(name=data.get("last_name"))
-            and BaseValidate.validate_username(username=data.get("username"))
+        return BaseValidate.validate_name(name=data.get("first_name")) and BaseValidate.validate_name(
+            name=data.get("last_name")
         )
