@@ -1,6 +1,6 @@
 import requests
 from django.conf import settings
-from utils.exceptions.exceptions import NotFound, 
+from utils.exceptions.exceptions import NotFound
 
 
 def get_user_fb_id(token: str):
