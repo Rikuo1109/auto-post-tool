@@ -34,9 +34,6 @@ class Post(models.Model):
     def filter_by_user(user):
         return Post.objects.filter(user=user)
 
-    def set_type_list(self):
-        self.post_type = json.loads(self.post_type)
-
 
 class PostManagement(models.Model):
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
