@@ -6,16 +6,13 @@ import requests
 
 class LinkedInService(object):
     @staticmethod
-    def return_post_response(url: str, data: str, header: str):
-        return requests.request("POST", url=url, headers=header, data=data)
-
-    @staticmethod
-    def return_get_response(url: str, data: str, header: str):
-        return requests.request("GET", url=url, headers=header, data=data)
+    def return_response(url: str, header: str, data={}, method="POST"):
+        return requests.request(method=method, url=url, headers=header, data=data)
 
     @staticmethod
     def request_access_oath(oath_code: str):
-        return LinkedInService.return_post_response(
+        return LinkedInService.return_response(
+            method="POST",
             url=settings.LINKEDIN_ACCESS_TOKEN_URL,
             headers={"Content-Type": settings.API_REQUEST_CONTENT_TYPE},
             data={
@@ -29,8 +26,8 @@ class LinkedInService(object):
 
     @staticmethod
     def get_user_info(user: User):
-        return LinkedInService.return_get_response(
+        return LinkedInService.return_response(
+            method="GET",
             url=settings.LINKEDIN_SELF_PROFILE_URL,
             header={"Authorization": f"Bearer {LinkedInTokenService.get_access_token(user=user)}"},
-            data={},
         )

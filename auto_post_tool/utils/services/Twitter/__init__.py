@@ -10,10 +10,10 @@ class TwitterService(object):
         self.client_secret = settings.TWITTER_CLIENT_SECRET
         self.request_content_type = settings.API_REQUEST_CONTENT_TYPE
 
-    def get_response(self, data: str):
+    def get_response(self, data={}):
         return requests.request(
             "POST",
-            settings.ZALO_ACCESS_TOKEN_URL,
+            settings.TWITTER_ACCESS_TOKEN_URL,
             headers={
                 "Content-Type": self.request_content_type,
                 "Authorization": f"Basic {EncodingService.create_base64_auth_code(client_id=self.client_id, client_secret=self.client_secret)}",
