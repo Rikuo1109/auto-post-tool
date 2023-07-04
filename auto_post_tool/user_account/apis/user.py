@@ -1,3 +1,7 @@
+from typing import Optional
+
+from ninja import File
+from ninja.files import UploadedFile
 from ninja_extra import api_controller, http_get, http_post, http_put
 
 from ..models.user import User
@@ -12,16 +16,16 @@ from ..schema.payload import (
     FacebookConnectResponse,
 )
 from ..schema.response import GetUserResponse
-
-from utils.services.data_validate import BaseValidate
+from image_management.firebase import FirebaseService
 from router.authenticate import AuthBearer
 from token_management.models.token import ResetToken, RegisterToken
 from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
-from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_register_token import RegisterTokenService
+from token_management.services.create_reset_token import ResetTokenService
 from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
+from utils.services.data_validate import BaseValidate
 from utils.services.facebook.get_user_info import get_user_fb_page_info
 
 
@@ -69,18 +73,21 @@ class UserController:
         BaseValidate.validate_password(password=data.new_password)
         user = request.user
         if data.current_password == data.new_password:
-            raise AuthenticationFailed(message_code="SAME_PASSWORD")
+            raise ValidationError(message_code="SAME_PASSWORD")
         if not user.check_password(data.current_password):
-            raise AuthenticationFailed(message_code="INVALID_PASSWORD")
+            raise ValidationError(message_code="INVALID_PASSWORD")
         user.set_password(data.new_password)
         user.save()
 
-    @http_put("/update/info", auth=AuthBearer())
-    def update_info(self, request, data: UserUpdateInfoRequest):
-        BaseValidate.validate_info(data=data.dict())
+    @http_post("/update/info", auth=AuthBearer())
+    def update_info(self, request, data: UserUpdateInfoRequest, avatar: Optional[UploadedFile] = File(...)):
+        data = data.dict()
+        BaseValidate.validate_info(data=data)
+        if avatar is not None:
+            service = FirebaseService()
+            data["avatar"] = service.create_image(user=request.user, source=avatar).url
         user = request.user
-        user.first_name = data.first_name
-        user.last_name = data.last_name
+        user.__dict__.update({key: value for key, value in data.items() if value is not None})
         user.save()
 
     @http_post("/logout", auth=AuthBearer())

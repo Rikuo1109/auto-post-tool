@@ -23,6 +23,8 @@ class AuthBearer(HttpBearer):
             access_token = jwt.decode(token, settings.SECRET_KEY, algorithms=settings.JWT_ALGORITHM)
         except jwt.exceptions.DecodeError:
             raise AuthenticationFailed(message_code="INVALID_LOGIN_TOKEN")
+        except jwt.exceptions.ExpiredSignatureError:
+            raise AuthenticationFailed(message_code="INVALID_LOGIN_TOKEN")
         """Parsing JWT"""
         user_uid = access_token.get("user_uid")
         exp_time = access_token.get("exp")

@@ -1,10 +1,10 @@
 from django.db import transaction
 
 
-class UpdateStatusService:
-    def __init__(self, post_management, status):
+class ContentLogService:
+    def __init__(self, post_management, content):
         self.post_management = post_management
-        self.post_management.status = status
+        self.post_management.content = content
 
     @transaction.atomic
     def __call__(self):

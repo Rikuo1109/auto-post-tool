@@ -1,21 +1,14 @@
 from datetime import datetime
 from typing import List, Optional
 
-from ninja import Field, FilterSchema, ModelSchema, Schema
+from ninja import Field, FilterSchema, Schema
 
-from ..models import Post
-from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
+from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum
 
 
 """
 MODEL SCHEMA FIELDS
 """
-
-
-class PostPayloadSchema(ModelSchema):
-    class Config:
-        model = Post
-        model_fields = ["content", "post_type", "created_at"]
 
 
 class PostManagementPayloadSchema(Schema):
@@ -35,9 +28,14 @@ class PostManagementCreateRequest(Schema):
 
 
 class PostRequest(Schema):
+    title: str
     content: Optional[str]
-    post_types: List[str] = []
+    post_type: List[str]
     images: List[str] = []
+
+
+class PublishPostManagementRequest(Schema):
+    post_uid: str
     managements: List[PostManagementPayloadSchema]
 
 
@@ -47,14 +45,9 @@ UPDATE FIELDS
 
 
 class PostDetailUpdateRequest(Schema):
+    title: Optional[str]
     content: Optional[str]
-    post_types: List[str] = []
-
-
-class PostManagementUpdateRequest(Schema):
-    platform: Optional[PostManagementPlatFormEnum]
-    auto_publish: Optional[bool]
-    time_posting: Optional[datetime]
+    post_type: List[str]
 
 
 """
@@ -63,15 +56,18 @@ FILTER FIELDS
 
 
 class PostFiltersRequest(FilterSchema):
-    search: Optional[str] = Field(q=["content__icontains", "post_type__icontains"])
-    post_type: Optional[PostTypeEnum] = Field(q=["post_type__iexact"])
+    search: Optional[str] = Field(q=["title__icontains"])
     min_time: Optional[datetime] = Field(q=["created_at__gte"])
     max_time: Optional[datetime] = Field(q=["created_at__lte"])
+
+
+class PostFiltersCustomRequest(Schema):
+    post_type: Optional[str]
 
 
 class PostManagementFiltersRequest(FilterSchema):
-    platform: Optional[PostManagementPlatFormEnum] = Field(q=["platform__iexact"])
+    platform: Optional[List[PostManagementPlatFormEnum]] = Field(q=["platform__in"])
     auto_publish: Optional[bool] = Field(q=["auto_publish__exact"])
-    status: Optional[PostManagementStatusEnum] = Field(q=["platform__iexact"])
-    min_time: Optional[datetime] = Field(q=["created_at__gte"])
-    max_time: Optional[datetime] = Field(q=["created_at__lte"])
+    status: Optional[List[PostManagementStatusEnum]] = Field(q=["status__in"])
+    min_time: Optional[datetime] = Field(q=["time_posting__gte"])
+    max_time: Optional[datetime] = Field(q=["time_posting__lte"])

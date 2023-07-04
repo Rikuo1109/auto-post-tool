@@ -203,7 +203,6 @@ BASE_HOST = os.environ.get("BASE_HOST")
 MEDIA_ROOT = os.path.join(BASE_DIR, str(os.environ.get("MEDIA_ROOT")))
 MEDIA_URL = str(os.environ.get("MEDIA_URL"))
 
-
 NINJA_DOCS_VIEW = "redoc"
 
 # Logging Settings
@@ -229,6 +228,7 @@ STATICFILES_DIRS = ("/static/",)
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATIC_URL = os.environ.get("STATIC_URL")
 
+# JWT
 JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")
 JWT_EXPIRED_TIME = int(str(os.environ.get("JWT_EXPIRED_TIME")))
 
@@ -238,6 +238,7 @@ REGISTER_TOKEN_LIFETIME = int(str(os.environ.get("REGISTER_TOKEN_LIFETIME")))
 RESET_TOKEN_LENGTH = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LENGTH")))
 RESET_PASSWORD_TOKEN_LIFETIME = int(str(os.environ.get("RESET_PASSWORD_TOKEN_LIFETIME")))
 
+# Facebook
 FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 FACEBOOK_API_APP_ID = os.environ.get("FACEBOOK_API_APP_ID")
 FACEBOOK_API_APP_SECRET = os.environ.get("FACEBOOK_API_APP_SECRET")
@@ -248,15 +249,6 @@ FACEBOOK_GET_USERID_URL = os.environ.get("FACEBOOK_GET_USERID_URL")
 FACEBOOK_GET_USER_PAGES_URL = os.environ.get("FACEBOOK_GET_USER_PAGES_URL")
 FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 
-# Zalo API
-ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
-
-# Twitter API
-TWITTER_ACCESS_TOKEN_URL = os.environ.get("TWITTER_ACCESS_TOKEN_URL")
-
-# LinkedIn API
-LINKEDIN_ACCESS_TOKEN_URL = os.environ.get("LINKEDIN_ACCESS_TOKEN_URL")
-LINKEDIN_SELF_PROFILE_URL = os.environ.get("LINKEDIN_SELF_PROFILE_URL")
 
 API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
@@ -285,6 +277,13 @@ PASSWORD_NOT_CONTAIN_SPACE = os.environ.get("PASSWORD_NOT_CONTAIN_SPACE") == "Tr
 
 # name rules
 NAME_CANT_CONTAIN_NUMBER = os.environ.get("NAME_CANT_CONTAIN_NUMBER")
+
+SUCCESS_CODE = os.environ.get("SUCCESS_CODE")
+
+# Firebase key path
+FIREBASE_STORAGE_BUCKET = str(os.environ.get("FIREBASE_STORAGE_BUCKET"))
+DEFAULT_AVATAR = str(os.environ.get("DEFAULT_AVATAR"))
+# post type
 NAME_NOT_CONTAIN_SPACE = os.environ.get("NAME_NOT_CONTAIN_SPACE") == "True"
 # post type
 DEFAULT_POST_TYPE = os.environ.get("DEFAULT_POST_TYPE")

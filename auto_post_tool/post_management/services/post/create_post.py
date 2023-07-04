@@ -1,14 +1,17 @@
+import json
+
 from django.db import transaction
 
 from post_management.models.post import Post
 
 
 class CreatePostService:
-    def __init__(self, user, content, post_type):
+    def __init__(self, user, data):
         self.user = user
-        self.content = content
-        self.post_type = post_type
+        self.content = data.content
+        self.post_type = data.post_type
+        self.title = data.title
 
     @transaction.atomic
     def __call__(self):
-        return Post.objects.create(user=self.user, content=self.content, post_type=self.post_type)
+        return Post.objects.create(user=self.user, title=self.title, content=self.content, post_type=self.post_type)
