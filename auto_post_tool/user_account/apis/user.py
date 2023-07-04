@@ -71,12 +71,13 @@ class UserController:
 
     @http_post("/update/info", auth=AuthBearer())
     def update_info(self, request, data: UserUpdateInfoRequest, avatar: Optional[UploadedFile] = File(...)):
+        data = data.dict()
+        BaseValidate.validate_info(data=data)
         if avatar is not None:
             service = FirebaseService()
-            data.url = service.create_image(source=avatar)
-        BaseValidate.validate_info(data=data.dict())
+            data["avatar"] = service.create_image(user=request.user, source=avatar).url
         user = request.user
-        user.__dict__.update({key: value for key, value in data.dict().items() if value is not None})
+        user.__dict__.update({key: value for key, value in data.items() if value is not None})
         user.save()
 
     @http_post("/logout", auth=AuthBearer())

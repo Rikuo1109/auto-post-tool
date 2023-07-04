@@ -15,9 +15,6 @@ firebase_admin.initialize_app(cred, {"storageBucket": settings.FIREBASE_STORAGE_
 
 
 class FirebaseService:
-    def __init__(self):
-        pass
-
     @staticmethod
     def push_image(image, blob_name, isPublic=True) -> str:
         bucket = storage.bucket()

@@ -14,6 +14,4 @@ class CreatePostService:
 
     @transaction.atomic
     def __call__(self):
-        return Post.objects.create(
-            user=self.user, title=self.title, content=self.content, post_type=json.dumps(self.post_type)
-        )
+        return Post.objects.create(user=self.user, title=self.title, content=self.content, post_type=self.post_type)

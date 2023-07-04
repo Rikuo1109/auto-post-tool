@@ -1,16 +1,39 @@
 import json
+import re
 from datetime import datetime
-from typing import List
 from uuid import uuid4
 
-from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import models
 
 from image_management.models import ImagePost
 from user_account.models.user import User
-from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
+from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum
 from utils.exceptions import NotFound, ValidationError
+
+
+class PostTypeField(models.CharField):
+    def db_type(self, connection):
+        return "str"
+
+    def get_prep_value(self, value):
+        if isinstance(value, list):
+            value.sort()
+            return json.dumps(value)
+        return value
+
+    def from_db_value(self, value, expression, connection):
+        if isinstance(value, str):
+            value = value.replace("'", '"')
+            return json.loads(value)
+        return value
+
+    def get_db_prep_save(self, value, connection):
+        if not value:
+            return None
+        if isinstance(value, str):
+            value = value.split(",")
+        return super().get_db_prep_save(value, connection)
 
 
 class Post(models.Model):
@@ -20,7 +43,7 @@ class Post(models.Model):
     )
     title = models.TextField(max_length=128, blank=True)
     content = models.TextField()
-    post_type = models.CharField(max_length=150, default=f"[{settings.DEFAULT_POST_TYPE}]")
+    post_type = PostTypeField(max_length=255, default="[]")
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ManyToManyField(to=ImagePost, related_name="posts_mm_iamges", blank=True, db_constraint=False)
 
@@ -69,8 +92,6 @@ class PostManagement(models.Model):
             return PostManagement.objects.get(uid=uid)
         except PostManagement.DoesNotExist as e:
             raise NotFound(message_code="POST_MANAGEMENT_NOT_FOUND") from e
-        except PostManagement.MultipleObjectsReturned as e:
-            raise ValidationError(message_code="MORE_THAN_ONE_POST_MANAGEMENT_FOUND") from e
         except DjangoValidationError:
             raise ValidationError(message_code="INVALID_UID")
 

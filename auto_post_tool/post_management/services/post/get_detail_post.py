@@ -6,5 +6,5 @@ class GetDetailPostService:
         self.post = Post.get_by_uid(uid=uid)
 
     def __call__(self):
-        setattr(self.post, "management", PostManagement.filter_by_post(post=self.post))
+        self.post.managements = PostManagement.filter_by_post(post=self.post)
         return self.post

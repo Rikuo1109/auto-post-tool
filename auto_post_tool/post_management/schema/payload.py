@@ -56,7 +56,7 @@ FILTER FIELDS
 
 
 class PostFiltersRequest(FilterSchema):
-    search: Optional[str] = Field(q=["content__icontains"])
+    search: Optional[str] = Field(q=["title__icontains"])
     min_time: Optional[datetime] = Field(q=["created_at__gte"])
     max_time: Optional[datetime] = Field(q=["created_at__lte"])
 

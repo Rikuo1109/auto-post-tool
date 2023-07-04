@@ -8,10 +8,10 @@ class PostFiltersUtils:
     @staticmethod
     def handle_post_filter_dict(key, value):
         if key == "post_type":
+            value = value if isinstance(value, list) else value.split(",")
             filter = Q()
-            post_types = value if isinstance(value, list) else value.split(",")
-            for post_type in post_types:
-                filter = filter | Q(post_type__icontains=post_type)
+            for post_type in value:
+                filter = filter | Q(post_type__icontains=f'"{post_type}"')
             return filter
 
     @staticmethod

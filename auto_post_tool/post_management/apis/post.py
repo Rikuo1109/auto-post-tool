@@ -39,7 +39,7 @@ class PostController:
         self,
         request,
         sorting: SortingPostEnum = SortingPostEnum.CREATED_AT,
-        sort_type: SortTypeEnum = SortTypeEnum.ASC,
+        sort_type: SortTypeEnum = SortTypeEnum.DESC,
         filters: PostFiltersRequest = Query(...),
         filters_custom: PostFiltersCustomRequest = Query(...),
     ):
@@ -83,7 +83,7 @@ class PostController:
         request,
         uid,
         sorting: SortingPostManagementEnum = SortingPostManagementEnum.TIME_POSTING,
-        sort_type: SortTypeEnum = SortTypeEnum.ASC,
+        sort_type: SortTypeEnum = SortTypeEnum.DESC,
         filters: PostManagementFiltersRequest = Query(...),
     ):
         """
