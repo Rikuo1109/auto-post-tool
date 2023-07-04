@@ -35,4 +35,4 @@ beautifulsoup4==4.12.2
 Markdown==3.4.3
 
 # Firebase
-firebase-admin==6.2.0
+Pyrebase4==4.7.1
