@@ -35,4 +35,6 @@ class AuthBearer(HttpBearer):
             request.user = User.objects.get(uid=user_uid)
         except User.DoesNotExist:
             raise NotFound(message_code="USER_NOT_FOUND")
+        if not request.user.is_verified:
+            raise AuthenticationFailed(message_code="USER_UNVERIFIED")
         return token

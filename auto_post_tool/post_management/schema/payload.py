@@ -1,10 +1,9 @@
 from datetime import datetime
 from typing import List, Optional
 
-from ninja import FilterSchema, ModelSchema, Schema
+from ninja import Field, FilterSchema, ModelSchema, Schema
 
-from ..models import Post, PostManagement
-from ninja import Field
+from ..models import Post
 from utils.enums.post import PostManagementPlatFormEnum, PostManagementStatusEnum, PostTypeEnum
 
 
@@ -19,10 +18,11 @@ class PostPayloadSchema(ModelSchema):
         model_fields = ["content", "post_type", "created_at"]
 
 
-class PostManagementPayloadSchema(ModelSchema):
-    class Config:
-        model = PostManagement
-        model_fields = ["platform", "auto_publish", "time_posting"]
+class PostManagementPayloadSchema(Schema):
+    platform: PostManagementPlatFormEnum
+    auto_publish: bool
+    time_posting: Optional[datetime]
+    required_items: Optional[dict]
 
 
 """
@@ -37,6 +37,7 @@ class PostManagementCreateRequest(Schema):
 class PostRequest(Schema):
     content: Optional[str]
     post_type: PostTypeEnum
+    images: List[str] = []
     managements: List[PostManagementPayloadSchema]
 
 

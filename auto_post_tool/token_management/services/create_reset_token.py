@@ -1,7 +1,9 @@
 import random
 import string
 from datetime import datetime
+
 from django.conf import settings
+from datetime import datetime
 from token_management.models.token import ResetToken
 from user_account.models import User
 from utils.exceptions import ValidationError
@@ -27,12 +29,11 @@ class ResetTokenService:
         return random_token
 
     @staticmethod
-    def deactivate(token: ResetToken):
-        if not ResetTokenService.check_valid(token=token):
-            raise ValidationError("VALIDATION_ERROR")
-        token.active = False
-        token.save()
+    def deactivate(user: User):
+        ResetToken.objects.filter(user=user, active=True).update(active=False)
 
     @staticmethod
     def check_valid(token: ResetToken):
+        if not token.expire_at:
+            return False
         return token.expire_at > datetime.now() and token.active

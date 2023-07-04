@@ -1,5 +1,5 @@
-from .groups_api import GroupsApiFacebookService
-from .pages_api import PagesApiFacebookService
+from .groups_api import GroupsFacebookApiService
+from .pages_api import PagesFacebookApiService
 
 
-__all__ = ["GroupsApiFacebookService", "PagesApiFacebookService"]
+__all__ = ["GroupsFacebookApiService", "PagesFacebookApiService"]

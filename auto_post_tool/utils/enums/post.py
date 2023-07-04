@@ -26,6 +26,6 @@ class PostManagementPlatFormEnum(TextChoices):
 
 
 @unique
-class FacebookPlatFormEnum(TextChoices):
-    GROUP = "GROUP", "group"
-    PAGE = "PAGE", "page"
+class PostTypeFormatEnum(TextChoices):
+    MARKDOWN = "MARKDOWN", "markdown"
+    PLAINTEXT = "PLAINTEXT", "plaintext"

@@ -24,15 +24,19 @@ ERROR_MESSAGES = {
     # Check user existence
     "USER_NOT_FOUND": "User not found",
     "EMAIL_HAS_BEEN_USED": "Email has been used",
-    # Check login information
-    "INVALID_PASSWORD": "Password must contain at least 8 character and not contain any special character",
+    "USER_UNVERIFIED": "User is not verified",
+    "USER_ALREADY_ACTIVE": "User is already active",
     # Check new password and old password
     "SAME_PASSWORD": "New password is the same with current password",
     # Check login token
     "LOGIN_TOKEN_NOT_FOUND": "Login token not found",
     "INVALID_LOGIN_TOKEN": "Invalid login token",
     # Check reset token
+    "RESET_TOKEN_NOT_FOUND": "Reset token not found",
+    # Check reset token
     "RESET_TOKEN_INVALID_OR_EXPIRED": "Reset token is invalid or expired",
+    # Check register token
+    "REGISTER_TOKEN_INVALID_OR_EXPIRED": "Register token is invalid or expired",
     # Check data format
     "INVALID_NAME": "First name and last name must contain no numbers",
     "INVALID_EMAIL": "Wrong email format",
@@ -43,10 +47,18 @@ ERROR_MESSAGES = {
     # Facebook errors
     "INVALID_FACEBOOK_TOKEN": "Invalid facebook token",
     "FACEBOOK_NOT_CONNECTED": "Facebook not connected",
+    "MATERIAL_NOT_FOUND": "Material not found",
+    "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
     "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
     "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",
     "ZALO_TOKEN_NOT_CONNECTED": "Zalo not connected",
+    # Post errors
+    "POST_NOT_FOUND": "Post not found",
+    "MORE_THAN_ONE_POST_FOUND": "More than one post found",
+    # Post management errors
+    "POST_MANAGEMENT_NOT_FOUND": "Post management not found",
+    "MORE_THAN_ONE_POST_MANAGEMENT_FOUND": "More than one post management found",
 }
