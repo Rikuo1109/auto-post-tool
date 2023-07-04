@@ -7,19 +7,18 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from utils.exceptions.exceptions import NotFound
+from utils.exceptions.exceptions import NotFound, AuthenticationFailed
 
 
 class UserManager(BaseUserManager):  # type: ignore
     def create_user(
-        self, email: str, password: str, first_name: str = "admin", last_name: str = "admin", username: str = "admin"
+        self, email: str, password: str, first_name: Optional[str] = None, last_name: Optional[str] = None
     ) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
         user: Any = User(email=self.normalize_email(email))
         user.first_name = first_name
         user.last_name = last_name
-        user.username = username
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -43,15 +42,11 @@ class User(AbstractUser):
     uid = models.UUIDField(unique=True, default=uuid4, editable=False)
 
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
-    username = models.CharField(max_length=255, null=True, blank=True)
     first_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True)
-
-    uid = models.UUIDField(unique=True, default=uuid4)
-
-    facebook_access_token = models.TextField(null=True)
-    zalo_access_token = models.TextField(null=True)
-
+    last_name = models.CharField(max_length=255, blank=True, null=True, default=None)
+    username = models.CharField(max_length=255, blank=True, null=True, default=None)
+    is_verified = models.BooleanField(default=False)
     # Required by django admin
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
@@ -70,3 +65,8 @@ class User(AbstractUser):
         except User.DoesNotExist:
             raise NotFound(message_code="USER_NOT_FOUND")
         return user
+
+    def check_verified(self):
+        if not self.is_verified:
+            raise AuthenticationFailed(message_code="USER_UNVERIFIED")
+        return True

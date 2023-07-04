@@ -33,7 +33,7 @@ class MailSenderService:
         self.provider = EMAIL_HOST
 
     def send_reset_password_email(self):
-        subject, body, to = EmailPayload.reset_password(user=self.recipients[0])
+        subject, body, to = EmailPayload.reset_password(email=self.recipients[0])
         thread = EmailThread(
             subject=subject,
             body=body,
@@ -47,4 +47,21 @@ class MailSenderService:
             timeout=self.timeout,
             use_tls=self.use_tls,
         )
-        thread.run()
+        thread.start()
+
+    def send_register_email(self):
+        subject, body, to = EmailPayload.verify_email(email=self.recipients[0])
+        thread = EmailThread(
+            subject=subject,
+            body=body,
+            recipients=[to],
+            sender=self.sender,
+            messages=[],
+            auth_user=self.sender,
+            auth_password=self.password,
+            provider=self.provider,
+            port_number=self.port_number,
+            timeout=self.timeout,
+            use_tls=self.use_tls,
+        )
+        thread.start()
