@@ -6,7 +6,7 @@ from uuid import uuid4
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from utils.exceptions.exceptions import NotFound
+from utils.exceptions.exceptions import NotFound, AuthenticationFailed
 
 
 class UserManager(BaseUserManager):  # type: ignore
@@ -63,3 +63,8 @@ class User(AbstractUser):
         except User.DoesNotExist:
             raise NotFound(message_code="USER_NOT_FOUND")
         return user
+
+    def check_verified(self):
+        if not self.is_verified:
+            raise AuthenticationFailed(message_code="USER_UNVERIFIED")
+        return True

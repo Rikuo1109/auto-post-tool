@@ -3,25 +3,22 @@ from ninja_extra import api_controller, http_get, http_post, http_put
 from ..models.user import User
 from ..schema.payload import (
     UserChangePassword,
-    UserEmailRequest,
-    UserFacebookTokenRequest,
     UserLoginRequest,
     UserPasswordResetRequest,
     UserRegisterRequest,
     UserUpdateInfoRequest,
-    UserZaloTokenRequest,
     UserRegisterCheckRequest,
 )
-from ..schema.response import UserResponse2
+from ..schema.response import GetUserResponse
 
 from utils.services.data_validate import BaseValidate
 from router.authenticate import AuthBearer
-from token_management.models.token import ResetToken, RegisterToken
+from token_management.models.token import ResetToken
 from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
 from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_register_token import RegisterTokenService
-from utils.exceptions import AuthenticationFailed, NotFound, ValidationError, PermissionDenied
+from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
 from utils.services.facebook.get_user_info import get_user_fb_page_info
 
@@ -33,8 +30,8 @@ class UserController:
         user = User.get_user_by_email(email=data.email)
         if not user.check_password(data.password):
             raise AuthenticationFailed(message_code="INVALID_EMAIL_PASSWORD")
-        RegisterTokenService.is_verified(user=user)
-        return {"access_token": LoginTokenService().create_token(user)}
+        user.check_verified()
+        return {"access_token": LoginTokenService().create_token(user=user)}
 
     @http_post("/register")
     def user_register(self, data: UserRegisterRequest):
@@ -47,22 +44,22 @@ class UserController:
         return True
 
     @http_post("/email-verify")
-    def verify_email(self, data: UserEmailRequest):
-        user = User.get_user_by_email(email=data.email)
-        RegisterTokenService.is_verified(user=user)
-        MailSenderService(recipients=[data.email]).send_register_email()
+    def verify_email(self, email: str):
+        user = User.get_user_by_email(email=email)
+        user.check_verified()
+        MailSenderService(recipients=[email]).send_register_email()
         return True
 
     @http_put("/register-check")
-    def user_register_check(self, data: UserRegisterCheckRequest):
-        register_token = RegisterTokenService.get_register_token(data.token)
+    def user_register_check(self, token: str):
+        register_token = RegisterTokenService.get_register_token(token=token)
         user = register_token.user
         user.is_verified = True
         user.save()
         RegisterTokenService.deactivate(user)
         return True
 
-    @http_get("/get/me", response=UserResponse2, auth=AuthBearer())
+    @http_get("/get/me", response=GetUserResponse, auth=AuthBearer())
     def get_me(self, request):
         request.user.facebook_status = FacebookTokenService.check_exist_facebook_token(user=request.user)
         return request.user
@@ -91,9 +88,9 @@ class UserController:
         LoginTokenService.deactivate(token=request.auth)
 
     @http_post("/forgot-password")
-    def forgot_password(self, data: UserEmailRequest):
-        BaseValidate.validate_email(email=data.email)
-        MailSenderService(recipients=[data.email]).send_reset_password_email()
+    def forgot_password(self, email: str):
+        BaseValidate.validate_email(email=email)
+        MailSenderService(recipients=[email]).send_reset_password_email()
         return True
 
     @http_put("/reset-password")
@@ -102,7 +99,7 @@ class UserController:
             reset_token = ResetToken.objects.get(token=data.token)
         except ResetToken.DoesNotExist as e:
             raise NotFound(message_code="RESET_TOKEN_INVALID_OR_EXPIRED") from e
-        if not ResetTokenService.check_valid(reset_token):
+        if not ResetTokenService.check_valid(token=reset_token):
             raise ValidationError(message_code="RESET_TOKEN_INVALID_OR_EXPIRED")
         BaseValidate.validate_password(password=data.password)
         user = reset_token.user
@@ -113,14 +110,14 @@ class UserController:
         ResetTokenService.deactivate(token=reset_token)
 
     @http_post("/connect/facebook", auth=AuthBearer())
-    def connect_facebook_token(self, request, data: UserFacebookTokenRequest):
-        FacebookTokenService.get_long_lived_access_token(request.user, data.token)
+    def connect_facebook_token(self, request, token: str):
+        FacebookTokenService.get_long_lived_access_token(user=request.user, short_lived_access_token=token)
 
     @http_put("/disconnect/facebook", auth=AuthBearer())
     def disconnect_facebook_token(self, request):
-        FacebookTokenService.deactivate(request.user)
+        FacebookTokenService.deactivate(user=request.user)
 
     @http_get("/get/facebook/page_id", auth=AuthBearer())
     def get_facebook_groupid(self, request):
-        access_token = FacebookTokenService.get_token_by_user(request.user)
+        access_token = FacebookTokenService.get_token_by_user(user=request.user)
         return get_user_fb_page_info(token=access_token)

@@ -30,9 +30,7 @@ class ResetTokenService:
 
     @staticmethod
     def deactivate(user: User):
-        for token in ResetToken.objects.filter(user=user, active=True):
-            token.active = False
-            token.save()
+        ResetToken.objects.filter(user=user, active=True).update(active=False)
 
     @staticmethod
     def check_valid(token: ResetToken):

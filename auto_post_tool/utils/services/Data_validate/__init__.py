@@ -9,7 +9,7 @@ class BaseValidate:
     @staticmethod
     def validate_password(password: str):
         if settings.PASSWORD_MINIMUM_LENGTH:
-            if not BaseValidator.is_longer_than(value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)):
+            if not BaseValidator.is_longer_than(value=password, max_length=settings.PASSWORD_MINIMUM_LENGTH):
                 raise ValidationError(message_code="INVALID_PASSWORD")
             if settings.PASSWORD_NOT_CONTAIN_SPACE == "True" and BaseValidator.is_contain_space(value=password):
                 raise ValidationError(message_code="INVALID_PASSWORD")

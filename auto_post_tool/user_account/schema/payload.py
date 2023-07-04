@@ -8,10 +8,6 @@ class UserRegisterRequest(Schema):
     password: str
 
 
-class UserRegisterCheckRequest(Schema):
-    token: str
-
-
 class UserLoginRequest(Schema):
     email: str
     password: str
@@ -27,18 +23,6 @@ class UserUpdateInfoRequest(Schema):
     last_name: str
 
 
-class UserEmailRequest(Schema):
-    email: str
-
-
 class UserPasswordResetRequest(Schema):
     token: str
     password: str
-
-
-class UserFacebookTokenRequest(Schema):
-    token: str
-
-
-class UserZaloTokenRequest(Schema):
-    oath_code: str

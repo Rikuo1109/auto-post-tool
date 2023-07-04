@@ -6,7 +6,7 @@ from django.conf import settings
 from datetime import datetime
 from token_management.models.token import RegisterToken
 from user_account.models import User
-from utils.exceptions import ValidationError, NotFound, AuthenticationFailed
+from utils.exceptions import ValidationError, NotFound
 
 
 class RegisterTokenService:
@@ -41,15 +41,8 @@ class RegisterTokenService:
         return register_token
 
     @staticmethod
-    def is_verified(user: User):
-        if not user.is_verified:
-            raise AuthenticationFailed(message_code="USER_UNVERIFIED")
-
-    @staticmethod
     def deactivate(user: User):
-        for token in RegisterToken.objects.filter(user=user, active=True):
-            token.active = False
-            token.save()
+        RegisterToken.objects.filter(user=user, active=True).update(active=False)
 
     @staticmethod
     def check_valid(token: RegisterToken):
