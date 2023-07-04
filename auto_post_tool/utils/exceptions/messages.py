@@ -19,6 +19,7 @@ ERROR_MESSAGES = {
     "MISSING_FIELD": "Missing field",
     # Raise when a field is invalid (e.g. wrong type)
     "INVALID_FIELD": "Invalid field",
+    "INVALID_UID": "Invalid uid",
     # Validation errors
     "INVALID_ARGUMENTS": "Invalid arguments",
     # Check user existence
@@ -38,7 +39,7 @@ ERROR_MESSAGES = {
     # Check register token
     "REGISTER_TOKEN_INVALID_OR_EXPIRED": "Register token is invalid or expired",
     # Check data format
-    "INVALID_NAME": "First name and last name must contain no numbers",
+    "INVALID_NAME": "First name and last name must contain no numbers, no spaces allowed at the beginning or at the end, and no two consecutive spaces in the middle.",
     "INVALID_EMAIL": "Wrong email format",
     "INVALID_PASSWORD": "Password must contain at least 8 characters and contain at least 1 number and 1 letter",
     "INVALID_USERNAME": "Username must contain 8 characters",
@@ -49,8 +50,6 @@ ERROR_MESSAGES = {
     "FACEBOOK_NOT_CONNECTED": "Facebook not connected",
     "MATERIAL_NOT_FOUND": "Material not found",
     "INVALID_SCHEDULED_PUBLISH_TIME": "The specified scheduled publish time is invalid",
-    "FACEBOOK_ID_NOT_FOUND": "Facebook ID not found",
-    "FACEBOOK_PAGE_NOT_FOUND": "Facebook page not found",
     # Zalo errors
     "INVALID_OAUTH_TOKEN": "Invalid oauth token",
     "INVALID_ZALO_REFRESH_TOKEN": "Invalid zalo refresh token",

@@ -46,11 +46,13 @@ class EmailPayload:
         subject = "Đăng ký tài khoản"
         RegisterTokenService.deactivate(user)
 
+        register_token = RegisterTokenService().create_register_token(user=user)
+
         context = {
             "last_name": user.last_name,
             "first_name": user.first_name,
             "time": datetime.now,
-            "register_token": RegisterTokenService().create_register_token(user=user),
+            "register_link": f"{settings.BASE_UI_URL}/verify-account/{register_token}",
             "base_ui_url": BASE_UI_URL,
         }
 

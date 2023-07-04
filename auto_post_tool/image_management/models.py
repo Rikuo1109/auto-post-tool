@@ -8,7 +8,7 @@ from utils.exceptions import NotFound
 
 class ImagePost(models.Model):
     uid = models.UUIDField(default=uuid4, editable=False, unique=True)
-    source = models.ImageField()
+    url = models.URLField(blank=True, null=True)
     date_updated = models.DateTimeField(auto_now_add=True)
 
     @staticmethod

@@ -1,3 +1,5 @@
+from typing import Optional
+
 from ninja.schema import Schema
 
 
@@ -5,6 +7,10 @@ class UserRegisterRequest(Schema):
     first_name: str
     last_name: str
     email: str
+
+
+class UserPasswordRegisterRequest(Schema):
+    token: str
     password: str
 
 
@@ -26,3 +32,11 @@ class UserUpdateInfoRequest(Schema):
 class UserPasswordResetRequest(Schema):
     token: str
     password: str
+
+
+class EmailRequestResponse(Schema):
+    email: str
+
+
+class FacebookConnectResponse(Schema):
+    token: str
