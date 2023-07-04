@@ -29,11 +29,8 @@ class ResetTokenService:
         return random_token
 
     @staticmethod
-    def deactivate(token: ResetToken):
-        if not ResetTokenService.check_valid(token=token):
-            raise ValidationError("VALIDATION_ERROR")
-        token.active = False
-        token.save()
+    def deactivate(user: User):
+        ResetToken.objects.filter(user=user, active=True).update(active=False)
 
     @staticmethod
     def check_valid(token: ResetToken):
