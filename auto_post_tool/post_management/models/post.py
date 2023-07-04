@@ -1,5 +1,4 @@
 import json
-import re
 from datetime import datetime
 from uuid import uuid4
 
@@ -61,9 +60,6 @@ class Post(models.Model):
     @staticmethod
     def filter_by_user(user):
         return Post.objects.filter(user=user)
-
-    def set_type_list(self):
-        self.post_type = json.loads(self.post_type)
 
 
 class PostManagement(models.Model):
