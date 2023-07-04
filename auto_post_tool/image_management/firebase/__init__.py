@@ -5,17 +5,17 @@ from ninja.files import UploadedFile
 from image_management.models import ImagePost
 from pyrebase import initialize_app
 from user_account.models.user import User
-
+from django.conf import settings
 
 config = {
-    "apiKey": "AIzaSyDlNprL8t5ElEjMVhu1odD1NfPXJuAOIFg",
-    "authDomain": "auto-post-tool.firebaseapp.com",
-    "databaseURL": "https://auto-post-tool-default-rtdb.firebaseio.com",
-    "projectId": "auto-post-tool",
-    "storageBucket": "auto-post-tool.appspot.com",
-    "messagingSenderId": "577246572125",
-    "appId": "1:577246572125:web:01a77f00606dfe8fe167b4",
-    "measurementId": "G-TQQFSL7ZSG",
+    "apiKey": settings.FIREBASE_APIKEY,
+    "authDomain": settings.FIREBASE_AUTHDOMAIN,
+    "databaseURL": settings.FIREBASE_DATABASEURL,
+    "projectId": settings.FIREBASE_PROJECTID,
+    "storageBucket": settings.FIREBASE_STORAGEBUCKET,
+    "messagingSenderId": settings.FIREBASE_MESSAGINGSENDERID,
+    "appId": settings.FIREBASE_APPID,
+    "measurementId": settings.FIREBASE_MEASUREMENTID,
 }
 
 firebase = initialize_app(config)
