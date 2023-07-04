@@ -8,6 +8,7 @@ from user_account.models.user import User
 from utils.exceptions import NotFound, ValidationError
 
 
+
 SUCCESS_CODE = 200
 
 
@@ -24,7 +25,6 @@ class FacebookTokenService:
     @staticmethod
     def get_long_lived_access_token(user: User, short_lived_access_token: str):
         """Generate long-live access token from short-live"""
-        FacebookTokenService.deactivate(user=user)
         try:
             response = requests.post(
                 settings.FACEBOOK_ACCESS_TOKEN_URL,
@@ -42,6 +42,7 @@ class FacebookTokenService:
         if response.status_code is not SUCCESS_CODE:
             raise ValidationError(message_code="INVALID_FACEBOOK_TOKEN")
         response_data = response.json()
+        FacebookTokenService.deactivate(user=user)
         FacebookTokenService.create_token(
             expire_time=int(response_data.get("expires_in", settings.FACEBOOK_LONG_LIVE_TOKEN_LIFETIME)),
             user=user,

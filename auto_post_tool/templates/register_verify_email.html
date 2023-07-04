@@ -166,27 +166,48 @@
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p>Xin chào</p>
-              <p>Bạn vừa thực hiện đăng ký tài khoản tại trang <strong>{{ base_ui_url }}</strong> vào lúc <strong>{{ time }}</strong>. Vui lòng trở lại trang xác nhận thông tin và nhập mã xác minh sau</p><br/>
+              <p>Xin chào <strong>{{ first_name }} {{ last_name }}</strong>,</p>
+              <p>Bạn vừa yêu cầu đăng ký tài khoản<strong>{{ username }}</strong> tại trang <strong>{{ base_ui_url }}</strong> vào lúc <strong>{{ time }}</strong>. Vui lòng nhấn vào liên kết phía dưới để tiếp tục thực hiện đăng ký tài khoản</p>
+              <p>Nếu bạn không thực hiện hành động trên, vui lòng liên hệ với đội ngũ HORUSOFTACE-AUTOPOST để biết thêm chi tiết</p>
             </td>
           </tr>
           <!-- end copy -->
 
           <!-- start button -->
           <tr>
-            <td align="center" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
-              <p>Mã xác minh của bạn:</p>
-              <h2 color="#1a82e2">{{ register_token }}</h2>
+            <td align="left" bgcolor="#ffffff">
+              <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                <tr>
+                  <td align="center" bgcolor="#ffffff" style="padding: 12px;">
+                    <table border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center" bgcolor="#1a82e2" style="border-radius: 6px;">
+                          <a href="{{ register_link }}" target="_blank" style="display: inline-block; padding: 16px 36px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; color: #ffffff; text-decoration: none; border-radius: 6px;">Đăng ký tài khoản</a>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+              </table>
             </td>
           </tr>
           <!-- end button -->
+
+          <!-- start copy -->
+          <tr>
+            <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px;">
+              <p style="margin: 0;">Nếu nhấn vào liên kết không thành công, bạn có thể sao chép và dán đường liên kết sau đây vào trình duyệt</p>
+              <p style="margin: 0;"><a href="{{ register_link }}" target="_blank">{{ register_link }}</a></p>
+            </td>
+          </tr>
+          <!-- end copy -->
+
           <!-- start copy -->
           <tr>
             <td align="left" bgcolor="#ffffff" style="padding: 24px; font-family: 'Source Sans Pro', Helvetica, Arial, sans-serif; font-size: 16px; line-height: 24px; border-bottom: 3px solid #d4dadf">
-                <p>Nếu bạn không thực hiện hành động trên, vui lòng liên hệ với đội ngũ HORUSOFTACE-AUTOPOST để biết thêm chi tiết</p>
-                <p>Xin chú ý mã xác nhận sẽ hết hạn trong 15 phút.</p>
-                <p>Trân trọng,</p>
-                <p>Đội ngũ <strong>HORUSOFTACEAE-AUTOPOST</strongp>
+              <p>Xin chú ý đường dẫn liên kết sẽ hết hạn trong 15 phút.</p>
+              <p>Trân trọng,</p>
+              <p>Đội ngũ <strong>HORUSOFTACEAE-AUTOPOST</strongp>
             </td>
           </tr>
           <!-- end copy -->

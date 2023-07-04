@@ -7,12 +7,15 @@ from ..schema.payload import (
     UserPasswordResetRequest,
     UserRegisterRequest,
     UserUpdateInfoRequest,
+    UserPasswordRegisterRequest,
+    EmailRequestResponse,
+    FacebookConnectResponse,
 )
 from ..schema.response import GetUserResponse
 
 from utils.services.data_validate import BaseValidate
 from router.authenticate import AuthBearer
-from token_management.models.token import ResetToken
+from token_management.models.token import ResetToken, RegisterToken
 from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
 from token_management.services.create_reset_token import ResetTokenService
@@ -29,7 +32,7 @@ class UserController:
         user = User.get_user_by_email(email=data.email)
         if not user.check_password(data.password):
             raise AuthenticationFailed(message_code="INVALID_EMAIL_PASSWORD")
-        user.check_verified()
+        user.check_active()
         return {"access_token": LoginTokenService().create_token(user=user)}
 
     @http_post("/register")
@@ -37,26 +40,24 @@ class UserController:
         BaseValidate.validate_register(data=data.dict())
         if User.objects.filter(email=data.email).exists():
             raise ValidationError(message_code="EMAIL_HAS_BEEN_USED")
-        User.objects.create_user(
-            first_name=data.first_name, last_name=data.last_name, email=data.email, password=data.password
-        )
-        return True
-
-    @http_post("/email-verify")
-    def verify_email(self, email: str):
-        user = User.get_user_by_email(email=email)
-        user.check_verified()
-        MailSenderService(recipients=[email]).send_register_email()
+        User.objects.create_user(first_name=data.first_name, last_name=data.last_name, email=data.email)
+        MailSenderService(recipients=[data.email]).send_register_email()
         return True
 
     @http_put("/register-check")
-    def user_register_check(self, token: str):
-        register_token = RegisterTokenService.get_register_token(token=token)
+    def user_register_check(self, data: UserPasswordRegisterRequest):
+        try:
+            register_token = RegisterToken.objects.get(token=data.token)
+        except RegisterToken.DoesNotExist as e:
+            raise NotFound(message_code="REGISTER_TOKEN_INVALID_OR_EXPIRED") from e
+        if not RegisterTokenService.check_valid(token=register_token):
+            raise ValidationError(message_code="REGISTER_TOKEN_INVALID_OR_EXPIRED")
+        BaseValidate.validate_password(password=data.password)
         user = register_token.user
-        user.is_verified = True
+        user.set_password(data.password)
+        user.is_active = True
         user.save()
-        RegisterTokenService.deactivate(user)
-        return True
+        ResetTokenService.deactivate(user)
 
     @http_get("/get/me", response=GetUserResponse, auth=AuthBearer())
     def get_me(self, request):
@@ -87,9 +88,9 @@ class UserController:
         LoginTokenService.deactivate(token=request.auth)
 
     @http_post("/forgot-password")
-    def forgot_password(self, email: str):
-        BaseValidate.validate_email(email=email)
-        MailSenderService(recipients=[email]).send_reset_password_email()
+    def forgot_password(self, data: EmailRequestResponse):
+        BaseValidate.validate_email(email=data.email)
+        MailSenderService(recipients=[data.email]).send_reset_password_email()
         return True
 
     @http_put("/reset-password")
@@ -109,8 +110,8 @@ class UserController:
         ResetTokenService.deactivate(token=reset_token)
 
     @http_post("/connect/facebook", auth=AuthBearer())
-    def connect_facebook_token(self, request, token: str):
-        FacebookTokenService.get_long_lived_access_token(user=request.user, short_lived_access_token=token)
+    def connect_facebook_token(self, request, data: FacebookConnectResponse):
+        FacebookTokenService.get_long_lived_access_token(user=request.user, short_lived_access_token=data.token)
 
     @http_put("/disconnect/facebook", auth=AuthBearer())
     def disconnect_facebook_token(self, request):

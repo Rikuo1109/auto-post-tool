@@ -196,6 +196,7 @@ ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")
 # UID
 BASE_UI_URL = os.environ.get("BASE_UI_URL")
 BASE_MEDIA_HOST = os.environ.get("BASE_MEDIA_HOST")
+CALL_BACK_URL = os.environ.get("CALL_BACK_URL")
 BASE_HOST = os.environ.get("BASE_HOST")
 
 # media directory in the root directory
@@ -247,16 +248,27 @@ FACEBOOK_GET_USERID_URL = os.environ.get("FACEBOOK_GET_USERID_URL")
 FACEBOOK_GET_USER_PAGES_URL = os.environ.get("FACEBOOK_GET_USER_PAGES_URL")
 FACEBOOK_API_HOST = os.path.join(os.environ.get("FACEBOOK_API_HOST"), os.environ.get("FACEBOOK_API_VERSION"))
 
-
-ZALO_API_APP_ID = os.environ.get("ZALO_API_APP_ID")
-
-ZALO_API_HOST = os.environ.get("ZALO_API_HOST")
-
-API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
-ZALO_API_APP_SECRET = os.environ.get("ZALO_API_APP_SECRET")
+# Zalo API
 ZALO_ACCESS_TOKEN_URL = os.environ.get("ZALO_ACCESS_TOKEN_URL")
 
+# Twitter API
+TWITTER_ACCESS_TOKEN_URL = os.environ.get("TWITTER_ACCESS_TOKEN_URL")
+
+# LinkedIn API
+LINKEDIN_ACCESS_TOKEN_URL = os.environ.get("LINKEDIN_ACCESS_TOKEN_URL")
+LINKEDIN_SELF_PROFILE_URL = os.environ.get("LINKEDIN_SELF_PROFILE_URL")
+
+API_REQUEST_CONTENT_TYPE = os.environ.get("API_REQUEST_CONTENT_TYPE")
 REQUEST_TIMEOUT = int(str(os.environ.get("REQUEST_TIMEOUT")))
+
+MINIMUM_LENGTH = os.environ.get("MINIMUM_LENGTH")
+CONTAIN_NO_NUMBER = os.environ.get("CONTAIN_NO_NUMBER")
+CONTAIN_NUMBER_AND_LETTER = os.environ.get("CONTAIN_NUMBER_AND_LETTER")
+EMAIL = os.environ.get("EMAIL")
+
+NAME = os.environ.get("NAME")
+PASSWORD = os.environ.get("PASSWORD")
+EMAIL = os.environ.get("EMAIL")
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
@@ -267,10 +279,12 @@ GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 GITHUB_REPO = os.environ.get("GITHUB_REPO")
 
 # password rules
-PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER")
+PASSWORD_MUST_CONTAIN_NUMBER = os.environ.get("PASSWORD_MUST_CONTAIN_NUMBER") == "False"
 PASSWORD_MINIMUM_LENGTH = int(os.environ.get("PASSWORD_MINIMUM_LENGTH"))
-PASSWORD_NOT_CONTAIN_SPACE = os.environ.get("PASSWORD_NOT_CONTAIN_SPACE")
+PASSWORD_NOT_CONTAIN_SPACE = os.environ.get("PASSWORD_NOT_CONTAIN_SPACE") == "True"
 
 # name rules
 NAME_CANT_CONTAIN_NUMBER = os.environ.get("NAME_CANT_CONTAIN_NUMBER")
-NAME_NOT_CONTAIN_SPACE = os.environ.get("NAME_NOT_CONTAIN_SPACE")
+NAME_NOT_CONTAIN_SPACE = os.environ.get("NAME_NOT_CONTAIN_SPACE") == "True"
+# post type
+DEFAULT_POST_TYPE = os.environ.get("DEFAULT_POST_TYPE")
