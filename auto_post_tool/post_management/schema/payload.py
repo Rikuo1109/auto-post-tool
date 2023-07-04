@@ -36,7 +36,7 @@ class PostManagementCreateRequest(Schema):
 
 class PostRequest(Schema):
     content: Optional[str]
-    post_type: PostTypeEnum
+    post_types: List[str] = []
     images: List[str] = []
     managements: List[PostManagementPayloadSchema]
 
@@ -48,7 +48,7 @@ UPDATE FIELDS
 
 class PostDetailUpdateRequest(Schema):
     content: Optional[str]
-    post_type: Optional[PostTypeEnum]
+    post_types: List[str] = []
 
 
 class PostManagementUpdateRequest(Schema):

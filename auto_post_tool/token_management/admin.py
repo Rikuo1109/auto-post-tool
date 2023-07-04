@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import LoginToken, ResetToken, FacebookToken, ZaloToken
+from .models import LoginToken, ResetToken, FacebookToken
 
 
 # Register your models here.
@@ -8,14 +8,12 @@ from .models import LoginToken, ResetToken, FacebookToken, ZaloToken
 class LoginTokenAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(ResetToken)
 class ResetTokenAdmin(admin.ModelAdmin):
     pass
 
+
 @admin.register(FacebookToken)
 class FacebookTokenAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(ZaloToken)
-class ZaloTokenAdmin(admin.ModelAdmin):
     pass

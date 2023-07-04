@@ -11,7 +11,6 @@ from utils.exceptions import ValidationError
 class GroupsFacebookApiService:
     def __init__(self, post_management):
         self.post_management = post_management
-        user = post_management.post.user
         service = RequiredItemsService(post_management=self.post_management)
         self.group_id = service.load_item(item_key="group_id")
         self.access_token = service.load_item(item_key="access_token")
