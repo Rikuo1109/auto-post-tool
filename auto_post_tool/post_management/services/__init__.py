@@ -1,3 +1,5 @@
+import json
+
 from django.db import transaction
 
 from .apis.services import ApiGetInteractionsService, ApiPublishService
@@ -5,6 +7,7 @@ from .post import CreatePostService, GetDetailPostService, RemovePostService, Up
 from .post_management import CreatePostManagementService, RemovePostManagementService, UpdatePostManagementService
 from image_management.models import ImagePost
 from post_management.models.post import Post, PostManagement
+from ..schema.payload import PostRequest
 from utils.functions.filters import FiltersUtils
 from utils.functions.validator import ValidatorsUtils
 
@@ -14,12 +17,13 @@ class Service:
         self.request = request
 
     @transaction.atomic
-    def create_post_service(self, data):
-        service = CreatePostService(user=self.request.user, content=data.content, post_type=data.post_type)
+    def create_post_service(self, data: PostRequest):
+        """json dumps will turn the list of post_type into string literal"""
+        service = CreatePostService(user=self.request.user, content=data.content, post_type=json.dumps(data.post_type))
         post = service()
 
         if len(data.images) > 0:
-            post.images.add(*ImagePost.filter_by_uids(data.images))
+            post.images.add(*ImagePost.filter_by_uids(uids=data.images))
 
         service = CreatePostManagementService(post=post, managements=data.managements)
         return service()

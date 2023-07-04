@@ -22,7 +22,7 @@ class PostManagementStatusEnum(TextChoices):
 @unique
 class PostManagementPlatFormEnum(TextChoices):
     FACEBOOK = "FACEBOOK", "facebook"
-    ZALO = "ZALO", "zalo"
+    LINKEDIN = "LINKEDIN", "linkedin"
 
 
 @unique

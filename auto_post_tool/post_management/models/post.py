@@ -1,6 +1,8 @@
+import json
 from datetime import datetime
 from uuid import uuid4
 
+from django.conf import settings
 from django.db import models
 
 from image_management.models import ImagePost
@@ -15,7 +17,7 @@ class Post(models.Model):
         to=User, on_delete=models.CASCADE, related_name="post_fk_user", db_constraint=False, db_column="user_id"
     )
     content = models.TextField()
-    post_type = models.CharField(max_length=150, choices=PostTypeEnum.choices, default=PostTypeEnum.ARTICLE)
+    post_type = PostTypeField()
     created_at = models.DateTimeField(auto_now_add=True)
     images = models.ManyToManyField(to=ImagePost, related_name="posts_mm_iamges", blank=True, db_constraint=False)
 
