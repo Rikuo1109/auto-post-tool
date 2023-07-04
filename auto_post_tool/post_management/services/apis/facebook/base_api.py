@@ -4,6 +4,7 @@ import requests
 from ..services.required_items_service import RequiredItemsService
 from ..services.response_items_service import ResponseItemsService
 from ..services.update_status_service import UpdateStatusService
+from ..services.content_log_service import ContentLogService
 from utils.enums.post import PostManagementStatusEnum
 from utils.exceptions import ValidationError
 
@@ -61,10 +62,12 @@ class BaseFacebookApiService:
         service.save_item(item_key=insert_post_to_middle(self.base_id), item_value=response["id"])
         service = UpdateStatusService(post_management=self.post_management, status=PostManagementStatusEnum.SUCCESS)
         service()
+        service = ContentLogService(post_management=self.post_management, content=self.post_management.post.content)
+        service()
 
         return response
 
-    def get_all_reactions(self):
+    def get_all_insights(self):
         try:
             service = ResponseItemsService(self.post_management)
             base_post_id = service.load_item(item_key=insert_post_to_middle(self.base_id))
@@ -73,29 +76,12 @@ class BaseFacebookApiService:
 
         params = self.prepair_params_interactions()
 
-        response = requests.get(
-            f"{self.path}/{base_post_id}/reactions", params=params, timeout=settings.REQUEST_TIMEOUT
-        )
+        response = requests.get(f"{self.path}/{base_post_id}", params=params, timeout=settings.REQUEST_TIMEOUT)
 
-        return_response = self.handle_response(response)
-        return len(return_response["data"])
+        return self.handle_response(response)
 
     def prepair_params_interactions(self):
-        return {"access_token": self.access_token}
-
-    def get_all_comments(self):
-        try:
-            service = ResponseItemsService(self.post_management)
-            base_post_id = service.load_item(item_key=insert_post_to_middle(self.base_id))
-        except ValidationError:
-            return 0
-
-        params = self.prepair_params_interactions()
-
-        response = requests.get(f"{self.path}/{base_post_id}/comments", params=params, timeout=settings.REQUEST_TIMEOUT)
-
-        return_response = self.handle_response(response)
-        return len(return_response["data"])
+        return {"access_token": self.access_token, "fields": """shares,reactions{type},comments{message}"""}
 
     def handle_response(self, response):
         """

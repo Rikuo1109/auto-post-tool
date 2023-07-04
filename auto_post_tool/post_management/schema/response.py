@@ -6,6 +6,12 @@ from ..models import Post, PostManagement
 from image_management.schema.response import ImagePostResponseSchema
 
 
+class PostUidResponse(ModelSchema):
+    class Config:
+        model = Post
+        model_fields = ["uid"]
+
+
 class PostContentResponseSchema(ModelSchema):
     class Config:
         model = Post
@@ -26,12 +32,11 @@ class PostManagementDetailResponse(ModelSchema):
     reactions: Optional[int]
     comments: Optional[int]
     title: str
-    content: str
     images: Optional[List[ImagePostResponseSchema]]
 
     class Config:
         model = PostManagement
-        model_fields = ["uid", "platform", "auto_publish", "time_posting", "status"]
+        model_fields = ["uid", "content", "platform", "auto_publish", "time_posting", "status"]
 
 
 class PostManagementMatrixResponse(ModelSchema):

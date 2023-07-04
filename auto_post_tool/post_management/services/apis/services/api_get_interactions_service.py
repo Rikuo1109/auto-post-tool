@@ -7,25 +7,31 @@ from utils.enums.post import PostManagementPlatFormEnum
 class ApiGetInteractionsService:
     def __init__(self, post_management):
         self.post_management = post_management
+        self.reactions = []
+        self.comments = []
+        self.shares = []
+
+    def __call__(self):
+        if self.post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
+            service = RequiredItemsService(self.post_management)
+            required_items = service.load_required_items()
+            service = None
+            if "page_id" in required_items:
+                service = PagesFacebookApiService(post_management=self.post_management)
+            elif "group_id" in required_items:
+                service = GroupsFacebookApiService(post_management=self.post_management)
+            if service is None:
+                return
+            data = service.get_all_insights()
+            self.reactions = data["reactions"]["data"]
+            self.comments = data["comments"]["data"]
+            self.shares = data["shares"]["data"]
 
     def get_all_reactions(self):
-        if self.post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
-            service = RequiredItemsService(self.post_management)
-            required_items = service.load_required_items()
-            if "page_id" in required_items:
-                service = PagesFacebookApiService(post_management=self.post_management)
-                return service.get_all_reactions()
-            elif "group_id" in required_items:
-                service = GroupsFacebookApiService(post_management=self.post_management)
-                return service.get_all_reactions()
+        return self.reactions
 
     def get_all_comments(self):
-        if self.post_management.platform == PostManagementPlatFormEnum.FACEBOOK:
-            service = RequiredItemsService(self.post_management)
-            required_items = service.load_required_items()
-            if "page_id" in required_items:
-                service = PagesFacebookApiService(post_management=self.post_management)
-                return service.get_all_comments()
-            elif "group_id" in required_items:
-                service = GroupsFacebookApiService(post_management=self.post_management)
-                return service.get_all_comments()
+        return self.comments
+
+    def get_all_shares(self):
+        return self.shares

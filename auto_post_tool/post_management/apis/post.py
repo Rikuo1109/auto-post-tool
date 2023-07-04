@@ -6,6 +6,7 @@ from ninja_extra import api_controller, http_get, http_post
 
 from ..schema.payload import (
     PostDetailUpdateRequest,
+    PostFiltersCustomRequest,
     PostFiltersRequest,
     PostManagementCreateRequest,
     PostManagementFiltersRequest,
@@ -17,6 +18,7 @@ from ..schema.response import (
     PostManagementDetailResponse,
     PostManagementMatrixResponse,
     PostMatrixResponse,
+    PostUidResponse,
 )
 from ..services import Service
 from router.authenticate import AuthBearer
@@ -26,10 +28,10 @@ from utils.enums.common import SortingPostEnum, SortingPostManagementEnum, SortT
 
 @api_controller(prefix_or_class="/posts", tags=["Post"], auth=AuthBearer())
 class PostController:
-    @http_post("/create")
+    @http_post("/create", response=PostUidResponse)
     def create_post(self, request, payload: PostRequest):
         service = Service(request=request)
-        service.create_post_service(data=payload)
+        return service.create_post_service(data=payload)
 
     @http_get("/matrix", response=List[PostMatrixResponse])
     @paginate(Pagination)
@@ -39,9 +41,12 @@ class PostController:
         sorting: SortingPostEnum = SortingPostEnum.CREATED_AT,
         sort_type: SortTypeEnum = SortTypeEnum.ASC,
         filters: PostFiltersRequest = Query(...),
+        filters_custom: PostFiltersCustomRequest = Query(...),
     ):
         service = Service(request=request)
-        return service.get_matrix_post_service(filters=filters, sorting=sorting, sort_type=sort_type)
+        return service.get_matrix_post_service(
+            filters=filters, filters_custom=filters_custom, sorting=sorting, sort_type=sort_type
+        )
 
     @http_get("/{uid}/detail", response=PostDetailResponse)
     def view_post_detail(self, request, uid):

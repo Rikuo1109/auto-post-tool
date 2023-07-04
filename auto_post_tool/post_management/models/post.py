@@ -18,7 +18,7 @@ class Post(models.Model):
     user = models.ForeignKey(
         to=User, on_delete=models.CASCADE, related_name="post_fk_user", db_constraint=False, db_column="user_id"
     )
-    title = models.TextField(max_length=128, blank=True, null=True)
+    title = models.TextField(max_length=128, blank=True)
     content = models.TextField()
     post_type = models.CharField(max_length=150, default=f"[{settings.DEFAULT_POST_TYPE}]")
     created_at = models.DateTimeField(auto_now_add=True)
@@ -52,6 +52,7 @@ class PostManagement(models.Model):
         db_constraint=False,
         db_column="post_id",
     )
+    content = models.TextField()
     platform = models.CharField(max_length=16, choices=PostManagementPlatFormEnum.choices)
     time_posting = models.DateTimeField(auto_now_add=False)
     auto_publish = models.BooleanField()

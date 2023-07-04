@@ -24,7 +24,7 @@ class UserChangePassword(Schema):
 class UserUpdateInfoRequest(Schema):
     first_name: Optional[str]
     last_name: Optional[str]
-    username: Optional[str]
+    avatar: Optional[str]
 
 
 class UserEmailRequest(Schema):

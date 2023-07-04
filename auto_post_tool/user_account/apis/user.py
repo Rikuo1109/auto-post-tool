@@ -1,3 +1,6 @@
+from typing import Optional
+from ninja import File
+from ninja.files import UploadedFile
 from ninja_extra import api_controller, http_get, http_post, http_put
 
 from ..models.user import User
@@ -12,8 +15,7 @@ from ..schema.payload import (
     UserZaloTokenRequest,
 )
 from ..schema.response import UserResponse, UserResponse2
-
-from utils.services.data_validate import BaseValidate
+from image_management.firebase import FirebaseService
 from router.authenticate import AuthBearer
 from token_management.models.token import ResetToken
 from token_management.services.create_facebook_token import FacebookTokenService
@@ -22,6 +24,7 @@ from token_management.services.create_reset_token import ResetTokenService
 from token_management.services.create_zalo_token import ZaloTokenService
 from utils.exceptions import AuthenticationFailed, NotFound, ValidationError
 from utils.mail import MailSenderService
+from utils.services.data_validate import BaseValidate
 from utils.services.facebook.get_user_info import get_user_fb_page_info
 
 
@@ -67,7 +70,10 @@ class UserController:
         user.save()
 
     @http_post("/update/info", auth=AuthBearer())
-    def update_info(self, request, data: UserUpdateInfoRequest):
+    def update_info(self, request, data: UserUpdateInfoRequest, avatar: Optional[UploadedFile] = File(...)):
+        if avatar is not None:
+            service = FirebaseService()
+            data.url = service.create_image(source=avatar)
         BaseValidate.validate_info(data=data.dict())
         user = request.user
         user.__dict__.update({key: value for key, value in data.dict().items() if value is not None})

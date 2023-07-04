@@ -7,9 +7,7 @@ class BaseValidate:
     @staticmethod
     def validate_username(username: str):
         if settings.USERNAME_MINIMUM_LENGTH:
-            if not BaseValidator.is_longger_than(
-                value=username, max_length=int(settings.USERNAME_MINIMUM_LENGTH)
-            ):
+            if not BaseValidator.is_longger_than(value=username, max_length=int(settings.USERNAME_MINIMUM_LENGTH)):
                 raise ValidationError(message_code="INVALID_USERNAME")
             return True
         return True
@@ -17,9 +15,7 @@ class BaseValidate:
     @staticmethod
     def validate_password(password: str):
         if settings.PASSWORD_MINIMUM_LENGTH:
-            if not BaseValidator.is_longger_than(
-                value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)
-            ):
+            if not BaseValidator.is_longger_than(value=password, max_length=int(settings.PASSWORD_MINIMUM_LENGTH)):
                 raise ValidationError(message_code="INVALID_PASSWORD")
             if settings.PASSWORD_MUST_CONTAIN_NUMBER == "False":
                 return True
@@ -53,8 +49,6 @@ class BaseValidate:
 
     @staticmethod
     def validate_info(data: dict):
-        return (
-            BaseValidate.validate_name(name=data.get("first_name"))
-            and BaseValidate.validate_name(name=data.get("last_name"))
-            and BaseValidate.validate_username(username=data.get("username"))
+        return BaseValidate.validate_name(name=data.get("first_name")) and BaseValidate.validate_name(
+            name=data.get("last_name")
         )

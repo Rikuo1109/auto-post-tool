@@ -7,6 +7,8 @@ class RequiredItemsService:
     def __init__(self, post_management):
         self.post_management = post_management
         self.required_items = json.loads(self.post_management.required_items or "{}")
+        if self.required_items is None:
+            self.required_items = {}
 
     def load_required_items(self):
         return self.required_items

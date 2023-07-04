@@ -56,9 +56,12 @@ FILTER FIELDS
 
 
 class PostFiltersRequest(FilterSchema):
-    search: Optional[str]
-    min_time: Optional[datetime]
-    max_time: Optional[datetime]
+    search: Optional[str] = Field(q=["content__icontains"])
+    min_time: Optional[datetime] = Field(q=["created_at__gte"])
+    max_time: Optional[datetime] = Field(q=["created_at__lte"])
+
+
+class PostFiltersCustomRequest(Schema):
     post_type: Optional[str]
 
 
