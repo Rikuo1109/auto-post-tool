@@ -11,7 +11,7 @@ class PostFiltersUtils:
             value = value if isinstance(value, list) else value.split(",")
             filter = Q()
             for post_type in value:
-                filter = filter | Q(post_type__icontains=f'"{post_type}"')
+                filter = filter & Q(post_type__icontains=f'"{post_type}"')
             return filter
 
     @staticmethod
