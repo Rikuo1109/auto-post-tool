@@ -13,10 +13,6 @@ from post_management.services.utils.filters import PostFiltersUtils
 from utils.functions.filters import FiltersUtils
 from utils.functions.validator import ValidatorsUtils
 
-import re
-
-import json
-
 
 class Service:
     def __init__(self, request):

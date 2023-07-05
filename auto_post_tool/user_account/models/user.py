@@ -7,17 +7,11 @@ from django.conf import settings
 from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db import models
 
-from utils.exceptions.exceptions import NotFound, AuthenticationFailed
+from utils.exceptions.exceptions import AuthenticationFailed, NotFound
 
 
 class UserManager(BaseUserManager):  # type: ignore
-    def create_user(
-        self,
-        email: str,
-        password: Optional[str] = None,
-        first_name: Optional[str] = None,
-        last_name: Optional[str] = None,
-    ) -> Any:
+    def create_user(self, email: str, first_name: Optional[str] = None, last_name: Optional[str] = None) -> Any:
         if not email:
             raise ValueError("Users must have an email address")
         user: Any = User(email=self.normalize_email(email))
@@ -46,7 +40,6 @@ class User(AbstractUser):
 
     email = models.EmailField(unique=True, verbose_name="email-address", max_length=255)
     first_name = models.CharField(max_length=255, blank=True, null=True)
-    last_name = models.CharField(max_length=255, blank=True, null=True)
     last_name = models.CharField(max_length=255, blank=True, null=True, default=None)
     username = models.CharField(max_length=255, blank=True, null=True, default=None)
     # Required by django admin

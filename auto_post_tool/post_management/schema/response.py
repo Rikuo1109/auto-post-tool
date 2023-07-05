@@ -7,6 +7,8 @@ from image_management.schema.response import ImagePostResponseSchema
 
 
 class PostUidResponse(ModelSchema):
+    images: Optional[List[ImagePostResponseSchema]]
+
     class Config:
         model = Post
         model_fields = ["uid"]

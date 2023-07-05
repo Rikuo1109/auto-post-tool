@@ -1,24 +1,21 @@
-from typing import Optional
-
-from ninja import File
+from ninja import File, Form
 from ninja.files import UploadedFile
 from ninja_extra import api_controller, http_get, http_post, http_put
 
 from ..models.user import User
 from ..schema.payload import (
-    UserChangePassword,
-    UserLoginRequest,
-    UserPasswordResetRequest,
-    UserRegisterRequest,
-    UserUpdateInfoRequest,
-    UserPasswordRegisterRequest,
     EmailRequestResponse,
     FacebookConnectResponse,
+    UserChangePassword,
+    UserLoginRequest,
+    UserPasswordRegisterRequest,
+    UserPasswordResetRequest,
+    UserRegisterRequest,
 )
 from ..schema.response import GetUserResponse
 from image_management.firebase import FirebaseService
 from router.authenticate import AuthBearer
-from token_management.models.token import ResetToken, RegisterToken
+from token_management.models.token import RegisterToken, ResetToken
 from token_management.services.create_facebook_token import FacebookTokenService
 from token_management.services.create_login_token import LoginTokenService
 from token_management.services.create_register_token import RegisterTokenService
@@ -80,8 +77,10 @@ class UserController:
         user.save()
 
     @http_post("/update/info", auth=AuthBearer())
-    def update_info(self, request, data: UserUpdateInfoRequest, avatar: Optional[UploadedFile] = File(...)):
-        data = data.dict()
+    def update_info(
+        self, request, first_name: str = Form(...), last_name: str = Form(...), avatar: UploadedFile = File(...)
+    ):
+        data = {"first_name": first_name, "last_name": last_name}
         BaseValidate.validate_info(data=data)
         if avatar is not None:
             service = FirebaseService()
@@ -114,7 +113,7 @@ class UserController:
             raise AuthenticationFailed(message_code="SAME_PASSWORD")
         user.set_password(data.password)
         user.save()
-        ResetTokenService.deactivate(token=reset_token)
+        ResetTokenService.deactivate(user=user)
 
     @http_post("/connect/facebook", auth=AuthBearer())
     def connect_facebook_token(self, request, data: FacebookConnectResponse):

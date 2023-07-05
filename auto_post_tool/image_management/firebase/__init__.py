@@ -24,20 +24,16 @@ db = firebase.storage()
 
 class FirebaseService:
     @staticmethod
-    def push_image(image, blob_name, isPublic=True) -> str:
-        child = db.child(blob_name)
-        response = child.put(file=image.file, content_type=image.content_type)
+    def push_image(image, blob_name) -> str:
+        response = db.child(blob_name).put(file=image.file, content_type=image.content_type)
         name = response.get("name").replace("/", "%2F")
         return f"https://firebasestorage.googleapis.com/v0/b/auto-post-tool.appspot.com/o/{name}?alt=media"
 
     @staticmethod
     def create_image(user: User, source: UploadedFile):
-        image = ImagePost()
-        image.url = FirebaseService.push_image(
-            image=source, blob_name=FirebaseService.generate_image_blob(user, source)
+        return ImagePost.objects.create(
+            url=FirebaseService.push_image(image=source, blob_name=FirebaseService.generate_image_blob(user, source))
         )
-        image.save()
-        return image
 
     @staticmethod
     def generate_image_blob(user: User, source: UploadedFile):

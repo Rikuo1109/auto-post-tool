@@ -1,5 +1,3 @@
-from typing import Optional
-
 from ninja.schema import Schema
 
 
@@ -22,11 +20,6 @@ class UserLoginRequest(Schema):
 class UserChangePassword(Schema):
     current_password: str
     new_password: str
-
-
-class UserUpdateInfoRequest(Schema):
-    first_name: Optional[str]
-    last_name: Optional[str]
 
 
 class UserPasswordResetRequest(Schema):
